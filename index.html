@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="美团开放服务(MOS) : " />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>美团开放服务(MOS)</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/meituan/mcsapi_python">View on GitHub</a>
+
+          <h1 id="project_title">美团开放服务(MOS)</h1>
+          <h2 id="project_tagline"></h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/meituan/mcsapi_python/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/meituan/mcsapi_python/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="mcs-api-python-binding" class="anchor" href="#mcs-api-python-binding"><span class="octicon octicon-link"></span></a>MCS API Python Binding</h1>
+
+<p>我们提供了方便调用MCS API的Python Library以及基于该Libary实现的客户端。</p>
+
+<h2>
+<a name="%E5%AE%89%E8%A3%85" class="anchor" href="#%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>安装</h2>
+
+<p>从本站下载mcsapi_python代码，解压，进入目录执行下述命令安装。将安装客户端可执行文件climos以及相应的python library。</p>
+
+<pre><code>python setup.py install
+</code></pre>
+
+<h2>
+<a name="python-library" class="anchor" href="#python-library"><span class="octicon octicon-link"></span></a>Python Library</h2>
+
+<p>通过mosclient.client.Client生成客户端实例，API接口实现参见mosclient/v1/client.py。</p>
+
+<p>示例代码如下：</p>
+
+<div class="highlight"><pre>    <span class="kn">import</span> <span class="nn">mosclient</span>
+
+    <span class="n">version</span> <span class="o">=</span> <span class="s">'1'</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="s">'MOS_ACCESS_KEY'</span>
+    <span class="n">secret</span> <span class="o">=</span> <span class="s">'MOS_ACCESS_SECRET'</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s">'https://mcsapi.meituan.com:8333/'</span>
+
+    <span class="n">cli</span> <span class="o">=</span> <span class="n">mosclient</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+
+    <span class="n">types</span> <span class="o">=</span> <span class="n">cli</span><span class="o">.</span><span class="n">GetBalance</span><span class="p">()</span>
+    <span class="k">print</span> <span class="n">types</span>
+</pre></div>
+
+<h2>
+<a name="python%E5%AE%A2%E6%88%B7%E7%AB%AF" class="anchor" href="#python%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="octicon octicon-link"></span></a>Python客户端</h2>
+
+<p>安装客户端软件后，执行以下步骤开始使用MCS API Python客户端。</p>
+
+<p>1. 在MOS帐户页面获取个人的MOS ACCESS Key和Secret，以及API入口URL，设置如下环境变量：</p>
+
+<pre><code>export MOS_ACCESS=4ba303cc17454cc7904e044db2a3c912
+export MOS_SECRET=2952f821201341a38978ac4a4a292ce8
+export MOS_URL=https://10.168.44.160:8883
+</code></pre>
+
+<p>2. 执行climos客户端</p>
+
+<pre><code>climos help
+climos DescribeTemplates
+</code></pre>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">美团开放服务(MOS) maintained by <a href="https://github.com/meituan">meituan</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
