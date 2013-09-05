@@ -125,7 +125,7 @@ def do_TerminateInstance(client, args):
 @utils.arg('--image', metavar='<IMAGE>', help='ID of root image template')
 def do_RebuildInstanceRootImage(client, args):
     """ Rebuild root image of an instance """
-    self.RebuildInstanceRootImage(args.id, image_id=args.image)
+    client.RebuildInstanceRootImage(args.id, image_id=args.image)
 
 
 @utils.arg('id', metavar='<ID>', help='ID of instance')
@@ -133,7 +133,7 @@ def do_RebuildInstanceRootImage(client, args):
 @utils.arg('--duration', metavar='<DURATION>', help='Reserved instance duration, in H or M, e.g. 72H, 1M')
 def do_ChangeInstanceType(client, args):
     """ Change instance type """
-    self.ChangeInstanceType(args.id, args.instance_type, duration=args.duration)
+    client.ChangeInstanceType(args.id, args.instance_type, duration=args.duration)
 
 
 @utils.arg('id', metavar='<ID>', help='ID of instance')
