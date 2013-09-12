@@ -15,13 +15,13 @@
 示例代码如下：
 
 ```python
-    import mosclient
-    
+    import mosclient.client
+ 
     version = '1'
     key = 'MOS_ACCESS_KEY'
     secret = 'MOS_ACCESS_SECRET'
-    url = 'https://mcsapi.meituan.com:8333/'
-    
+    url = 'https://mosapi.meituan.com/mcs/v1'
+ 
     cli = mosclient.client.Client(version, key, secret, url)
 
     types = cli.GetBalance()
