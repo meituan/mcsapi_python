@@ -51,12 +51,12 @@
 
 <p>示例代码如下：</p>
 
-<div class="highlight"><pre>    <span class="kn">import</span> <span class="nn">mosclient</span>
+<div class="highlight highlight-python"><pre>    <span class="kn">import</span> <span class="nn">mosclient.client</span>
 
     <span class="n">version</span> <span class="o">=</span> <span class="s">'1'</span>
     <span class="n">key</span> <span class="o">=</span> <span class="s">'MOS_ACCESS_KEY'</span>
     <span class="n">secret</span> <span class="o">=</span> <span class="s">'MOS_ACCESS_SECRET'</span>
-    <span class="n">url</span> <span class="o">=</span> <span class="s">'https://mcsapi.meituan.com:8333/'</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s">'https://mosapi.meituan.com/mcs/v1'</span>
 
     <span class="n">cli</span> <span class="o">=</span> <span class="n">mosclient</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
 
