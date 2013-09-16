@@ -8,7 +8,9 @@
 
     python setup.py install
 
-## Python Library ##
+访问[MOS管理界面](https://mos.meituan.com)的[帐户-个人设置](https://mos.meituan.com/dashboard/account#profile)页面获得API入口URL、ACCESS Key和Secret。
+
+## 使用MCS API Python Library ##
 
 通过mosclient.client.Client生成客户端实例，API接口实现参见mosclient/v1/client.py。
 
@@ -16,19 +18,19 @@
 
 ```python
     import mosclient.client
- 
+
     version = '1'
     key = 'MOS_ACCESS_KEY'
     secret = 'MOS_ACCESS_SECRET'
     url = 'https://mosapi.meituan.com/mcs/v1'
- 
+
     cli = mosclient.client.Client(version, key, secret, url)
 
     types = cli.GetBalance()
     print types
 ```
 
-## Python客户端 ##
+## 使用Python客户端 ##
 
 安装客户端软件后，执行以下步骤开始使用MCS API Python客户端。
 
