@@ -1,4 +1,4 @@
-# MCS API Python Binding #
+# MCS API Python SDK及客户端 #
 
 我们提供了方便调用MCS API的Python Library以及基于该Libary实现的客户端。
 
