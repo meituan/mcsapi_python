@@ -4,13 +4,13 @@
 
 ## 安装 ##
 
-从本站下载mcsapi_python代码，解压，进入目录执行下述命令安装。将安装客户端可执行文件climos以及相应的python library。
+从本站下载mcsapi\_python代码，解压，进入目录执行下述命令安装。将安装客户端可执行文件climos以及相应的python library。
 
     python setup.py install
 
-访问[MOS管理界面](https://mos.meituan.com)的[帐户-个人设置](https://mos.meituan.com/dashboard/account#profile)页面获得API入口URL、ACCESS Key和Secret。
+访问 [MOS管理界面](https://mos.meituan.com) 的 [帐户-个人设置](https://mos.meituan.com/dashboard/account#profile) 页面获得API入口URL、ACCESS Key和Secret。
 
-## 使用MCS API Python Library ##
+## 使用Python SDK ##
 
 通过mosclient.client.Client生成客户端实例，API接口实现参见mosclient/v1/client.py。
 
@@ -26,8 +26,8 @@
 
     cli = mosclient.client.Client(version, key, secret, url)
 
-    types = cli.GetBalance()
-    print types
+    balance = cli.GetBalance()
+    print balance
 ```
 
 ## 使用Python客户端 ##

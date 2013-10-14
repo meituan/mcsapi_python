@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import re
 
 from mosclient.common import utils
@@ -11,14 +13,33 @@ def match_duration(string):
 
 
 class Client(BaseClient):
+    """
+    MCS API client (v1)
+
+    :param access: 指定MOS API access key
+    :type access: string
+    :param secret: 指定MOS API secret
+    :type secret: string
+    :param url: MOS API访问URL
+    :type url: string
+    :param format: 指定返回数据格式xml或者json，缺省为xml
+    :type format: string
+    :param timeout: 超时秒数，缺省为300秒
+    :type timeout: int
+    :param debug: 是否输出debug信息，缺省为False
+    :type debug: bool
+    """
 
     def DescribeInstanceTypes(self, limit=0, offset=0, filters=None):
-        """
-        List all instance types
-        limit: integer, maximal count of returned items
-        offset: integer, offset of return items
-        filters: dict, filter conditions
-                 filter keys: name, status
+        """ 获取所有虚拟机类型
+
+        :param limit: 最大返回数量，用于分页控制
+        :type limit: int
+        :param offset: 返回偏移量，用于分页控制
+        :type offset: int
+        :param filters: 过滤条件，key/value分别指定过滤字段名称和值，支持的字段名称为：name, status
+        :type filters: dict
+        :returns: 系统支持的虚拟机类型列表
         """
         kwargs = {}
         self.parse_list_params(limit, offset, filters, kwargs)
@@ -26,29 +47,37 @@ class Client(BaseClient):
         return val['InstanceTypeSet']
 
     def DescribeTemplates(self):
-        """
-        List all image templates
+        """ 获得所有虚拟机模板
+
+        :returns: 模板列表
         """
         val = self.request()
         return val['TemplateSet']
 
     def GetBalance(self):
-        """
-        Get Account Balance
+        """ 获取帐户余额
+
+        :returns: 帐户余额
         """
         val = self.request()
         return val
 
     def DescribeInstances(self, ids=None, names=None, limit=0, offset=0,
                                 filters=None):
-        """
-        List instances
-        ids: list, ids of expected instances
-        names: list, names of expected instances
-        limit: integer, maximal return items
-        offset: integer, offset of return items
-        filters: dict, filter conditions
-                filter key: status, name
+        """ 获得所有虚拟机
+
+        :param ids: 期望获取的虚拟机ID列表
+        :type ids: list
+        :param names: 期望获取信息的虚拟机名称列表
+        :type names: list
+        :param limit: 最多返回数量
+        :type limit: int
+        :param offset: 返回虚拟机的偏移量，用于分页显示
+        :type offset: int
+        :param filters: 过滤器，一个dict，包含过滤字段名和值，可能过滤字段为：name, status 
+        :type filters: dict
+
+        :returns: 虚拟机列表
         """
         kwargs = {}
         if isinstance(ids, list) and len(ids) > 0:
@@ -60,12 +89,17 @@ class Client(BaseClient):
         return val['InstanceSet']
 
     def DescribeInstanceVolumes(self, iid, limit=0, offset=0, filters=None):
-        """
-        List all volumes of an instance
-        iid: string, ID of instance
-        limit: integer, maximal returned items
-        offset: integer, offset of returned items
-        filters: dict, filter conditions
+        """ 获取指定虚拟机的虚拟磁盘信息
+
+        :param iid: 虚拟机ID
+        :type iid: string
+        :param limit: 最大返回数量，用于分页控制
+        :type limit: int
+        :param offset: 返回的偏移量，用于分页控制
+        :type offset: int
+        :param filters: 返回结果过滤条件，由dict的key/value指定过滤字段名和值
+
+        :returns: 虚拟机磁盘列表
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
@@ -75,12 +109,17 @@ class Client(BaseClient):
 
     def DescribeInstanceNetworkInterfaces(self, iid, limit=0, offset=0,
                                                 filters=None):
-        """
-        List all network interfaces of an instance
-        iid: string, ID of instance
-        limit: integer, maximal returned items
-        offset: integer, offset of returned items
-        filters: dict, filter conditions
+        """ 获取指定虚拟机的网络接口（虚拟网卡）信息
+
+        :param iid: 虚拟机ID
+        :type iid: string
+        :param limit: 最大返回数量，用于分页控制
+        :type limit: int
+        :param offset: 返回的偏移量，用于分页控制
+        :type offset: int
+        :param filters: 返回结果过滤条件，由dict的key/value指定过滤字段名和值
+
+        :returns: 虚拟机网络接口列表
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
@@ -89,10 +128,12 @@ class Client(BaseClient):
         return val['InstanceNetworkInterfaceSet']
 
     def RenewInstance(self, iid, duration=None):
-        """
-        Renew instance
-        iid: string, ID of instance
-        duration: string, renew duration, default is 1M
+        """ 虚拟机租期续费
+
+        :param iid: 虚拟机ID
+        :type iid: string
+        :param duration: 续费租期，缺省为'1M'，即一个月
+        :type duration: string
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
@@ -104,9 +145,12 @@ class Client(BaseClient):
         self.request(**kwargs)
 
     def GetInstanceContractInfo(self, iid):
-        """
-        Get contract information of an instance
-        iid: string, id of instance
+        """ 获取虚拟机的租期信息
+
+        :param iid: 虚拟机ID
+        :type iid: string
+
+        :returns: 虚拟机租期信息，包含过期时间、自动删除时间
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
@@ -114,8 +158,20 @@ class Client(BaseClient):
 
     def CreateInstance(self, imageid, itype, duration=None, name=None,
             keypair=None):
-        """
-        Create an instance
+        """ 创建虚拟机
+
+        :param imageid: 系统模板ID
+        :type imageid: string
+        :param itype: 虚拟机类型ID
+        :type itype: string
+        :param duration: 虚拟机租期, 缺省为'1M'，即一个月
+        :type duration: string
+        :param name: 虚拟机名称(可选)
+        :type name: string
+        :param keypair: 虚拟机使用的SSH密钥ID
+        :type keypair: string
+
+        :returns: 创建成功的虚拟机信息
         """
         kwargs = {}
         kwargs['ImageId'] = imageid
@@ -133,8 +189,12 @@ class Client(BaseClient):
         return val['Instance']
 
     def DescribeInstanceStatus(self, iid):
-        """
-        Get status of an instance
+        """ 获取虚拟机的状态
+
+        :param iid: 虚拟机ID
+        :type iid: string
+
+        :returns: 虚拟机状态字符串
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
@@ -142,8 +202,14 @@ class Client(BaseClient):
         return val['InstanceStatus']
 
     def GetPasswordData(self, iid, key_file=None):
-        """
-        Get password data of an instance
+        """ 获取虚拟机的Login帐户信息
+
+        :param iid: 虚拟机ID
+        :type iid: string
+        :param key_file: 私钥文件路径，路过虚拟机使用了SSH密钥，需要指定私钥解密password
+        :type key_file: string
+
+        :returns: 虚拟机Login信息，包含帐户名称、密码，如果使用SSH密钥，则还包含密钥名称
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
@@ -160,16 +226,22 @@ class Client(BaseClient):
         return val
 
     def StartInstance(self, iid):
-        """
-        Start an instance
+        """ 启动虚拟机
+
+        :param iid: 虚拟机ID
+        :type iid: string
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
         self.request(**kwargs)
 
     def StopInstance(self, iid, force=False):
-        """
-        Stop an instance
+        """ 停止虚拟机
+
+        :param iid: 虚拟机ID
+        :type iid: string
+        :param force: 是否强制停止虚拟机
+        :type param: bool
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
@@ -178,24 +250,32 @@ class Client(BaseClient):
         self.request(**kwargs)
 
     def RebootInstance(self, iid):
-        """
-        Reboot an instance
+        """ 重启虚拟机
+
+        :param iid: 虚拟机ID
+        :type iid: string
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
         self.request(**kwargs)
 
     def TerminateInstance(self, iid):
-        """
-        Terminate an instance
+        """ 删除虚拟机
+
+        :param iid: 虚拟机ID
+        :type iid: string
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
         self.request(**kwargs)
 
     def RebuildInstanceRootImage(self, iid, image_id=None):
-        """
-        Rebuild root image of an instance
+        """ 重置虚拟机系统磁盘
+
+        :param iid: 虚拟机ID
+        :type iid: string
+        :param image_id: 将虚拟机系统磁盘用指定镜像模板重置，如果无该参数，则使用原镜像模板重置
+        :type image_id: string
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
@@ -204,8 +284,14 @@ class Client(BaseClient):
         self.request(**kwargs)
 
     def ChangeInstanceType(self, iid, itype, duration=None):
-        """
-        Change instance type
+        """ 更改虚拟机类型
+
+        :param iid: 虚拟机ID
+        :type iid: string
+        :param itype: 指定更改的虚拟机类型
+        :type itype: string
+        :param duration: 指定更改后的初始租期，缺省为'1M'，即一个月
+        :type duration: string
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
@@ -218,8 +304,12 @@ class Client(BaseClient):
         self.request(**kwargs)
 
     def GetInstanceMetadata(self, iid):
-        """
-        Get metadata of an instance
+        """ 获取虚拟机的metadata
+
+        :param iid: 虚拟机ID
+        :type iid: string
+
+        :returns: 一个dict包含虚拟机所有metadata的key/value
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
@@ -227,8 +317,12 @@ class Client(BaseClient):
         return val['InstanceMetadata']
 
     def PutInstanceMetadata(self, iid, data):
-        """
-        Save metadata of an instance
+        """ 修改虚拟机的metadata
+
+        :param iid: 虚拟机ID
+        :type iid: string
+        :param data: 需要增加或修改的metadata信息
+        :type data: dict
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
@@ -242,8 +336,16 @@ class Client(BaseClient):
         self.request(**kwargs)
 
     def DescribeKeyPairs(self, limit=0, offset=0, filters=None):
-        """
-        List all keypairs
+        """ 获取用户的SSH密钥对
+
+        :param limit: 最大返回数量，用于分页控制
+        :type limit: int
+        :param offset: 返回偏移量，用于分页控制
+        :type offset: int
+        :param filters: 过滤条件，key/value分别指定过滤字段名称和值，支持的字段名称为：name
+        :type filters: dict
+
+        :returns: SSH密钥对列表
         """
         kwargs = {}
         self.parse_list_params(limit, offset, filters, kwargs)
@@ -251,8 +353,14 @@ class Client(BaseClient):
         return val['KeyPairSet']
 
     def ImportKeyPair(self, name, pubkey):
-        """
-        Import SSH keypair
+        """ 导入一个用户的SSH公钥，并创建一个SSH密钥对
+
+        :param name: 密钥对名称
+        :type name: string
+        :param pubkey: SSH公钥信息
+        :type pubkey: string
+
+        :returns: 创建的SSH密钥对信息
         """
         kwargs = {}
         kwargs['KeyName'] = name
@@ -261,8 +369,10 @@ class Client(BaseClient):
         return val['KeyPair']
 
     def DeleteKeyPair(self, kid):
-        """
-        Delete SSH keypair
+        """ 删除一个SSH密钥对
+
+        :param kid: 密钥对ID
+        :type kid: string
         """
         kwargs = {}
         kwargs['KeyName'] = kid
