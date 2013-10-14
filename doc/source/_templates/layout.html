@@ -1,47 +1,11 @@
 {% extends "!layout.html" %}
 
 {% block footer %}
-<footer>
-    <div class="nav text-font">
-    <span><a href="/doc/faq">常见问题</a></span>
-    <span class='spliter'>|</span>
-    <span><a href="/doc/icp-reg">备案服务</a></span>
-    <span class='spliter'>|</span>
-    <span><a href="/doc/about">联系我们</a></span>
-    <span class='spliter'>|</span>
-    <span><a href="/doc/about">关于</a></span>
-    </div>
-    <span class='footer-text'>
-    <p style='margin-top: 0px;'>©
-    <span id='year' title="b02">2013</span>
-    <span ><a href="https://mos.meituan.com">美团开放服务</a> meituan.com <a href="http://www.miibeian.gov.cn/" target="_blank">京ICP证070791号</a></span>
-    </p>
-    <p style='margin-top: -10px;'>京公网安备110105002099号<a href="http://www.meituan.com/about/rules" target="_blank"> 电子公告服务规则</a></p>
-    </span>
-</footer>
-{% endblock %}
-
-{% block header %}
-<div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-inner">
-    <div class="container">
-    <a class="brand" href="/">MOS</a>
-    <div class="nav-collapse collapse">
-    <ul class="nav nav-main">
-    <li><a href="/">首页</a></li>
-    <li class="active" ><a href="/">文档</a></li>
-    </ul>
-    </div><!--/.nav-collapse -->
-    </div>
-    </div>
-</div>
 {% endblock %}
 
 {% block extrahead %}
-<link rel="stylesheet" media="screen" href="http://mos.meituan.com/media/css/bootstrap.css?v=659a7" />
-<link rel="stylesheet" media="screen" href="http://mos.meituan.com/media/css/font-awesome.min.css?v=7fbe7" />
-<link rel="stylesheet" media="screen" href="http://mos.meituan.com/media/css/button.css?v=c4384" />
-<link rel="stylesheet" media="screen" href="http://mos.meituan.com/media/css/base.css?v=7292e" />
+{% endblock %}
+{% block header %}
 {% endblock %}
 
 {% block rootrellink %}{% endblock %}
@@ -49,6 +13,7 @@
 {% block sidebarsourcelink %}{% endblock %}
 {% block sidebar1 %}{% endblock %}
 {% block relbar1 %}{% endblock %}
+{% block relbar2 %}{% endblock %}
 
 {% block sidebartoc %}
     <h3><a href="{{ pathto(master_doc) }}">{{ _('Table Of Contents') }}</a></h3>
