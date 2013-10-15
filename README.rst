@@ -6,10 +6,11 @@ MCS API Python SDK及客户端
 安装
 ----
 
-从本站下载mcsapi\_python代码，解压，进入目录执行下述命令安装。将安装客户端可执行文件climos以及相应的python
-library。
+从 `github下载mcsapi\_python <https://github.com/meituan/mcsapi_python/archive/master.zip>`_ 代码并解压，或者执行如下命令获取源码::
 
-::
+    git clone https://github.com/meituan/mcsapi_python
+
+进入mcsapi_python目录执行下述命令安装客户端可执行文件climos以及相应的python SDK::
 
     python setup.py install
 
