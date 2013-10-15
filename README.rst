@@ -14,8 +14,7 @@ MCS API Python SDK及客户端
 
     python setup.py install
 
-访问"`MOS管理界面 <https://mos.meituan.com>`_"的
-"`帐户-个人设置 <https://mos.meituan.com/dashboard/account#profile>`_"
+访问MOS管理界面的"`帐户-个人设置 <https://mos.meituan.com/dashboard/account#profile>`_"
 页面获得API入口URL、ACCESS Key和Secret。
 
 使用Python SDK

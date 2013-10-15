@@ -39,7 +39,7 @@ class Client(BaseClient):
         :type offset: int
         :param filters: 过滤条件，key/value分别指定过滤字段名称和值，支持的字段名称为：name, status
         :type filters: dict
-        :returns: 系统支持的虚拟机类型列表
+        :returns: InstanceTypeSet，包含系统支持的虚拟机类型列表
         """
         kwargs = {}
         self.parse_list_params(limit, offset, filters, kwargs)
@@ -57,7 +57,7 @@ class Client(BaseClient):
     def GetBalance(self):
         """ 获取帐户余额
 
-        :returns: 帐户余额
+        :returns: 帐户余额和最近更新时间
         """
         val = self.request()
         return val
@@ -77,7 +77,7 @@ class Client(BaseClient):
         :param filters: 过滤器，一个dict，包含过滤字段名和值，可能过滤字段为：name, status 
         :type filters: dict
 
-        :returns: 虚拟机列表
+        :returns: InstanceSet，包含虚拟机列表
         """
         kwargs = {}
         if isinstance(ids, list) and len(ids) > 0:
@@ -99,7 +99,7 @@ class Client(BaseClient):
         :type offset: int
         :param filters: 返回结果过滤条件，由dict的key/value指定过滤字段名和值
 
-        :returns: 虚拟机磁盘列表
+        :returns: InstanceVolumeSet，包含虚拟机磁盘列表
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
@@ -119,7 +119,7 @@ class Client(BaseClient):
         :type offset: int
         :param filters: 返回结果过滤条件，由dict的key/value指定过滤字段名和值
 
-        :returns: 虚拟机网络接口列表
+        :returns: InstanceNetworkInterfaceSet，包含虚拟机网络接口列表
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
@@ -209,7 +209,7 @@ class Client(BaseClient):
         :param key_file: 私钥文件路径，路过虚拟机使用了SSH密钥，需要指定私钥解密password
         :type key_file: string
 
-        :returns: 虚拟机Login信息，包含帐户名称、密码，如果使用SSH密钥，则还包含密钥名称
+        :returns: 虚拟机Login信息，包含帐户名称、密码，如果使用SSH密钥，则还包含密钥ID和名称
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
@@ -345,7 +345,7 @@ class Client(BaseClient):
         :param filters: 过滤条件，key/value分别指定过滤字段名称和值，支持的字段名称为：name
         :type filters: dict
 
-        :returns: SSH密钥对列表
+        :returns: KeyPairSet, 包含SSH密钥对列表
         """
         kwargs = {}
         self.parse_list_params(limit, offset, filters, kwargs)
