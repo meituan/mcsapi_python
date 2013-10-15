@@ -1,7 +1,7 @@
 MCS API Python SDK及客户端
 ==========================
 
-我们提供了方便调用MCS API的Python Library以及基于该Libary实现的客户端。
+我们提供了方便调用MCS API的Python SDK以及基于该SDK实现的客户端。
 
 安装
 ----
@@ -13,14 +13,14 @@ library。
 
     python setup.py install
 
-访问 `MOS管理界面 <https://mos.meituan.com>`_ 的
-`帐户-个人设置 <https://mos.meituan.com/dashboard/account#profile>`_
+访问"`MOS管理界面 <https://mos.meituan.com>`_"的
+"`帐户-个人设置 <https://mos.meituan.com/dashboard/account#profile>`_"
 页面获得API入口URL、ACCESS Key和Secret。
 
 使用Python SDK
 --------------
 
-通过mosclient.client.Client生成客户端实例，API接口实现参见mosclient/v1/client.py。
+通过mosclient.client.Client生成客户端实例，API接口说明实现参见":doc:`mosclient/v1/client.py文档 <client>`"。
 
 示例代码如下：
 
@@ -37,6 +37,7 @@ library。
 
         balance = cli.GetBalance()
         print balance
+
 
 使用Python客户端
 ----------------
