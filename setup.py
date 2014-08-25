@@ -10,9 +10,9 @@ setuptools.setup(
     name="python-mosclient",
     version='0.1.20130719',
     description="Client library for Meituan Cloud Platform EC2 API",
-    url='http://wiki.sankuai.com/pages/viewpage.action?pageId=71732595',
-    author='Qiu Jian',
-    author_email='qiujian@meituan.com',
+    url='https://mos.meituan.com/docs/index.html',
+    author='Meituan Open Services',
+    author_email='mos@meituan.com',
     packages=setuptools.find_packages(exclude=['tests', 'tests.*']),
     classifiers=[
         'Development Status :: 4 - Beta',
