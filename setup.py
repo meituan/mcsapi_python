@@ -1,5 +1,3 @@
-import os
-import sys
 import setuptools
 
 from mosclient.common import setuputils
@@ -8,7 +6,7 @@ requires = setuputils.parse_requirements()
 
 setuptools.setup(
     name="python-mosclient",
-    version='0.1.20130719',
+    version='0.1.20140825',
     description="Client library for Meituan Cloud Platform EC2 API",
     url='https://mos.meituan.com/docs/index.html',
     author='Meituan Open Services',
