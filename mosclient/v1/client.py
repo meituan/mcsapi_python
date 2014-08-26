@@ -387,15 +387,15 @@ class Client(BaseClient):
         self.request(**kwargs)
 
     def SaveInstanceImage(self, iid, name, public=False, useid=None):
-        """ 保存虚拟机的镜像
+        """ 保存虚拟机的模板
 
         :param iid: 虚拟机ID
         :type iid: string
-        :param name: 镜像名称
+        :param name: 模板名称
         :type name: string
         :param public: 是否为公共
         :type public: bool
-        :param useid: 保存镜像使用的指定ID
+        :param useid: 保存模板使用的指定ID
         :type useid: string
         """
         kwargs = {}
