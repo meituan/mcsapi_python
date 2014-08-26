@@ -170,7 +170,7 @@ class Client(BaseClient):
         :type name: string
         :param keypair: 虚拟机使用的SSH密钥ID
         :type keypair: string
-        :param extra_ext_disksize: 指定创建虚拟机使用的额外磁盘
+        :param extra_ext_disksize: 指定创建虚拟机使用的额外数据盘
         :type extra_ext_disksize: int
         :param extra_ext_bandwidth: 指定创建虚拟机使用的额外带宽
         :type extra_ext_bandwidth: int
