@@ -157,7 +157,7 @@ class Client(BaseClient):
         return self.request(**kwargs)
 
     def CreateInstance(self, imageid, itype, duration=None, name=None,
-            keypair=None, extra_ext_disksize=None, extra_ext_bandwidth=None):
+            keypair=None, datadisk=None, bandwidth=None):
         """ 创建虚拟机
 
         :param imageid: 系统模板ID
@@ -170,10 +170,10 @@ class Client(BaseClient):
         :type name: string
         :param keypair: 虚拟机使用的SSH密钥ID
         :type keypair: string
-        :param extra_ext_disksize: 指定创建虚拟机使用的额外数据盘
-        :type extra_ext_disksize: int
-        :param extra_ext_bandwidth: 指定创建虚拟机使用的额外带宽
-        :type extra_ext_bandwidth: int
+        :param datadisk: 指定创建虚拟机使用的额外数据盘
+        :type datadisk: int
+        :param bandwidth: 指定创建虚拟机使用的额外带宽
+        :type bandwidth: int
 
         :returns: 创建成功的虚拟机信息
         """
@@ -189,10 +189,10 @@ class Client(BaseClient):
             kwargs['InstanceName'] = name
         if keypair is not None:
             kwargs['KeyName'] = keypair
-        if extra_ext_disksize is not None:
-            kwargs['ExtraExtDisksize'] = extra_ext_disksize
-        if extra_ext_bandwidth is not None:
-            kwargs['ExtraExtBandwidth'] = extra_ext_bandwidth
+        if datadisk is not None:
+            kwargs['ExtraExtDisksize'] = datadisk
+        if bandwidth is not None:
+            kwargs['ExtraExtBandwidth'] = bandwidth
         val = self.request(**kwargs)
         return val['Instance']
 

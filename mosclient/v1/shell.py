@@ -50,8 +50,8 @@ def do_CreateInstance(client, args):
                                 duration=args.duration,
                                 name=args.name,
                                 keypair=args.keypair,
-                                extra_ext_disksize=args.datadisk,
-                                extra_ext_bandwidth=args.bandwidth)
+                                datadisk=args.datadisk,
+                                bandwidth=args.bandwidth)
     utils.print_dict(val)
 
 
