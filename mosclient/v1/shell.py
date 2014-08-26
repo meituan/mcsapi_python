@@ -200,9 +200,8 @@ def do_DeleteKeyPair(client, args):
 
 utils.arg('id', metavar='<ID>', help='ID of instance')
 utils.arg('name', metavar='<NAME>', help='Name of image')
-utils.arg('--public', action='store_true', help='the saved image publicly available')
 utils.arg('--useid', metavar='<USE_IMAGE_ID>', help='Saved image use specified ID')
 def do_SaveInstanceImage(client, args):
     """Save root disk to new image and upload to glance."""
-    val = client.SaveInstanceImage(args.id, args.name, public=args.public, use_id=args.useid)
+    val = client.SaveInstanceImage(args.id, args.name, use_id=args.useid)
     utils.print_dict(val)
