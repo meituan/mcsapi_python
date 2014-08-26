@@ -1,3 +1,4 @@
+import sys
 from mosclient.common import utils
 
 
@@ -41,12 +42,16 @@ def do_GetInstanceContractInfo(client, args):
 @utils.arg('--duration', metavar='<DURATION>', help='Reserved instance duration, in H or M, e.g. 72H, 1M')
 @utils.arg('--name', metavar='<NAME>', help='Optional instance name')
 @utils.arg('--keypair', metavar='<KEYPAIR>', help='SSH key pair name')
+@utils.arg('--extra-ext-disksize', metavar='<DISKSIZE>', type=int, help='Extra disksize in GB')
+@utils.arg('--extra-ext-bandwidth', metavar='<BANDWIDTH>', type=int, help='Extra external bandwidth in Mbps')
 def do_CreateInstance(client, args):
     """ Create servers """
     val = client.CreateInstance(args.image, args.instance_type,
                                 duration=args.duration,
                                 name=args.name,
-                                keypair=args.keypair)
+                                keypair=args.keypair,
+                                extra_ext_disksize=args.extra_ext_disksize,
+                                extra_ext_bandwidth=args.extra_ext_bandwidth)
     utils.print_dict(val)
 
 

@@ -38,7 +38,7 @@ class BaseClient(object):
             host = host[:host.rfind(':')]
         path = req.path
         if req.path == '':
-            path = '/'   
+            path = '/'
         cred_dict = {
             'access': self.access,
             'host': host,
@@ -106,7 +106,7 @@ class BaseClient(object):
             fidx = 1
             for k, vs in filters.iteritems():
                 kwargs['Filter.%d.Name' % fidx] = k
-                if not isinstance(v, list):
+                if not isinstance(vs, list):
                     vs = [vs]
                 vidx = 1
                 for v in vs:

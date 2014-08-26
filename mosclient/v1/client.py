@@ -74,7 +74,7 @@ class Client(BaseClient):
         :type limit: int
         :param offset: 返回虚拟机的偏移量，用于分页显示
         :type offset: int
-        :param filters: 过滤器，一个dict，包含过滤字段名和值，可能过滤字段为：name, status 
+        :param filters: 过滤器，一个dict，包含过滤字段名和值，可能过滤字段为：name, status
         :type filters: dict
 
         :returns: InstanceSet，包含虚拟机列表
@@ -157,7 +157,7 @@ class Client(BaseClient):
         return self.request(**kwargs)
 
     def CreateInstance(self, imageid, itype, duration=None, name=None,
-            keypair=None):
+            keypair=None, extra_ext_disksize=None, extra_ext_bandwidth=None):
         """ 创建虚拟机
 
         :param imageid: 系统模板ID
@@ -170,6 +170,10 @@ class Client(BaseClient):
         :type name: string
         :param keypair: 虚拟机使用的SSH密钥ID
         :type keypair: string
+        :param extra_ext_disksize: 指定创建虚拟机使用的额外磁盘
+        :type extra_ext_disksize: int
+        :param extra_ext_bandwidth: 指定创建虚拟机使用的额外带宽
+        :type extra_ext_bandwidth: int
 
         :returns: 创建成功的虚拟机信息
         """
@@ -185,6 +189,10 @@ class Client(BaseClient):
             kwargs['InstanceName'] = name
         if keypair is not None:
             kwargs['KeyName'] = keypair
+        if extra_ext_disksize is not None:
+            kwargs['ExtraExtDisksize'] = extra_ext_disksize
+        if extra_ext_bandwidth is not None:
+            kwargs['ExtraExtBandwidth'] = extra_ext_bandwidth
         val = self.request(**kwargs)
         return val['Instance']
 
