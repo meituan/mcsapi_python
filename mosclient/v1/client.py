@@ -385,3 +385,25 @@ class Client(BaseClient):
         kwargs = {}
         kwargs['KeyName'] = kid
         self.request(**kwargs)
+
+    def SaveInstanceImage(self, iid, name, public=False, useid=None):
+        """ 保存虚拟机的镜像
+
+        :param iid: 虚拟机ID
+        :type iid: string
+        :param name: 镜像名称
+        :type name: string
+        :param public: 是否为公共
+        :type public: bool
+        :param useid: 保存镜像使用的指定ID
+        :type useid: string
+        """
+        kwargs = {}
+        kwargs['InstanceId'] = iid
+        kwargs['Name'] = name
+        if public:
+            kwargs['Public'] = public
+        if useid is not None:
+            kwargs['UseId'] = useid
+        val = self.request(**kwargs)
+        return val
