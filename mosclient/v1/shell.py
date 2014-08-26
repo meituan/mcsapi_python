@@ -196,3 +196,81 @@ def do_ImportKeyPair(client, args):
 def do_DeleteKeyPair(client, args):
     """ Delete a keypair """
     client.DeleteKeyPair(args.id)
+
+
+@utils.arg('id', metavar='<ID>', help='ID of instance')
+def do_ListMetrics(client, args):
+    """List monitor metrics"""
+    val = client.ListMetrics(args.id)
+    utils.print_list(val, 'Metric')
+
+
+@utils.arg('id', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_DescribeAlarmHistory(client, args):
+    """List monitor alarm history"""
+    val = client.DescribeAlarmHistory(args.id)
+    utils.print_list(val, 'AlarmHistory')
+
+
+@utils.arg('--server-id', metavar='<SERVER>', required=True, help='Server ID')
+@utils.arg('--metric', metavar='<METRIC>', required=True, help='Metric Name')
+@utils.arg('--threshold', metavar='<THRESHOLD>', required=True, help='Threshold')
+@utils.arg('--operator', metavar='<OPERATOR>', choices=['GT', 'EQ', 'LT'], required=True, help='Operator')
+def do_CreateMetricAlarm(client, args):
+    """Create metric check monitor"""
+    val = client.CreateMetricAlarm(args.server_id, args.metric, args.operator, args.threshold)
+    utils.print_dict(val)
+
+
+def do_DescribeMetricAlarm(client, args):
+    """List metric check"""
+    val = client.DescribeMetricAlarm()
+    utils.print_list(val, 'MetricAlarm')
+
+
+@utils.arg('id', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_DeleteMetricAlarm(client, args):
+    """Delete metric check"""
+    val = client.DeleteMetricAlarm(args.id)
+    utils.print_dict(val)
+
+
+@utils.arg('--server-id', metavar='<SERVER>', required=True, help='Server ID')
+def do_CreateAliveAlarm(client, args):
+    """Create alive check"""
+    val = client.CreateAliveAlarm(args.server_id)
+    utils.print_dict(val)
+
+
+def do_DescribeAliveAlarm(client, args):
+    """List alive check"""
+    val = client.DescribeAliveAlarm()
+    utils.print_list(val, 'AliveAlarm')
+
+
+@utils.arg('id', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_DeleteAliveAlarm(client, args):
+    """Delete alive check"""
+    val = client.DeleteAliveAlarm(args.id)
+    utils.print_dict(val)
+
+
+@utils.arg('--server-id', metavar='<SERVER>', required=True, help='Server ID')
+@utils.arg('--tcp-port', metavar='<PORT>', required=True, help='TCP port')
+def do_CreateTCPAlarm(client, args):
+    """Create tcp check"""
+    val = client.CreateTCPAlarm(args.server_id, args.tcp_port)
+    utils.print_dict(val)
+
+
+def do_DescribeTCPAlarm(client, args):
+    """List tcp check"""
+    val = client.DescribeTCPAlarm()
+    utils.print_list(val, 'TCPAlarm')
+
+
+@utils.arg('id', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_DeleteTCPAlarm(client, args):
+    """Delete tcp check"""
+    val = client.DeleteTCPAlarm(args.id)
+    utils.print_dict(val)
