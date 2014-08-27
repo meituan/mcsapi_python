@@ -46,6 +46,16 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val['InstanceTypeSet']
 
+    def DescribeNotifyQuotas(self, **kwargs):
+        """ 获得某月短信的配额和使用情况
+
+        :param ymonth: 指定月份，UTC时间，格式是yyyy-mm
+        :type ymonth: string
+        :returns: NotifyQuotaSet，某月短信的配额和使用情况列表
+        """
+        val = self.request(**kwargs)
+        return val['NotifyQuotaSet']
+
     def DescribeTemplates(self):
         """ 获得所有虚拟机模板
 

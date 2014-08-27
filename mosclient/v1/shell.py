@@ -10,6 +10,14 @@ def do_DescribeInstanceTypes(client, args):
     val = client.DescribeInstanceTypes(args.limit, args.offset, utils.convert_filter(args.filter))
     utils.print_list(val, 'InstanceType')
 
+@utils.arg('--ymonth', metavar='<YMONTH>', help='List quota of specified month(UTC date), usage: yyyy-mm')
+def do_DescribeNotifyQuotas(client, args):
+    """ List SMS quotas"""
+    kwargs = {}
+    if args.ymonth is not None:
+        kwargs['YMonth'] = args.ymonth
+    val = client.DescribeNotifyQuotas(**kwargs)
+    utils.print_list(val, 'NotifyQuota')
 
 def do_DescribeTemplates(client, args):
     """ List all image templates """
