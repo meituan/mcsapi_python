@@ -30,6 +30,33 @@ class Client(BaseClient):
     :type debug: bool
     """
 
+    def DescribeNotifyItems(self, item=None):
+        """ 获得所有或者某个通知服务项的通知方式
+
+        :param item: 指定通知服务项，否则获得所有通知服务项的通知方式
+        :type item: string
+        :returns: NotifyItemSet，当前通知服务项所使用的通知方式列表
+        """
+        kwargs = {}
+        if item is not None:
+            kwargs['Item'] = item
+        val = self.request(**kwargs)
+        return val['NotifyItemSet']
+
+    def UpdateNotifyItem(self, **kwargs):
+        """ 更新指定通知服务的通知方式
+
+        :param item: 指定所需要更新的通知服务项
+        :type item: string
+        :param email: 开启(on)或者关闭(off)邮件通知方式
+        :choices email: on, off
+        :param sms: 开启(on)或者关闭(off)短信通知方式
+        :choices sms: on, off
+        :returns: NotifyItem，更新后通知服务项所采用的通知方式
+        """
+        val = self.request(**kwargs)
+        return val['NotifyItem']
+
     def DescribeInstanceTypes(self, limit=0, offset=0, filters=None):
         """ 获取所有虚拟机类型
 
@@ -157,7 +184,8 @@ class Client(BaseClient):
         return self.request(**kwargs)
 
     def CreateInstance(self, imageid, itype, duration=None, name=None,
-            keypair=None, datadisk=None, bandwidth=None):
+            keypair=None, datadisk=None, bandwidth=None,
+            high_perf_storage=False):
         """ 创建虚拟机
 
         :param imageid: 系统模板ID

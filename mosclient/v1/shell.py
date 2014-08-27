@@ -10,6 +10,23 @@ def do_DescribeInstanceTypes(client, args):
     val = client.DescribeInstanceTypes(args.limit, args.offset, utils.convert_filter(args.filter))
     utils.print_list(val, 'InstanceType')
 
+@utils.arg('--item', metavar='<ITEM>', help='List channel of specified notify item')
+def do_DescribeNotifyItems(client, args):
+    """ List all notify items"""
+    val = client.DescribeNotifyItems(args.item)
+    utils.print_list(val, 'NotifyItem')
+
+@utils.arg('item', metavar='<ITEM>', help='Update channel of specified item')
+@utils.arg('--email', metavar='<EMAIL>', choices=['on', 'off'], help='Email is switched on or off')
+@utils.arg('--sms', metavar='<SMS>', choices=['on', 'off'], help='SMS is switched on or off')
+def do_UpdateNotifyItem(client, args):
+    kwargs = {'Item': args.item}
+    if args.email is not None:
+        kwargs['Email'] = args.email
+    if args.sms is not None:
+        kwargs['SMS'] = args.sms
+    val = client.UpdateNotifyItem(**kwargs)
+    utils.print_dict(val)
 
 def do_DescribeTemplates(client, args):
     """ List all image templates """
