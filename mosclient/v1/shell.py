@@ -44,6 +44,7 @@ def do_GetInstanceContractInfo(client, args):
 @utils.arg('--keypair', metavar='<KEYPAIR>', help='SSH key pair name')
 @utils.arg('--datadisk', metavar='<DISKSIZE>', type=int, help='Extra disksize in GB')
 @utils.arg('--bandwidth', metavar='<BANDWIDTH>', type=int, help='Extra external bandwidth in Mbps')
+@utils.arg('--high-perf-storage', action='store_true', help='Instance run on high performance storage system')
 def do_CreateInstance(client, args):
     """ Create servers """
     val = client.CreateInstance(args.image, args.instance_type,
@@ -51,7 +52,8 @@ def do_CreateInstance(client, args):
                                 name=args.name,
                                 keypair=args.keypair,
                                 datadisk=args.datadisk,
-                                bandwidth=args.bandwidth)
+                                bandwidth=args.bandwidth,
+                                high_perf_storage=args.high_perf_storage)
     utils.print_dict(val)
 
 

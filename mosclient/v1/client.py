@@ -157,7 +157,8 @@ class Client(BaseClient):
         return self.request(**kwargs)
 
     def CreateInstance(self, imageid, itype, duration=None, name=None,
-            keypair=None, datadisk=None, bandwidth=None):
+            keypair=None, datadisk=None, bandwidth=None,
+            high_perf_storage=False):
         """ 创建虚拟机
 
         :param imageid: 系统模板ID
@@ -174,6 +175,8 @@ class Client(BaseClient):
         :type datadisk: int
         :param bandwidth: 指定创建虚拟机使用的额外带宽
         :type bandwidth: int
+        :param high_perf_storage: 指定创建高性能存储的虚拟机
+        :action high_perf_storage: store_true
 
         :returns: 创建成功的虚拟机信息
         """
@@ -193,6 +196,10 @@ class Client(BaseClient):
             kwargs['ExtraExtDisksize'] = datadisk
         if bandwidth is not None:
             kwargs['ExtraExtBandwidth'] = bandwidth
+        if high_perf_storage:
+            kwargs['HighPerfStorage'] = True
+        else:
+            kwargs['HighPerfStorage'] = False
         val = self.request(**kwargs)
         return val['Instance']
 
