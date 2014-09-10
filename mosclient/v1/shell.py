@@ -196,3 +196,13 @@ def do_ImportKeyPair(client, args):
 def do_DeleteKeyPair(client, args):
     """ Delete a keypair """
     client.DeleteKeyPair(args.id)
+
+
+@utils.arg('id', metavar='<ID>', help='ID of instance')
+@utils.arg('name', metavar='<NAME>', help='Name of image')
+@utils.arg('--useid', metavar='<USE_IMAGE_ID>', help='Saved image use specified ID')
+@utils.arg('--notes', metavar='<NOTES>', help='Notes')
+def do_SaveInstanceImage(client, args):
+    """Save root disk to new image and upload to glance."""
+    val = client.SaveInstanceImage(args.id, args.name, useid=args.useid, notes=args.notes)
+    utils.print_dict(val)
