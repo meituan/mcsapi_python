@@ -1,0 +1,36 @@
+# Cloud climos completation
+
+_climos()
+{
+    CLIENT_FILE="/etc/bash_completion.d/helpers/climos.options"
+	local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    second="${COMP_WORDS[1]}"
+	count=0
+	while read line
+	do
+		all_opts[count]=${line%#*}
+		sub_opts[count]=${line#*#}
+		((count++))
+	done<${CLIENT_FILE}
+	if [[ ${COMP_CWORD} -eq 1 ]]; then
+        COMPREPLY=( $(compgen -W "${all_opts[*]}" -- ${cur}) )
+    fi
+
+    # Complete sub-commands
+	item=0
+	for key in ${all_opts[*]}
+	do
+		case "${second}" in
+			$key)
+			COMPREPLY=( $(compgen -W "${sub_opts[item]}" -- ${cur}) )
+			;;
+            *)
+            ;;
+		esac
+		((item++))
+	done
+}
+    complete -F _climos climos

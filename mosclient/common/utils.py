@@ -1,6 +1,5 @@
 import sys
 import os
-import prettytable
 import urllib
 
 
@@ -61,6 +60,7 @@ def print_list(data, field, fields=None, formatters={}):
                 k = k.upper()
                 if k not in fields:
                     fields.append(k)
+    import prettytable
     pt = prettytable.PrettyTable(fields, caching=False)
     pt.align = 'l'
     data_fields_tbl = {}
@@ -89,6 +89,7 @@ def print_list(data, field, fields=None, formatters={}):
 
 
 def print_dict(d, key=None):
+    import prettytable
     pt = prettytable.PrettyTable(['Property', 'Value'], caching=False)
     pt.aligns = ['l', 'l']
     if not isinstance(d, dict):

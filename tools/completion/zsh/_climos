@@ -1,0 +1,37 @@
+#compdef climos
+
+_climmos(){
+	local curcontext="$curcontext" state line
+	typeset -A opt_args
+	CLIENT_FILE="/etc/bash_completion.d/helpers/climos.options"
+	count=1
+	while read line
+	do
+		all_opts[count]=${line%"#"*}
+		sub_opts[count]=${line#*"#"}
+		((count++))
+	done<${CLIENT_FILE}
+	_arguments \
+			'1: :->commands'\
+			'*: :->options'
+
+	case $state in
+		commands)
+		_arguments '1:Comm:(${all_opts[*]})'
+		;;
+		*)
+			item=1
+			for key in ${all_opts[*]}
+			do
+				case $words[2] in
+					$key)
+					compadd "$@" `echo $sub_opts[item]`
+					;;
+					*)
+					;;
+				esac
+				((item++))
+			done
+	esac
+}
+_climos "$@"
