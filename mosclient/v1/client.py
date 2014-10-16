@@ -170,9 +170,9 @@ class Client(BaseClient):
         :type name: string
         :param keypair: 虚拟机使用的SSH密钥ID
         :type keypair: string
-        :param datadisk: 指定创建虚拟机使用的额外数据盘
+        :param datadisk: 指定创建虚拟机使用的额外数据盘，单位为10GB
         :type datadisk: int
-        :param bandwidth: 指定创建虚拟机使用的额外带宽
+        :param bandwidth: 指定创建虚拟机使用的额外带宽，单位为Mbps
         :type bandwidth: int
 
         :returns: 创建成功的虚拟机信息
@@ -190,7 +190,7 @@ class Client(BaseClient):
         if keypair is not None:
             kwargs['KeyName'] = keypair
         if datadisk is not None:
-            kwargs['ExtraExtDisksize'] = datadisk
+            kwargs['ExtraExtDisksize'] = datadisk*10
         if bandwidth is not None:
             kwargs['ExtraExtBandwidth'] = bandwidth
         val = self.request(**kwargs)
