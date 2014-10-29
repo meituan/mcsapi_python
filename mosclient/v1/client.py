@@ -291,7 +291,8 @@ class Client(BaseClient):
             kwargs['ImageId'] = image_id
         self.request(**kwargs)
 
-    def ChangeInstanceType(self, iid, itype, duration=None):
+    def ChangeInstanceType(self, iid, itype, duration=None,
+                            datadisk=None, bandwidth=None):
         """ 更改虚拟机类型
 
         :param iid: 虚拟机ID
@@ -300,6 +301,11 @@ class Client(BaseClient):
         :type itype: string
         :param duration: 指定更改后的初始租期，缺省为'1M'，即一个月
         :type duration: string
+        :param datadisk: 指定创建虚拟机使用的额外数据盘，单位为10GB
+        :type datadisk: int
+        :param bandwidth: 指定创建虚拟机使用的额外带宽，单位为Mbps
+        :type bandwidth: int
+
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
@@ -309,6 +315,11 @@ class Client(BaseClient):
                 kwargs['Duration'] = duration
             else:
                 raise Exception('IIlegal duration format')
+        if datadisk is not None:
+            kwargs['ExtraExtDisksize'] = datadisk*10
+        if bandwidth is not None:
+            kwargs['ExtraExtBandwidth'] = bandwidth
+
         self.request(**kwargs)
 
     def GetInstanceMetadata(self, iid):
@@ -385,3 +396,25 @@ class Client(BaseClient):
         kwargs = {}
         kwargs['KeyName'] = kid
         self.request(**kwargs)
+
+    def SaveInstanceImage(self, iid, name, useid=None, notes=None):
+        """ 保存虚拟机的模板
+
+        :param iid: 虚拟机ID
+        :type iid: string
+        :param name: 模板名称
+        :type name: string
+        :param useid: 保存模板使用的指定ID
+        :type useid: string
+        :param notes: 保存模板的说明
+        :type notes: string
+        """
+        kwargs = {}
+        kwargs['InstanceId'] = iid
+        kwargs['Name'] = name
+        if useid is not None:
+            kwargs['UseId'] = useid
+        if notes is not None:
+            kwargs['Notes'] = notes
+        val = self.request(**kwargs)
+        return val

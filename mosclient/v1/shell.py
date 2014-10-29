@@ -136,9 +136,12 @@ def do_RebuildInstanceRootImage(client, args):
 @utils.arg('id', metavar='<ID>', help='ID of instance')
 @utils.arg('instance_type', metavar='<INSTANCE_TYPE>', help='Instance type')
 @utils.arg('--duration', metavar='<DURATION>', help='Reserved instance duration, in H or M, e.g. 72H, 1M')
+@utils.arg('--datadisk', metavar='<DISKSIZE>', required=True, type=int, help='Extra disksize in GB')
+@utils.arg('--bandwidth', metavar='<BANDWIDTH>', required=True, type=int, help='Extra external bandwidth in Mbps')
 def do_ChangeInstanceType(client, args):
     """ Change instance type """
-    client.ChangeInstanceType(args.id, args.instance_type, duration=args.duration)
+    client.ChangeInstanceType(args.id, args.instance_type, duration=args.duration,
+                              datadisk=args.datadisk, bandwidth=args.bandwidth)
 
 
 @utils.arg('id', metavar='<ID>', help='ID of instance')
@@ -196,3 +199,13 @@ def do_ImportKeyPair(client, args):
 def do_DeleteKeyPair(client, args):
     """ Delete a keypair """
     client.DeleteKeyPair(args.id)
+
+
+@utils.arg('id', metavar='<ID>', help='ID of instance')
+@utils.arg('name', metavar='<NAME>', help='Name of image')
+@utils.arg('--useid', metavar='<USE_IMAGE_ID>', help='Saved image use specified ID')
+@utils.arg('--notes', metavar='<NOTES>', help='Notes')
+def do_SaveInstanceImage(client, args):
+    """Save root disk to new image and upload to glance."""
+    val = client.SaveInstanceImage(args.id, args.name, useid=args.useid, notes=args.notes)
+    utils.print_dict(val)
