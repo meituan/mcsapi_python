@@ -42,7 +42,7 @@ def do_GetInstanceContractInfo(client, args):
 @utils.arg('--duration', metavar='<DURATION>', help='Reserved instance duration, in H or M, e.g. 72H, 1M')
 @utils.arg('--name', metavar='<NAME>', help='Optional instance name')
 @utils.arg('--keypair', metavar='<KEYPAIR>', help='SSH key pair name')
-@utils.arg('--datadisk', metavar='<DISKSIZE>', type=int, help='Extra disksize in GB')
+@utils.arg('--datadisk', metavar='<DISKSIZE>', type=int, help='Extra disksize in 10GB')
 @utils.arg('--bandwidth', metavar='<BANDWIDTH>', type=int, help='Extra external bandwidth in Mbps')
 def do_CreateInstance(client, args):
     """ Create servers """
@@ -136,7 +136,7 @@ def do_RebuildInstanceRootImage(client, args):
 @utils.arg('id', metavar='<ID>', help='ID of instance')
 @utils.arg('instance_type', metavar='<INSTANCE_TYPE>', help='Instance type')
 @utils.arg('--duration', metavar='<DURATION>', help='Reserved instance duration, in H or M, e.g. 72H, 1M')
-@utils.arg('--datadisk', metavar='<DISKSIZE>', required=True, type=int, help='Extra disksize in GB')
+@utils.arg('--datadisk', metavar='<DISKSIZE>', required=True, type=int, help='Extra disksize in 10GB')
 @utils.arg('--bandwidth', metavar='<BANDWIDTH>', required=True, type=int, help='Extra external bandwidth in Mbps')
 def do_ChangeInstanceType(client, args):
     """ Change instance type """
