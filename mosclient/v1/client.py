@@ -404,12 +404,10 @@ class Client(BaseClient):
         :type iid: string
         :param name: 模板名称
         :type name: string
-        :param useid: 保存模板使用的指定ID
-        :type useid: string
         :param notes: 保存模板的说明
         :type notes: string
 
-        :returns: 创建的模板信息
+        :returns:  请求是否成功
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
