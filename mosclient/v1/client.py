@@ -397,7 +397,7 @@ class Client(BaseClient):
         kwargs['KeyName'] = kid
         self.request(**kwargs)
 
-    def SaveInstanceImage(self, iid, name, useid=None, notes=None):
+    def CreateTemplate(self, iid, name, notes=None):
         """ 保存虚拟机的模板
 
         :param iid: 虚拟机ID
@@ -408,13 +408,24 @@ class Client(BaseClient):
         :type useid: string
         :param notes: 保存模板的说明
         :type notes: string
+
+        :returns: 创建的模板信息
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
         kwargs['Name'] = name
-        if useid is not None:
-            kwargs['UseId'] = useid
         if notes is not None:
             kwargs['Notes'] = notes
         val = self.request(**kwargs)
         return val
+
+    def DeleteTemplate(self, tid):
+        """ 删除一个模板
+
+        :param tid: 模板ID
+        :param tid: string
+        """
+
+        kwargs = {}
+        kwargs['TemplateId'] = tid
+        self.request(**kwargs)
