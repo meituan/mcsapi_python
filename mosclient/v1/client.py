@@ -170,9 +170,9 @@ class Client(BaseClient):
         :type name: string
         :param keypair: 虚拟机使用的SSH密钥ID
         :type keypair: string
-        :param datadisk: 指定创建虚拟机使用的额外数据盘
+        :param datadisk: 指定创建虚拟机使用的额外数据盘，单位为10GB
         :type datadisk: int
-        :param bandwidth: 指定创建虚拟机使用的额外带宽
+        :param bandwidth: 指定创建虚拟机使用的额外带宽，单位为Mbps
         :type bandwidth: int
 
         :returns: 创建成功的虚拟机信息
@@ -190,7 +190,7 @@ class Client(BaseClient):
         if keypair is not None:
             kwargs['KeyName'] = keypair
         if datadisk is not None:
-            kwargs['ExtraExtDisksize'] = datadisk
+            kwargs['ExtraExtDisksize'] = datadisk*10
         if bandwidth is not None:
             kwargs['ExtraExtBandwidth'] = bandwidth
         val = self.request(**kwargs)
@@ -291,7 +291,8 @@ class Client(BaseClient):
             kwargs['ImageId'] = image_id
         self.request(**kwargs)
 
-    def ChangeInstanceType(self, iid, itype, duration=None):
+    def ChangeInstanceType(self, iid, itype, duration=None,
+                            datadisk=None, bandwidth=None):
         """ 更改虚拟机类型
 
         :param iid: 虚拟机ID
@@ -300,6 +301,11 @@ class Client(BaseClient):
         :type itype: string
         :param duration: 指定更改后的初始租期，缺省为'1M'，即一个月
         :type duration: string
+        :param datadisk: 指定创建虚拟机使用的额外数据盘，单位为10GB
+        :type datadisk: int
+        :param bandwidth: 指定创建虚拟机使用的额外带宽，单位为Mbps
+        :type bandwidth: int
+
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
@@ -309,6 +315,11 @@ class Client(BaseClient):
                 kwargs['Duration'] = duration
             else:
                 raise Exception('IIlegal duration format')
+        if datadisk is not None:
+            kwargs['ExtraExtDisksize'] = datadisk*10
+        if bandwidth is not None:
+            kwargs['ExtraExtBandwidth'] = bandwidth
+
         self.request(**kwargs)
 
     def GetInstanceMetadata(self, iid):
@@ -385,6 +396,7 @@ class Client(BaseClient):
         kwargs = {}
         kwargs['KeyName'] = kid
         self.request(**kwargs)
+
 
     def ListMetrics(self, iid):
         """ 查看虚拟机监控项
@@ -509,3 +521,34 @@ class Client(BaseClient):
         kwargs['MonitorId'] = mid
         val = self.request(**kwargs)
         return val
+
+    def CreateTemplate(self, iid, name, notes=None):
+        """ 保存虚拟机的模板
+
+        :param iid: 虚拟机ID
+        :type iid: string
+        :param name: 模板名称
+        :type name: string
+        :param notes: 保存模板的说明
+        :type notes: string
+
+        :returns:  请求是否成功
+        """
+        kwargs = {}
+        kwargs['InstanceId'] = iid
+        kwargs['Name'] = name
+        if notes is not None:
+            kwargs['Notes'] = notes
+        val = self.request(**kwargs)
+        return val
+
+    def DeleteTemplate(self, tid):
+        """ 删除一个模板
+
+        :param tid: 模板ID
+        :param tid: string
+        """
+
+        kwargs = {}
+        kwargs['TemplateId'] = tid
+        self.request(**kwargs)

@@ -136,9 +136,12 @@ def do_RebuildInstanceRootImage(client, args):
 @utils.arg('id', metavar='<ID>', help='ID of instance')
 @utils.arg('instance_type', metavar='<INSTANCE_TYPE>', help='Instance type')
 @utils.arg('--duration', metavar='<DURATION>', help='Reserved instance duration, in H or M, e.g. 72H, 1M')
+@utils.arg('--datadisk', metavar='<DISKSIZE>', required=True, type=int, help='Extra disksize in GB')
+@utils.arg('--bandwidth', metavar='<BANDWIDTH>', required=True, type=int, help='Extra external bandwidth in Mbps')
 def do_ChangeInstanceType(client, args):
     """ Change instance type """
-    client.ChangeInstanceType(args.id, args.instance_type, duration=args.duration)
+    client.ChangeInstanceType(args.id, args.instance_type, duration=args.duration,
+                              datadisk=args.datadisk, bandwidth=args.bandwidth)
 
 
 @utils.arg('id', metavar='<ID>', help='ID of instance')
@@ -274,3 +277,17 @@ def do_DeleteTCPAlarm(client, args):
     """Delete tcp check"""
     val = client.DeleteTCPAlarm(args.id)
     utils.print_dict(val)
+
+
+@utils.arg('id', metavar='<INSTANCE_ID>', help='ID of tempalte')
+@utils.arg('name', metavar='<TEMPLATE_NAME>', help='Name of template')
+@utils.arg('--notes', metavar='<NOTES>', help='Template Notes')
+def do_CreateTemplate(client, args):
+    """Save root disk to new image and upload to glance."""
+    val = client.CreateTemplate(args.id, args.name, notes=args.notes)
+    utils.print_dict(val)
+
+@utils.arg('id', metavar='<TEMPLATE_ID>', help='ID of template')
+def do_DeleteTemplate(client, args):
+    """ Delete a template """
+    client.DeleteTemplate(args.id)
