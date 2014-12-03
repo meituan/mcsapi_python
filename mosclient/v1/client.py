@@ -398,7 +398,7 @@ class Client(BaseClient):
         self.request(**kwargs)
 
 
-    def ListMetrics(self, iid):
+    def ListMetrics(self, iid=None):
         """ 查看虚拟机监控项
 
         :param iid: 虚拟机ID
@@ -407,24 +407,30 @@ class Client(BaseClient):
         :returns: MetricSet，包含监控项列表
         """
         kwargs = {}
-        kwargs['InstanceId'] = iid
+        if iid:
+            kwargs['InstanceId'] = iid
         val = self.request(**kwargs)
         return val['MetricSet']
 
-    def DescribeAlarmHistory(self, mid):
+    def DescribeAlarmHistory(self, mid=None, iid=None):
         """ 查看监控告警历史
 
         :param mid: 监控项ID
         :type mid: string
+        :param iid: 虚拟机ID
+        :type iid: string
 
         :returns AlarmHistorySet，监控告警历史列表
         """
         kwargs = {}
-        kwargs['MonitorId'] = mid
+        if mid:
+            kwargs['MonitorId'] = mid
+        if iid:
+            kwargs['InstanceId'] = iid
         val = self.request(**kwargs)
         return val['AlarmHistorySet']
 
-    def CreateMetricAlarm(self, iid, metric, operator, threshold):
+    def CreateMetricAlarm(self, iid, metric, operator, threshold, description=None):
         """ 创建指标监控
 
         :param iid: 虚拟机ID
@@ -435,12 +441,16 @@ class Client(BaseClient):
         :type operator: string
         :param threshold: 监控阈值
         :type threshold: string
+        :param description: 描述
+        :type description: string
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
         kwargs['Metric'] = metric
         kwargs['Operator'] = operator
         kwargs['Threshold'] = threshold
+        if description:
+            kwargs['Description'] = description
         val = self.request(**kwargs)
         return val['MetricAlarm']
 
@@ -463,14 +473,40 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val
 
-    def CreateAliveAlarm(self, iid):
+    def DisableMetricAlarm(self, mid):
+        """ 禁用一个指标监控项
+
+        :param mid: 监控项ID
+        :type mid: string
+        """
+        kwargs = {}
+        kwargs['MonitorId'] = mid
+        val = self.request(**kwargs)
+        return val
+
+    def EnableMetricAlarm(self, mid):
+        """ 启用一个指标监控项
+
+        :param mid: 监控项ID
+        :type mid: string
+        """
+        kwargs = {}
+        kwargs['MonitorId'] = mid
+        val = self.request(**kwargs)
+        return val
+
+    def CreateAliveAlarm(self, iid, description=None):
         """ 创建主机存活监控
 
         :param iid: 虚拟机ID
         :type iid: string
+        :param description: 描述
+        :type description: string
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
+        if description:
+            kwargs['Description'] = description
         val = self.request(**kwargs)
         return val['AliveAlarm']
 
@@ -491,17 +527,43 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val
 
-    def CreateTCPAlarm(self, iid, port):
+    def DisableAliveAlarm(self, mid):
+        """ 禁用一个主机存活监控项
+
+        :param mid: 监控项ID
+        :type mid: string
+        """
+        kwargs = {}
+        kwargs['MonitorId'] = mid
+        val = self.request(**kwargs)
+        return val
+
+    def EnableAliveAlarm(self, mid):
+        """ 启用一个主机存活监控项
+
+        :param mid: 监控项ID
+        :type mid: string
+        """
+        kwargs = {}
+        kwargs['MonitorId'] = mid
+        val = self.request(**kwargs)
+        return val
+
+    def CreateTCPAlarm(self, iid, port, description=None):
         """ 创建TCP监控
 
         :param iid: 虚拟机ID
         :type iid: string
         :param port: tcp端口
         :type port: int
+        :param description: 描述
+        :type description: string
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
         kwargs['Port'] = port
+        if description:
+            kwargs['Description'] = description
         val = self.request(**kwargs)
         return val['TCPAlarm']
 
@@ -513,6 +575,28 @@ class Client(BaseClient):
 
     def DeleteTCPAlarm(self, mid):
         """ 删除TCP监控
+
+        :param mid: 监控项ID
+        :type mid: string
+        """
+        kwargs = {}
+        kwargs['MonitorId'] = mid
+        val = self.request(**kwargs)
+        return val
+
+    def DisableTCPAlarm(self, mid):
+        """ 禁用一个TCP监控项
+
+        :param mid: 监控项ID
+        :type mid: string
+        """
+        kwargs = {}
+        kwargs['MonitorId'] = mid
+        val = self.request(**kwargs)
+        return val
+
+    def EnableTCPAlarm(self, mid):
+        """ 启用一个TCP监控项
 
         :param mid: 监控项ID
         :type mid: string
