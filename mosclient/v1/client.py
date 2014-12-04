@@ -420,7 +420,7 @@ class Client(BaseClient):
         :param iid: 虚拟机ID
         :type iid: string
 
-        :returns AlarmHistorySet，监控告警历史列表
+        :returns: AlarmHistorySet，监控告警历史列表
         """
         kwargs = {}
         if mid:
@@ -443,6 +443,8 @@ class Client(BaseClient):
         :type threshold: string
         :param description: 描述
         :type description: string
+
+        :returns: 请求是否成功
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
@@ -467,6 +469,8 @@ class Client(BaseClient):
 
         :param mid: 监控项ID
         :type mid: string
+
+        :returns: 请求是否成功
         """
         kwargs = {}
         kwargs['MonitorId'] = mid
@@ -478,6 +482,8 @@ class Client(BaseClient):
 
         :param mid: 监控项ID
         :type mid: string
+
+        :returns: 请求是否成功
         """
         kwargs = {}
         kwargs['MonitorId'] = mid
@@ -489,6 +495,8 @@ class Client(BaseClient):
 
         :param mid: 监控项ID
         :type mid: string
+
+        :returns: 请求是否成功
         """
         kwargs = {}
         kwargs['MonitorId'] = mid
@@ -502,6 +510,8 @@ class Client(BaseClient):
         :type iid: string
         :param description: 描述
         :type description: string
+
+        :returns: 请求是否成功
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
@@ -512,6 +522,8 @@ class Client(BaseClient):
 
     def DescribeAliveAlarm(self):
         """ 查看主机存活监控
+
+        :returns: AliveAlarmSet，包含主机存货监控列表
         """
         val = self.request()
         return val['AliveAlarmSet']
@@ -521,6 +533,8 @@ class Client(BaseClient):
 
         :param mid: 监控项ID
         :type mid: string
+
+        :returns: 请求是否成功
         """
         kwargs = {}
         kwargs['MonitorId'] = mid
@@ -532,6 +546,8 @@ class Client(BaseClient):
 
         :param mid: 监控项ID
         :type mid: string
+
+        :returns: 请求是否成功
         """
         kwargs = {}
         kwargs['MonitorId'] = mid
@@ -543,6 +559,8 @@ class Client(BaseClient):
 
         :param mid: 监控项ID
         :type mid: string
+
+        :returns: 请求是否成功
         """
         kwargs = {}
         kwargs['MonitorId'] = mid
@@ -558,6 +576,8 @@ class Client(BaseClient):
         :type port: int
         :param description: 描述
         :type description: string
+
+        :returns: 请求是否成功
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
@@ -569,6 +589,8 @@ class Client(BaseClient):
 
     def DescribeTCPAlarm(self):
         """ 查看TCP监控
+
+        :returns: 返回TCPAlarmSet，包含TCP监控列表
         """
         val = self.request()
         return val['TCPAlarmSet']
@@ -578,6 +600,8 @@ class Client(BaseClient):
 
         :param mid: 监控项ID
         :type mid: string
+
+        :returns: 请求是否成功
         """
         kwargs = {}
         kwargs['MonitorId'] = mid
@@ -589,6 +613,8 @@ class Client(BaseClient):
 
         :param mid: 监控项ID
         :type mid: string
+
+        :returns: 请求是否成功
         """
         kwargs = {}
         kwargs['MonitorId'] = mid
@@ -600,6 +626,8 @@ class Client(BaseClient):
 
         :param mid: 监控项ID
         :type mid: string
+
+        :returns: 请求是否成功
         """
         kwargs = {}
         kwargs['MonitorId'] = mid
