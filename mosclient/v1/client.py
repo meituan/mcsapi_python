@@ -459,7 +459,7 @@ class Client(BaseClient):
     def DescribeMetricAlarm(self):
         """ 查看指标监控
 
-        :returns MetricAlarmSet，指标监控列表
+        :returns: MetricAlarmSet，指标监控列表
         """
         val = self.request()
         return val['MetricAlarmSet']
