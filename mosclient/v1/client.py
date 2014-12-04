@@ -427,3 +427,100 @@ class Client(BaseClient):
         kwargs = {}
         kwargs['TemplateId'] = tid
         self.request(**kwargs)
+
+
+    def DescribeSnapshots(self, ids=None, timestamps=None, instanceIds=None,
+                            limit=0, offset=0, filters=None):
+        """
+        列出所有的虚拟机快照
+
+        :param ids: 列出指定ID范围内的快照
+        :type ids: String[]
+        :param timestamps: 列出指定时间戳的快照
+        :type timestamps: String[]
+        :param instanceIds: 列出指定ID范围内的虚拟机的快照
+        :type instanceIds: String[]
+        :param limit: 最多返回数量
+        :type limit: int
+        :param offset: 返回虚拟机快照的偏移量，用于分页显示
+        :type offset: int
+        :param filters: 过滤器，一个dict，包含过滤字段名和值，可能过滤字段为：name, status
+        :type filters: dict
+
+        :returns dict 包含虚拟机快照的列表
+        """
+        kwargs = {}
+        if ids is not None and len(ids) > 0:
+            kwargs["SnapshotId"] = ids
+        if timestamps is not None and len(timestamps) > 0:
+            kwargs["SnapshotTimestamp"] = timestamps
+        if instanceIds is not None and len(instanceIds) > 0:
+            kwargs["InstanceId"] = instanceIds
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['SnapshotSet']
+
+    def CreateSnapshot(self, iid, name=None): 
+        """
+        为指定虚拟机创建一个快照
+
+        :param iid: 要创建快照的虚拟机ID
+        :type iid: String
+        :param name: 快照名称（可选)
+        :type name: String
+        """
+        kwargs = {}
+        kwargs["InstanceId"] = iid
+        if name is not None and len(name) > 0:
+            kwargs["SnapshotName"] = name
+        self.request(**kwargs)
+
+    def  DeleteSnapshot(self, sid):
+        """
+        删除指定虚拟机快照
+
+        :param sid: 虚拟机快照的ID
+        :type sid: String
+        """
+        kwargs = {}
+        kwargs["SnapshotId"] = sid
+        self.request(**kwargs)
+
+    def RestoreInstanceToSnapshot(self, iid, sid):
+        """
+        将一台虚拟机重置为指定虚拟机快照的内容
+
+        :param iid: 虚拟机ID
+        :type iid: String
+        :param sid: 虚拟机快照的ID
+        :type sid: String
+        """
+        kwargs = {}
+        kwargs["InstanceId"] = iid
+        kwargs["SnapshotId"] = sid
+        self.request(**kwargs)
+
+    def CreateInstanceFromSnapshot(self, sid, duration=None, name=None):
+        """
+        从指定虚拟机快照(克隆)创建一台虚拟机
+
+        :param sid: 创建虚拟机的虚拟机快照的ID
+        :type sid: String
+        :param duration: 虚拟机租期, 缺省为'1M'，即一个月
+        :type duration: String
+        :param name: 虚拟机名称(可选)
+        :type name: String
+
+        :returns: dict 创建成功的虚拟机信息
+        """
+        kwargs = {}
+        kwargs["SnapshotId"] = sid
+        if duration is not None:
+            if match_duration(duration):
+                kwargs['Duration'] = duration
+            else:
+                raise Exception('Illegal duration format')
+        if name is not None:
+            kwargs['InstanceName'] = name
+        val = self.request(**kwargs)
+        return val['Instance']

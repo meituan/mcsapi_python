@@ -209,7 +209,50 @@ def do_CreateTemplate(client, args):
     val = client.CreateTemplate(args.id, args.name, notes=args.notes)
     utils.print_dict(val)
 
+
 @utils.arg('id', metavar='<TEMPLATE_ID>', help='ID of template')
 def do_DeleteTemplate(client, args):
     """ Delete a template """
     client.DeleteTemplate(args.id)
+
+
+
+@utils.arg("--id", metavar="<ID>", action="append", help="ID of snapshots")
+@utils.arg("--timestamp", metavar="<TIMESTAMP>", action="append", help="Timestamp of snapshots")
+@utils.arg("--instance-id", metavar="<INSTANCEID>", action="append", help="ID of intances of snapshots")
+@utils.arg("--limit", metavar="<LIMIT>", type=int, help="Limit")
+@utils.arg("--offset", metavar="<OFFSET>", type=int, help="Offset")
+@utils.arg("--filter", metavar="<FILTER>", action="append", help="Filter")
+def do_DescribeSnapshots(client, args):
+    """ Get details of all or specified instance snapshots """
+    val = client.DescribeSnapshots(args.id, args.timestamp, args.instance_id, args.limit, args.offset, utils.convert_filter(args.filter))
+    utils.print_list(val, 'Snapshot')
+
+
+@utils.arg("id", metavar="<ID>", help="ID of instance")
+@utils.arg("--name", metavar="<NAME>", help="Name of snapshot, optional")
+def do_CreateSnapshot(client, args):
+    """ Create a snapshot for an instance """
+    client.CreateSnapshot(args.id, name=args.name)
+
+
+@utils.arg("id", metavar="<ID>", help="ID of instance")
+def do_DeleteSnapshot(client, args):
+    """ Delete a snapshot """
+    client.DeleteSnapshot(args.id)
+
+
+@utils.arg("id", metavar="<ID>", help="ID of instance")
+@utils.arg("snapshotid", metavar="<SNAPSHOTID>", help="ID of snapshot")
+def do_RestoreInstanceToSnapshot(client, args):
+    """ Restore an instance to a snapshot """
+    client.RestoreInstanceToSnapshot(args.id, args.snapshotid)
+
+
+@utils.arg("id", metavar="<ID>", help="ID of snapshot")
+@utils.arg("--duration", metavar="<DURATION>", help="Reserved instance duration, in H or M, e.g. 72H, 1M")
+@utils.arg("--name", metavar="<NAME>", help="Optional instance name")
+def do_CreateInstanceFromSnapshot(client, args):
+    """ Create an instance from a snapshot """
+    val = client.CreateInstanceFromSnapshot(args.id, duration=args.duration, name=args.name)
+    utils.print_dict(val)
