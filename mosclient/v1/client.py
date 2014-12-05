@@ -497,7 +497,7 @@ class Client(BaseClient):
         kwargs["SnapshotId"] = sid
         self.request(**kwargs)
 
-    def RestoreInstanceToSnapshot(self, iid, sid):
+    def RestoreSnapshot(self, iid, sid):
         """
         将一台虚拟机重置为指定虚拟机快照的内容
 
