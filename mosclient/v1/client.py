@@ -398,7 +398,7 @@ class Client(BaseClient):
         self.request(**kwargs)
 
 
-    def ListMetrics(self, iid=None):
+    def DescribeInstanceMetrics(self, iid=None):
         """ 查看虚拟机监控项
 
         :param iid: 虚拟机ID
@@ -456,7 +456,7 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val['MetricAlarm']
 
-    def DescribeMetricAlarm(self):
+    def DescribeMetricAlarms(self):
         """ 查看指标监控
 
         :returns: MetricAlarmSet，指标监控列表
@@ -520,7 +520,7 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val['AliveAlarm']
 
-    def DescribeAliveAlarm(self):
+    def DescribeAliveAlarms(self):
         """ 查看主机存活监控
 
         :returns: AliveAlarmSet，包含主机存货监控列表
@@ -587,7 +587,7 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val['TCPAlarm']
 
-    def DescribeTCPAlarm(self):
+    def DescribeTCPAlarms(self):
         """ 查看TCP监控
 
         :returns: 返回TCPAlarmSet，包含TCP监控列表
