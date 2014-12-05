@@ -156,16 +156,16 @@ class Client(BaseClient):
         kwargs['InstanceId'] = iid
         return self.request(**kwargs)
 
-    def CreateInstance(self, imageid=None, itype=None,
+    def CreateInstance(self, imageid=None, instancetype=None,
             keypair=None, datadisk=None, bandwidth=None,
             snapshotid=None,
-            duration=None, name=None):
+            duration=None, name=None, zone=None):
         """ 创建虚拟机
 
         :param imageid: 系统模板ID
         :type imageid: string
-        :param itype: 虚拟机类型ID
-        :type itype: string
+        :param instancetype: 虚拟机类型ID
+        :type instancetype: string
         :param keypair: 虚拟机使用的SSH密钥ID
         :type keypair: string
         :param datadisk: 指定创建虚拟机使用的额外数据盘，单位为10GB
@@ -184,9 +184,9 @@ class Client(BaseClient):
         kwargs = {}
         if snapshotid is not None:
             kwargs["SnapshotId"] = snapshotid
-        elif imageid is not None and itype is not None:
+        elif imageid is not None and instancetype is not None:
             kwargs['ImageId'] = imageid
-            kwargs['InstanceType'] = itype
+            kwargs['InstanceType'] = instancetype
             if keypair is not None:
                 kwargs['KeyName'] = keypair
             if datadisk is not None:
@@ -202,6 +202,8 @@ class Client(BaseClient):
                 raise Exception('Illegal duration format')
         if name is not None:
             kwargs['InstanceName'] = name
+        if zone is not None:
+            kwargs['AvailabilityZoneId'] = zone
         val = self.request(**kwargs)
         return val['Instance']
 

@@ -44,15 +44,17 @@ def do_GetInstanceContractInfo(client, args):
 @utils.arg('--keypair', metavar='<KEYPAIR>', help='SSH key pair name')
 @utils.arg('--datadisk', metavar='<DISKSIZE>', type=int, help='Extra disksize in GB')
 @utils.arg('--bandwidth', metavar='<BANDWIDTH>', type=int, help='Extra external bandwidth in Mbps')
+@utils.arg("--zone", metavar="<ZONE>", help="Optional availability zone")
 def do_CreateInstance(client, args):
     """ Create servers """
-    val = client.CreateInstance(image=args.image,
-                                instance_type=args.instance_type,
-                                duration=args.duration,
-                                name=args.name,
+    val = client.CreateInstance(imageid=args.image,
+                                instancetype=args.instance_type,
                                 keypair=args.keypair,
                                 datadisk=args.datadisk,
-                                bandwidth=args.bandwidth)
+                                bandwidth=args.bandwidth,
+                                duration=args.duration,
+                                name=args.name,
+                                zone=args.zone)
     utils.print_dict(val)
 
 
@@ -253,10 +255,11 @@ def do_RestoreInstanceToSnapshot(client, args):
 @utils.arg("id", metavar="<ID>", help="ID of snapshot")
 @utils.arg("--duration", metavar="<DURATION>", help="Reserved instance duration, in H or M, e.g. 72H, 1M")
 @utils.arg("--name", metavar="<NAME>", help="Optional instance name")
+@utils.arg("--zone", metavar="<ZONE>", help="Optional availability zone")
 def do_CreateInstanceFromSnapshot(client, args):
     """ Create an instance from a snapshot """
     val = client.CreateInstance(snapshotid=args.id, duration=args.duration,
-                                name=args.name)
+                                name=args.name, zone=args.zone)
     utils.print_dict(val)
 
 
