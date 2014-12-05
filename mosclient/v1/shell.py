@@ -46,7 +46,8 @@ def do_GetInstanceContractInfo(client, args):
 @utils.arg('--bandwidth', metavar='<BANDWIDTH>', type=int, help='Extra external bandwidth in Mbps')
 def do_CreateInstance(client, args):
     """ Create servers """
-    val = client.CreateInstance(args.image, args.instance_type,
+    val = client.CreateInstance(image=args.image,
+                                instance_type=args.instance_type,
                                 duration=args.duration,
                                 name=args.name,
                                 keypair=args.keypair,
@@ -254,5 +255,14 @@ def do_RestoreInstanceToSnapshot(client, args):
 @utils.arg("--name", metavar="<NAME>", help="Optional instance name")
 def do_CreateInstanceFromSnapshot(client, args):
     """ Create an instance from a snapshot """
-    val = client.CreateInstanceFromSnapshot(args.id, duration=args.duration, name=args.name)
+    val = client.CreateInstance(snapshotid=args.id, duration=args.duration,
+                                name=args.name)
     utils.print_dict(val)
+
+
+@utils.arg("--limit", metavar="<LIMIT>", type=int, help="Limit")
+@utils.arg("--offset", metavar="<OFFSET>", type=int, help="Offset")
+def do_DescribeAvailabilityZones(client, args):
+    """ Get details of all or specified instance snapshots """
+    val = client.DescribeAvailabilityZones(args.limit, args.offset)
+    utils.print_list(val, 'AvailabilityZone')

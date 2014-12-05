@@ -156,30 +156,45 @@ class Client(BaseClient):
         kwargs['InstanceId'] = iid
         return self.request(**kwargs)
 
-    def CreateInstance(self, imageid, itype, duration=None, name=None,
-            keypair=None, datadisk=None, bandwidth=None):
+    def CreateInstance(self, imageid=None, itype=None,
+            keypair=None, datadisk=None, bandwidth=None,
+            snapshotid=None,
+            duration=None, name=None):
         """ 创建虚拟机
 
         :param imageid: 系统模板ID
         :type imageid: string
         :param itype: 虚拟机类型ID
         :type itype: string
-        :param duration: 虚拟机租期, 缺省为'1M'，即一个月
-        :type duration: string
-        :param name: 虚拟机名称(可选)
-        :type name: string
         :param keypair: 虚拟机使用的SSH密钥ID
         :type keypair: string
         :param datadisk: 指定创建虚拟机使用的额外数据盘，单位为10GB
         :type datadisk: int
         :param bandwidth: 指定创建虚拟机使用的额外带宽，单位为Mbps
         :type bandwidth: int
+        :param snapshotid: 创建虚拟机的虚拟机快照的ID
+        :type snapshotid: String
+        :param duration: 虚拟机租期, 缺省为'1M'，即一个月
+        :type duration: string
+        :param name: 虚拟机名称(可选)
+        :type name: string
 
         :returns: 创建成功的虚拟机信息
         """
         kwargs = {}
-        kwargs['ImageId'] = imageid
-        kwargs['InstanceType'] = itype
+        if snapshotid is not None:
+            kwargs["SnapshotId"] = snapshotid
+        elif imageid is not None and itype is not None:
+            kwargs['ImageId'] = imageid
+            kwargs['InstanceType'] = itype
+            if keypair is not None:
+                kwargs['KeyName'] = keypair
+            if datadisk is not None:
+                kwargs['ExtraExtDisksize'] = datadisk*10
+            if bandwidth is not None:
+                kwargs['ExtraExtBandwidth'] = bandwidth
+        else:
+            raise Exception('Not enough parameters')
         if duration is not None:
             if match_duration(duration):
                 kwargs['Duration'] = duration
@@ -187,12 +202,6 @@ class Client(BaseClient):
                 raise Exception('Illegal duration format')
         if name is not None:
             kwargs['InstanceName'] = name
-        if keypair is not None:
-            kwargs['KeyName'] = keypair
-        if datadisk is not None:
-            kwargs['ExtraExtDisksize'] = datadisk*10
-        if bandwidth is not None:
-            kwargs['ExtraExtBandwidth'] = bandwidth
         val = self.request(**kwargs)
         return val['Instance']
 
@@ -500,27 +509,17 @@ class Client(BaseClient):
         kwargs["SnapshotId"] = sid
         self.request(**kwargs)
 
-    def CreateInstanceFromSnapshot(self, sid, duration=None, name=None):
-        """
-        从指定虚拟机快照(克隆)创建一台虚拟机
+    def DescribeAvailabilityZones(self, limit=0, offset=0):
+        """ 获得当前区域中所有的可用域
 
-        :param sid: 创建虚拟机的虚拟机快照的ID
-        :type sid: String
-        :param duration: 虚拟机租期, 缺省为'1M'，即一个月
-        :type duration: String
-        :param name: 虚拟机名称(可选)
-        :type name: String
+        :param limit: 最多返回数量
+        :type limit: int
+        :param offset: 返回可用域的偏移量，用于分页显示
+        :type offset: int
 
-        :returns: dict 创建成功的虚拟机信息
+        :returns: 可用域列表
         """
         kwargs = {}
-        kwargs["SnapshotId"] = sid
-        if duration is not None:
-            if match_duration(duration):
-                kwargs['Duration'] = duration
-            else:
-                raise Exception('Illegal duration format')
-        if name is not None:
-            kwargs['InstanceName'] = name
+        self.parse_list_params(limit, offset, None, kwargs)
         val = self.request(**kwargs)
-        return val['Instance']
+        return val['AvailabilityZoneSet']
