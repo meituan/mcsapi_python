@@ -57,6 +57,11 @@ class APIShell(object):
             help='MOS api URL'
         )
 
+        parser.add_argument('--mos-region',
+            default=utils.env('MOS_REGION'),
+            help='MOS Region'
+        )
+
         parser.add_argument('--mos-api-version',
             default=utils.env('MOS_API_VERSION', default='1'),
             help='MOS api version, defaults to env[MOS_API_VERSION] or 1'
@@ -137,11 +142,16 @@ class APIShell(object):
             raise Exception('You must provide mos_url via '
                             'either --mos-url or env[MOS_URL]')
 
+        if not args.mos_region:
+            raise Exception('You must provide mos_region vai '
+                            'either --mos-region or env[MOS_REGION]')
+
         if args.debug:
             logger = logging.getLogger()
             logger.setLevel(logging.DEBUG)
         clt = client.Client(api_version,
                             args.mos_access, args.mos_secret, args.mos_url,
+                            args.mos_region,
                             format=args.format,
                             timeout=args.timeout,
                             debug=args.debug)

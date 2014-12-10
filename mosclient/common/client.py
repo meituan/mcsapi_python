@@ -12,11 +12,12 @@ from xmltodict import parse
 
 class BaseClient(object):
 
-    def __init__(self, access, secret, url, format=None,
+    def __init__(self, access, secret, url, region, format=None,
                                 timeout=300, debug=False):
         self.access = access
         self.secret = secret
         self.url = url
+        self.region = region
         self.format = format
         self.timeout = timeout
         self.debug = debug
@@ -56,6 +57,7 @@ class BaseClient(object):
         params['Timestamp'] = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.000Z')
         params['SignatureVersion'] = '2'
         params['SignatureMethod'] = 'HmacSHA256'
+        params['Region'] = self.region
         for k, v in kwargs.iteritems():
             if isinstance(v, list):
                 i = 1
