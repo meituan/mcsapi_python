@@ -204,7 +204,7 @@ def do_DeleteKeyPair(client, args):
 @utils.arg('--iid', metavar='<INSTANCE_ID>', help='ID of instance')
 def do_DescribeInstanceMetrics(client, args):
     """List monitor metrics"""
-    val = client.ListMetrics(args.iid)
+    val = client.DescribeInstanceMetrics(args.iid)
     utils.print_list(val, 'Metric')
 
 
@@ -229,7 +229,7 @@ def do_CreateMetricAlarm(client, args):
 
 def do_DescribeMetricAlarms(client, args):
     """List metric check"""
-    val = client.DescribeMetricAlarm()
+    val = client.DescribeMetricAlarms()
     utils.print_list(val, 'MetricAlarm')
 
 
@@ -264,7 +264,7 @@ def do_CreateAliveAlarm(client, args):
 
 def do_DescribeAliveAlarms(client, args):
     """List alive check"""
-    val = client.DescribeAliveAlarm()
+    val = client.DescribeAliveAlarms()
     utils.print_list(val, 'AliveAlarm')
 
 
@@ -300,7 +300,7 @@ def do_CreateTCPAlarm(client, args):
 
 def do_DescribeTCPAlarms(client, args):
     """List tcp check"""
-    val = client.DescribeTCPAlarm()
+    val = client.DescribeTCPAlarms()
     utils.print_list(val, 'TCPAlarm')
 
 
