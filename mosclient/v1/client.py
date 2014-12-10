@@ -22,6 +22,8 @@ class Client(BaseClient):
     :type secret: string
     :param url: MOS API访问URL
     :type url: string
+    :param region: MOS Region
+    :type region: string
     :param format: 指定返回数据格式xml或者json，缺省为xml
     :type format: string
     :param timeout: 超时秒数，缺省为300秒
