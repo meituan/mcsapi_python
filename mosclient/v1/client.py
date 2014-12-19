@@ -170,7 +170,7 @@ class Client(BaseClient):
         :type name: string
         :param keypair: 虚拟机使用的SSH密钥ID
         :type keypair: string
-        :param datadisk: 指定创建虚拟机使用的额外数据盘，单位为10GB
+        :param datadisk: 指定创建虚拟机使用的额外数据盘，单位为GB
         :type datadisk: int
         :param bandwidth: 指定创建虚拟机使用的额外带宽，单位为Mbps
         :type bandwidth: int
@@ -190,9 +190,9 @@ class Client(BaseClient):
         if keypair is not None:
             kwargs['KeyName'] = keypair
         if datadisk is not None:
-            kwargs['ExtraExtDisksize'] = datadisk*10
+            kwargs['ExtraExtDisksize'] = int(datadisk)
         if bandwidth is not None:
-            kwargs['ExtraExtBandwidth'] = bandwidth
+            kwargs['ExtraExtBandwidth'] = int(bandwidth)
         val = self.request(**kwargs)
         return val['Instance']
 
@@ -301,7 +301,7 @@ class Client(BaseClient):
         :type itype: string
         :param duration: 指定更改后的初始租期，缺省为'1M'，即一个月
         :type duration: string
-        :param datadisk: 指定创建虚拟机使用的额外数据盘，单位为10GB
+        :param datadisk: 指定创建虚拟机使用的额外数据盘，单位为GB
         :type datadisk: int
         :param bandwidth: 指定创建虚拟机使用的额外带宽，单位为Mbps
         :type bandwidth: int
@@ -316,9 +316,9 @@ class Client(BaseClient):
             else:
                 raise Exception('IIlegal duration format')
         if datadisk is not None:
-            kwargs['ExtraExtDisksize'] = datadisk*10
+            kwargs['ExtraExtDisksize'] = int(datadisk)
         if bandwidth is not None:
-            kwargs['ExtraExtBandwidth'] = bandwidth
+            kwargs['ExtraExtBandwidth'] = int(bandwidth)
 
         self.request(**kwargs)
 
