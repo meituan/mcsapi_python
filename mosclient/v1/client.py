@@ -393,15 +393,13 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val['KeyPair']
 
-    def ImportKeyPair(self, name, pubkey, scheme='RSA', notes=None):
+    def ImportKeyPair(self, name, pubkey, notes=None):
         """ 导入一个用户的SSH公钥，并创建一个SSH密钥对
 
         :param name: 密钥对名称
         :type name: string
         :param pubkey: SSH公钥信息
         :type pubkey: string
-        :param scheme: SSH加密方式,支持RSA或DSA
-        :type scheme: string
         :param notes: SSH密钥对备注信息
         :type notes: string
 
@@ -410,7 +408,6 @@ class Client(BaseClient):
         kwargs = {}
         kwargs['KeyName'] = name
         kwargs['PublicKeyMaterial'] = pubkey
-        kwargs['KeyScheme'] = scheme
         if notes:
             kwargs['KeyNotes'] = notes
         val = self.request(**kwargs)
