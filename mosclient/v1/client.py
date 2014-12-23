@@ -371,19 +371,48 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val['KeyPairSet']
 
-    def ImportKeyPair(self, name, pubkey):
+    def CreateKeyPair(self, name, scheme='RSA', notes=None):
+        """ 新建一个SSH密钥对，并返回生成的私钥信息。
+        私钥信息请妥善保存，云平台不保存私钥信息，如果丢失将不能找回。
+
+        :param name: 密钥对名称
+        :type name: string
+        :param scheme: SSH加密方式,支持RSA或DSA
+        :type scheme: string
+        :param notes: SSH密钥对备注信息
+        :type notes: string
+
+        :returns 返回生成的私钥信息
+        """
+        kwargs = {}
+        kwargs['KeyName'] = name
+        kwargs['KeyScheme'] = scheme
+        if notes:
+            kwargs['KeyNotes'] = notes
+
+        val = self.request(**kwargs)
+        return val['KeyPair']
+
+    def ImportKeyPair(self, name, pubkey, scheme='RSA', notes=None):
         """ 导入一个用户的SSH公钥，并创建一个SSH密钥对
 
         :param name: 密钥对名称
         :type name: string
         :param pubkey: SSH公钥信息
         :type pubkey: string
+        :param scheme: SSH加密方式,支持RSA或DSA
+        :type scheme: string
+        :param notes: SSH密钥对备注信息
+        :type notes: string
 
         :returns: 创建的SSH密钥对信息
         """
         kwargs = {}
         kwargs['KeyName'] = name
         kwargs['PublicKeyMaterial'] = pubkey
+        kwargs['KeyScheme'] = scheme
+        if notes:
+            kwargs['KeyNotes'] = notes
         val = self.request(**kwargs)
         return val['KeyPair']
 

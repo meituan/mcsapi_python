@@ -179,8 +179,19 @@ def do_DescribeKeyPairs(client, args):
     utils.print_list(val, 'KeyPair')
 
 
+
+@utils.arg('name', metavar='<NAME>', type=str, help='Name of keypair')
+@utils.arg('--scheme', metavar='<SCHEME>', type=str, choices=['RSA', 'DSA'], default='RSA',  help='Scheme of keypair, RSA or DSA')
+@utils.arg('--notes', metavar='<NOTES>', type=str, help='Keypair notes')
+def do_CreateKeyPair(client, args):
+    """ Create SSH keypair """
+    val = client.CreateKeyPair(args.name, args.scheme, args.notes)
+    print val['PrivateKey']
+
 @utils.arg('name', metavar='<NAME>', type=str, help='Name of keypair')
 @utils.arg('--key-file', metavar='<PUBLIC_KEY_FILE>', type=str, help='Public key file path')
+@utils.arg('--scheme', metavar='<SCHEME>', type=str, choices=['RSA', 'DSA'], default='RSA', help='Scheme of keypair, RSA or DSA')
+@utils.arg('--notes', metavar='<NOTES>', type=str, help='Keypair notes')
 def do_ImportKeyPair(client, args):
     """ Import SSH keypairs """
     if args.key_file is not None:
@@ -189,7 +200,7 @@ def do_ImportKeyPair(client, args):
     else:
         pubkey = sys.stdin.read()
     if pubkey is not None and len(pubkey) > 0:
-        val = client.ImportKeyPair(args.name, pubkey)
+        val = client.ImportKeyPair(args.name, pubkey, args.scheme, args.notes)
         utils.print_dict(val)
     else:
         raise Exception('No public key provided')
