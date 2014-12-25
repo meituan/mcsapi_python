@@ -186,7 +186,7 @@ def do_DescribeKeyPairs(client, args):
 def do_CreateKeyPair(client, args):
     """ Create SSH keypair """
     val = client.CreateKeyPair(args.name, args.scheme, args.notes)
-    print val['PrivateKey']
+    print val['keyMaterial']
 
 @utils.arg('name', metavar='<NAME>', type=str, help='Name of keypair')
 @utils.arg('--key-file', metavar='<PUBLIC_KEY_FILE>', type=str, help='Public key file path')
