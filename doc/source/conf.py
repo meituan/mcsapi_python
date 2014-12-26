@@ -14,7 +14,7 @@ source_suffix = '.rst'
 
 master_doc = 'index'
 
-project = u'mosapi_python_sdk'
+project = u'美团云MOS Python SDK及客户端'
 copyright = u'2013, Qiu Jian'
 
 version = '0.1'

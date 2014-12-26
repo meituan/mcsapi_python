@@ -1,4 +1,4 @@
-MCS API Python SDK及客户端
+美团云MOS Python SDK及客户端
 ==========================
 
 .. toctree::
