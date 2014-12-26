@@ -20,7 +20,7 @@ MCS API Python SDK及客户端
 使用Python SDK
 --------------
 
-通过mosclient.client.Client生成客户端实例，API接口说明实现参见":doc:`mosclient/v1/client.py文档 <client>`"。
+通过mosclient.client.Client生成客户端实例，API接口说明实现参见"`mosclient/v1/client.py文档 <client>`"。
 
 示例代码如下：
 
@@ -44,14 +44,13 @@ MCS API Python SDK及客户端
 
 安装客户端软件后，执行以下步骤开始使用MCS API Python客户端。
 
-1. 在MOS帐户页面获取个人的MOS ACCESS
-Key和Secret，以及API入口URL，设置如下环境变量：
+1. 在MOS帐户页面获取个人的MOS ACCESS，Key和Secret，以及API入口URL，设置如下环境变量：
 
 ::
 
-    export MOS_ACCESS=4ba303cc17454cc7904e044db2a3c912
-    export MOS_SECRET=2952f821201341a38978ac4a4a292ce8
-    export MOS_URL=https://mosapi.meituan.com/mcs/v1
+   export MOS_ACCESS=4ba303cc17454cc7904e044db2a3c912
+   export MOS_SECRET=2952f821201341a38978ac4a4a292ce8
+   export MOS_URL=https://mosapi.meituan.com/mcs/v1
 
 2. 执行climos客户端
 
@@ -59,4 +58,3 @@ Key和Secret，以及API入口URL，设置如下环境变量：
 
     climos help
     climos DescribeTemplates
-

@@ -4,11 +4,19 @@ from mosclient.common import setuputils
 
 requires = setuputils.parse_requirements()
 
+def read(path):
+    with open(path, 'r') as f:
+        return f.read()
+
 setuptools.setup(
-    name="python-mosclient",
+    name="mosclient",
     version='1.0.3',
     description="Client library for Meituan Cloud Platform EC2 API",
-    url='https://mos.meituan.com/docs/index.html',
+
+    long_description = (read('README.rst') + '\n\n' + 
+                        read('CHANGELOG.rst')),
+
+    url='https://mos.meituan.com/document#sdk.html',
     author='Meituan Open Services',
     author_email='mos@meituan.com',
     packages=setuptools.find_packages(exclude=['tests', 'tests.*']),
