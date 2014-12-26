@@ -1,14 +1,24 @@
-MCS API Python SDK及客户端
+MOS API Python SDK及客户端
 ==========================
 
-我们提供了方便调用MCS API的Python SDK以及基于该SDK实现的客户端。
+|readthedocs|
+
+我们提供了方便调用MOS API的Python SDK以及基于该SDK实现的客户端。
 
 安装
 ----
 
+使用pip安装
+~~~~~~~~~~~
+在命令行下可以直接使用pip进行安装::
+
+    sudo pip install mosclient
+
+从源码安装
+~~~~~~~~~~
 从 `github下载mcsapi\_python <https://github.com/meituan/mcsapi_python/archive/master.zip>`_ 代码并解压，或者执行如下命令获取源码::
 
-    git clone https://github.com/meituan/mcsapi_python
+    git clone https://github.com/meituan/mcsapi_python.git
 
 进入mcsapi_python目录执行下述命令安装客户端可执行文件climos以及相应的python SDK::
 
@@ -20,7 +30,7 @@ MCS API Python SDK及客户端
 使用Python SDK
 --------------
 
-通过mosclient.client.Client生成客户端实例，API接口说明实现参见"`mosclient/v1/client.py文档 <client>`"。
+通过mosclient.client.Client生成客户端实例，API接口说明实现参见"`SDK API文档 <http://mcsapi-python.readthedocs.org/zh_CN/latest/client.html>`"。
 
 示例代码如下：
 
@@ -57,4 +67,9 @@ MCS API Python SDK及客户端
 ::
 
     climos help
-    climos DescribeTemplates
+    climos GetBalance
+
+
+.. |readthedocs| image:: https://readthedocs.org/projects/mcsapi-python/badge/?version=latest
+   :target: http://mcsapi-python.readthedocs.org/zh_CN/latest/
+   :alt: Documentation Status

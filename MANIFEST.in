@@ -2,10 +2,3 @@ include *.rst
 include LICENSE
 include climos
 include tools/pip-requires
-
-recursive-include doc *.bat
-recursive-include doc *.css
-recursive-include doc *.html
-recursive-include doc *.py
-recursive-include doc *.rst
-recursive-include doc Makefile
