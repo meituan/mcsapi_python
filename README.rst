@@ -41,9 +41,8 @@ Python SDK及客户端
         key = 'MOS_ACCESS_KEY'
         secret = 'MOS_ACCESS_SECRET'
         url = 'https://mosapi.meituan.com/mcs/v1'
-        region = 'Beijing'
 
-        cli = mosclient.client.Client(version, key, secret, url, region)
+        cli = mosclient.client.Client(version, key, secret, url)
 
         balance = cli.GetBalance()
         print balance
@@ -57,14 +56,13 @@ Python SDK及客户端
 设置环境变量
 ~~~~~~~~~~~~
 
-在MOS控制台 `API页面 <https://mos.meituan.com/console/#api>`_ 获取个人的MOS ACCESS Key和Secret，以及API入口URL，同时需要配置要访问的区域(Region)。目前美团云只有一个Region，即"Beijing"。设置如下环境变量
+在MOS控制台 `API页面 <https://mos.meituan.com/console/#api>`_ 获取个人的MOS ACCESS Key和Secret，以及API入口URL。设置如下环境变量
 
 ::
 
    export MOS_ACCESS=4ba303cc17454cc7904e044db2a3c912
    export MOS_SECRET=2952f821201341a38978ac4a4a292ce8
    export MOS_URL=https://mosapi.meituan.com/mcs/v1
-   export MOS_REGION=Beijing
 
 执行climos客户端
 ~~~~~~~~~~~~~~~~
