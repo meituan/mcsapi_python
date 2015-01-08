@@ -412,7 +412,7 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val['MetricSet']
 
-    def DescribeAlarmHistory(self, mid=None, iid=None):
+    def DescribeAlarmHistory(self, limit=0, offset=0, filters=None):
         """ 查看监控告警历史
 
         :param mid: 监控项ID
@@ -423,10 +423,7 @@ class Client(BaseClient):
         :returns: AlarmHistorySet，监控告警历史列表
         """
         kwargs = {}
-        if mid:
-            kwargs['MonitorId'] = mid
-        if iid:
-            kwargs['InstanceId'] = iid
+        self.parse_list_params(limit, offset, filters, kwargs)
         val = self.request(**kwargs)
         return val['AlarmHistorySet']
 

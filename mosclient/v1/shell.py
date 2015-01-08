@@ -208,11 +208,11 @@ def do_DescribeInstanceMetrics(client, args):
     utils.print_list(val, 'Metric')
 
 
-@utils.arg('--mid', metavar='<MONITOR_ID>', help='ID of monitor')
-@utils.arg('--iid', metavar='<INSTANCE_ID>', help='ID of instance')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Limit')
 def do_DescribeAlarmHistory(client, args):
     """List monitor alarm history"""
-    val = client.DescribeAlarmHistory(args.mid, args.iid)
+    val = client.DescribeAlarmHistory(args.limit, args.offset)
     utils.print_list(val, 'AlarmHistory')
 
 
