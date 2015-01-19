@@ -415,10 +415,10 @@ class Client(BaseClient):
     def DescribeAlarmHistory(self, limit=0, offset=0, filters=None):
         """ 查看监控告警历史
 
-        :param mid: 监控项ID
-        :type mid: string
-        :param iid: 虚拟机ID
-        :type iid: string
+        :param limit: 最大返回数量，用于分页控制
+        :type limit: int
+        :param offset: 返回偏移量，用于分页控制
+        :type offset: int
 
         :returns: AlarmHistorySet，监控告警历史列表
         """
