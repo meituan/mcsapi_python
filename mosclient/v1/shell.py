@@ -249,7 +249,7 @@ def do_DeleteSnapshot(client, args):
 @utils.arg("snapshotid", metavar="<SNAPSHOTID>", help="ID of snapshot")
 def do_RestoreInstanceToSnapshot(client, args):
     """ Restore an instance to a snapshot """
-    client.RestoreInstanceToSnapshot(args.id, args.snapshotid)
+    client.RestoreSnapshot(args.id, args.snapshotid)
 
 
 @utils.arg("id", metavar="<ID>", help="ID of snapshot")
