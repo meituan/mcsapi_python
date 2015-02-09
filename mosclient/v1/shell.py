@@ -213,3 +213,43 @@ def do_CreateTemplate(client, args):
 def do_DeleteTemplate(client, args):
     """ Delete a template """
     client.DeleteTemplate(args.id)
+
+@utils.arg('name', metavar='<GROUP_NAME>', help='Name of security group')
+@utils.arg('description', metavar='<DESCRIPTION>', help='Description of security group')
+def do_CreateSecurityGroup(client, args):
+    """ Create a security group """
+    val = client.CreateSecurityGroup(args.name, args.description)
+    utils.print_dict(val)
+
+
+@utils.arg('--id', metavar='<ID>', action='append', help='ID of security group')
+@utils.arg('--name', metavar='<NAME>', action='append', help='Name of security group')
+@utils.arg('--limit', metavar='<NUMBER>', default=20, help='Page limit')
+@utils.arg('--offset', metavar='<OFFSET>', help='Page offset')
+@utils.arg('--filter', metavar='<FILTER>', action='append', help='Filter')
+def do_DescribeSecurityGroups(client, args):
+    """ List all security groups """
+    p = utils.convert_filter(args.filter)
+    val = client.DescribeSecurityGroups(args.id, args.name, args.limit, args.offset, utils.convert_filter(args.filter))
+    utils.print_list(val, 'SecurityGroup')
+
+
+@utils.arg('id', metavar='<GROUP_ID>', help='ID of security group')
+def do_DeleteSecurityGroup(client, args):
+    """ Delete a security group """
+    client.DeleteSecurityGroup(args.id)
+
+
+@utils.arg('id', metavar='<ID>', help='ID of security group')
+@utils.arg('--rule', metavar='<RULE>', action='append', help='Security rule to authorize')
+def do_AuthorizeSecurityGroupIngress(client, args):
+    """ Authorize an ingress rule to a security group """
+    client.AuthorizeSecurityGroupIngress(args.id, args.rule)
+
+
+@utils.arg('id', metavar='<ID>', help='ID of security group')
+@utils.arg('--rule', metavar='<RULE>', action='append', help='Security rule to revoke')
+def do_RevokeSecurityGroupIngress(client, args):
+    """ Revoke an ingress rule from a security group """
+    client.RevokeSecurityGroupIngress(args.id, args.rule)
+

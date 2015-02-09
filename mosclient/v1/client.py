@@ -421,9 +421,108 @@ class Client(BaseClient):
         """ 删除一个模板
 
         :param tid: 模板ID
-        :param tid: string
+        :type tid: string
         """
 
         kwargs = {}
         kwargs['TemplateId'] = tid
         self.request(**kwargs)
+
+    def CreateSecurityGroup(self, name, desc):
+        """ 创建安全组
+
+        :param name: 安全组名称
+        :type name: string
+        :param desc: 安全组描述
+        :type desc: string
+        """
+
+        kwargs = {}
+        kwargs['GroupName'] = name
+        kwargs['GroupDescription'] = desc
+        val = self.request(**kwargs)
+        return val['SecurityGroup']
+
+    def DescribeSecurityGroups(self, ids=None, names=None, limit=0, offset=0,
+                               filters=None):
+        """ 获取安全组信息
+
+        :param ids: 期望获取的安全组ID列表
+        :type ids: list
+        :param names: 期望获取的安全组名称列表
+        :type names: list
+        :param limit: 最多返回数量
+        :type limit: int
+        :param offset: 返回虚拟机的偏移量，用于分页显示
+        :type offset: int
+        :param filters: 过滤器，一个dict，包含过滤字段名和值
+        :type filters: dict
+
+        """
+
+        kwargs = {}
+        if isinstance(ids, list) and len(ids) > 0:
+            kwargs['GroupId'] = ids
+        if isinstance(names, list) and len(names) > 0:
+            kwargs['GroupName'] = names
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['SecurityGroupSet']
+
+    def DeleteSecurityGroup(self, gid):
+        """ 删除一个安全组
+
+        :param gid: 安全组ID
+        :type gid: string
+         """
+
+        kwargs = {}
+        kwargs['GroupId'] = gid
+        self.request(**kwargs)
+
+    def AuthorizeSecurityGroupIngress(self, gid, rules=None):
+        """ 给一个安全组授权进入流量的规则(30条上限)
+
+        :param gid: 安全组ID
+        :type gid: string
+        :param rules: 入流量授权规则的列表
+        :type names: list
+
+        规则类型: string
+        规则格式: [IP] PROTOCAL [PORT]
+            IP: 选填，默认为0.0.0.0/0，可以是一个IP或一个网段，例如：192.168.0.1，192.168.0.0/16
+            PROTOCAL: 必填，支持tcp/udp/icmp/any
+            PORT: 选填，如果是any或者是icmp，不必填；如果是tcp或udp，不填时默认为全部端口，填时为指定端口，如8000，
+                也支持设定范围，如20-25（注：端口范围个数占用该安全组规则条数配额）
+        示例:
+            'tcp 2200'，'192.168.0.0/16 tcp 80'，'192.168.0.0/24 any'，'udp 21-22'
+
+        """
+
+        kwargs = {}
+        idx = 0
+        kwargs['GroupId'] = gid
+        if rules:
+            kwargs['Rule'] = rules
+        self.request(**kwargs)
+
+    def RevokeSecurityGroupIngress(self, gid, rules=None):
+        """ 从一个安全组中撤销进入流量的规则(指定撤销的规则必须和之前授权的规则完全匹配)
+
+        :param gid: 安全组ID
+        :type gid: string
+        :param rules: 需要撤销的入流量规则的列表
+        :type names: list
+
+        规则类型: string
+        规则格式: 见AuthorizeSecurityGroupIngress
+
+        """
+
+        kwargs = {}
+        idx = 0
+        kwargs['GroupId'] = gid
+        if rules:
+            kwargs['Rule'] = rules
+        self.request(**kwargs)
+ 
