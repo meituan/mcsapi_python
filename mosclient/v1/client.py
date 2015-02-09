@@ -489,13 +489,14 @@ class Client(BaseClient):
         :type names: list
 
         规则类型: string
-        规则格式: [IP] PROTOCAL [PORT]
+        规则格式: ACTION [IP] PROTOCAL [PORT]
+            ACTION: 必填，支持allow/deny
             IP: 选填，默认为0.0.0.0/0，可以是一个IP或一个网段，例如：192.168.0.1，192.168.0.0/16
             PROTOCAL: 必填，支持tcp/udp/icmp/any
             PORT: 选填，如果是any或者是icmp，不必填；如果是tcp或udp，不填时默认为全部端口，填时为指定端口，如8000，
                 也支持设定范围，如20-25（注：端口范围个数占用该安全组规则条数配额）
         示例:
-            'tcp 2200'，'192.168.0.0/16 tcp 80'，'192.168.0.0/24 any'，'udp 21-22'
+            'deny tcp 2200'，'deny 192.168.0.0/16 tcp 80'，'allow 192.168.0.0/24 any'，'allow udp 21-22'
 
         """
 
