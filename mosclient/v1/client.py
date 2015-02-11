@@ -481,7 +481,7 @@ class Client(BaseClient):
         self.request(**kwargs)
 
     def AuthorizeSecurityGroupIngress(self, gid, rules=None):
-        """ 给一个安全组授权进入流量的规则(30条上限)
+        """ 给一个安全组授权进入流量的规则(10条上限)
 
         :param gid: 安全组ID
         :type gid: string
@@ -494,7 +494,7 @@ class Client(BaseClient):
             IP: 选填，默认为0.0.0.0/0，可以是一个IP或一个网段，例如：192.168.0.1，192.168.0.0/16
             PROTOCAL: 必填，支持tcp/udp/icmp/any
             PORT: 选填，如果是any或者是icmp，不必填；如果是tcp或udp，不填时默认为全部端口，填时为指定端口，如8000，
-                也支持设定范围，如20-25（注：端口范围个数占用该安全组规则条数配额）
+                也支持设定范围，如20-25（注：范围包含的端口个数不能超过30）
         示例:
             'deny tcp 2200'，'deny 192.168.0.0/16 tcp 80'，'allow 192.168.0.0/24 any'，'allow udp 21-22'
 
