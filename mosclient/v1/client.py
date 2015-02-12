@@ -534,9 +534,9 @@ class Client(BaseClient):
     def InstanceAssignSecurityGroup(self, iid, gid):
         """ 给一个虚拟机分配安全组
 
-        :param iid: 安全组ID
+        :param iid: 虚拟机ID
         :type iid: string
-        :param gid: 需要撤销的入流量规则的列表
+        :param gid: 安全组ID
         :type gid: string
 
         """
@@ -549,7 +549,7 @@ class Client(BaseClient):
     def InstanceRevokeSecurityGroup(self, iid):
         """ 撤销一个虚拟机的安全组
 
-        :param iid: 安全组ID
+        :param iid: 虚拟机ID
         :type iid: string
 
         """
