@@ -157,7 +157,7 @@ class Client(BaseClient):
         return self.request(**kwargs)
 
     def CreateInstance(self, imageid, itype, duration=None, name=None,
-            keypair=None, datadisk=None, bandwidth=None):
+            keypair=None, secgroup=None, datadisk=None, bandwidth=None):
         """ 创建虚拟机
 
         :param imageid: 系统模板ID
@@ -170,6 +170,8 @@ class Client(BaseClient):
         :type name: string
         :param keypair: 虚拟机使用的SSH密钥ID
         :type keypair: string
+        :param secgroup: 安全组ID
+        :type secgroup: string
         :param datadisk: 指定创建虚拟机使用的额外数据盘，单位为GB
         :type datadisk: int
         :param bandwidth: 指定创建虚拟机使用的额外带宽，单位为Mbps
@@ -189,6 +191,8 @@ class Client(BaseClient):
             kwargs['InstanceName'] = name
         if keypair is not None:
             kwargs['KeyName'] = keypair
+        if secgroup is not None:
+            kwargs['GroupId'] = secgroup
         if datadisk is not None:
             kwargs['ExtraExtDisksize'] = int(datadisk)
         if bandwidth is not None:
@@ -513,7 +517,7 @@ class Client(BaseClient):
         :param gid: 安全组ID
         :type gid: string
         :param rules: 需要撤销的入流量规则的列表
-        :type names: list
+        :type rules: list
 
         规则类型: string
         规则格式: 见AuthorizeSecurityGroupIngress
@@ -526,4 +530,31 @@ class Client(BaseClient):
         if rules:
             kwargs['Rule'] = rules
         self.request(**kwargs)
- 
+
+    def InstanceAssignSecurityGroup(self, iid, gid):
+        """ 给一个虚拟机分配安全组
+
+        :param iid: 安全组ID
+        :type iid: string
+        :param gid: 需要撤销的入流量规则的列表
+        :type gid: string
+
+        """
+
+        kwargs = {}
+        kwargs['InstanceId'] = iid
+        kwargs['GroupId'] = gid
+        self.request(**kwargs)
+
+    def InstanceRevokeSecurityGroup(self, iid):
+        """ 撤销一个虚拟机的安全组
+
+        :param iid: 安全组ID
+        :type iid: string
+
+        """
+
+        kwargs = {}
+        kwargs['InstanceId'] = iid
+        self.request(**kwargs)
+

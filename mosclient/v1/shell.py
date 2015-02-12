@@ -42,6 +42,7 @@ def do_GetInstanceContractInfo(client, args):
 @utils.arg('--duration', metavar='<DURATION>', help='Reserved instance duration, in H or M, e.g. 72H, 1M')
 @utils.arg('--name', metavar='<NAME>', help='Optional instance name')
 @utils.arg('--keypair', metavar='<KEYPAIR>', help='SSH key pair name')
+@utils.arg('--secgroup', metavar='<SECGROUP>', help='Security group ID')
 @utils.arg('--datadisk', metavar='<DISKSIZE>', type=int, help='Extra disksize in GB')
 @utils.arg('--bandwidth', metavar='<BANDWIDTH>', type=int, help='Extra external bandwidth in Mbps')
 def do_CreateInstance(client, args):
@@ -50,6 +51,7 @@ def do_CreateInstance(client, args):
                                 duration=args.duration,
                                 name=args.name,
                                 keypair=args.keypair,
+                                secgroup=args.secgroup,
                                 datadisk=args.datadisk,
                                 bandwidth=args.bandwidth)
     utils.print_dict(val)
@@ -253,3 +255,13 @@ def do_RevokeSecurityGroupIngress(client, args):
     """ Revoke an ingress rule from a security group """
     client.RevokeSecurityGroupIngress(args.id, args.rule)
 
+@utils.arg('iid', metavar='<INSTANCE_ID>', help='ID of instance')
+@utils.arg('gid', metavar='<GROUP_ID>', help='ID of security group')
+def do_InstanceAssignSecurityGroup(client, args):
+    """ Assign a security group to an instance """
+    client.InstanceAssignSecurityGroup(args.iid, args.gid)
+
+@utils.arg('iid', metavar='<INSTANCE_ID>', help='ID of instance')
+def do_InstanceRevokeSecurityGroup(client, args):
+    """ Revoke a security group from an instance """
+    client.InstanceRevokeSecurityGroup(args.iid)
