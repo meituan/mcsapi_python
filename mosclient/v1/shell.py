@@ -203,6 +203,130 @@ def do_DeleteKeyPair(client, args):
     client.DeleteKeyPair(args.id)
 
 
+@utils.arg('--iid', metavar='<INSTANCE_ID>', help='ID of instance')
+def do_DescribeInstanceMetrics(client, args):
+    """List monitor metrics"""
+    val = client.DescribeInstanceMetrics(args.iid)
+    utils.print_list(val, 'Metric')
+
+
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Limit')
+def do_DescribeAlarmHistory(client, args):
+    """List monitor alarm history"""
+    val = client.DescribeAlarmHistory(args.limit, args.offset)
+    utils.print_list(val, 'AlarmHistory')
+
+
+@utils.arg('--iid', metavar='<INSTANCE_ID>', required=True, help='Instance ID')
+@utils.arg('--metric', metavar='<METRIC>', required=True, help='Metric Name')
+@utils.arg('--threshold', metavar='<THRESHOLD>', required=True, help='Threshold')
+@utils.arg('--operator', metavar='<OPERATOR>', choices=['GT', 'EQ', 'LT'], required=True, help='Operator')
+@utils.arg('--description', metavar='<DESCRIPTION>', help='Monitor description')
+def do_CreateMetricAlarm(client, args):
+    """Create metric check monitor"""
+    val = client.CreateMetricAlarm(args.iid, args.metric, args.operator, args.threshold, args.description)
+    utils.print_dict(val)
+
+
+def do_DescribeMetricAlarms(client, args):
+    """List metric check"""
+    val = client.DescribeMetricAlarms()
+    utils.print_list(val, 'MetricAlarm')
+
+
+@utils.arg('mid', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_DeleteMetricAlarm(client, args):
+    """Delete metric check"""
+    val = client.DeleteMetricAlarm(args.mid)
+    utils.print_dict(val)
+
+
+@utils.arg('mid', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_EnableMetricAlarm(client, args):
+    """Enable a metric check"""
+    val = client.EnableMetricAlarm(args.mid)
+    utils.print_dict(val)
+
+
+@utils.arg('mid', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_DisableMetricAlarm(client, args):
+    """Disable a metric check"""
+    val = client.DisableMetricAlarm(args.mid)
+    utils.print_dict(val)
+
+
+@utils.arg('--iid', metavar='<INSTANCE_ID>', required=True, help='Instance ID')
+@utils.arg('--description', metavar='<DESCRIPTION>', help='Monitor description')
+def do_CreateAliveAlarm(client, args):
+    """Create alive check"""
+    val = client.CreateAliveAlarm(args.iid, args.description)
+    utils.print_dict(val)
+
+
+def do_DescribeAliveAlarms(client, args):
+    """List alive check"""
+    val = client.DescribeAliveAlarms()
+    utils.print_list(val, 'AliveAlarm')
+
+
+@utils.arg('mid', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_DeleteAliveAlarm(client, args):
+    """Delete alive check"""
+    val = client.DeleteAliveAlarm(args.mid)
+    utils.print_dict(val)
+
+
+@utils.arg('mid', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_EnableAliveAlarm(client, args):
+    """Enable a alive check"""
+    val = client.EnableAliveAlarm(args.mid)
+    utils.print_dict(val)
+
+
+@utils.arg('mid', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_DisableAliveAlarm(client, args):
+    """Disable a alive check"""
+    val = client.DisableAliveAlarm(args.mid)
+    utils.print_dict(val)
+
+
+@utils.arg('--iid', metavar='<INSTANCE_ID>', required=True, help='Instance ID')
+@utils.arg('--tcp-port', metavar='<PORT>', required=True, help='TCP port')
+@utils.arg('--description', metavar='<DESCRIPTION>', help='Monitor description')
+def do_CreateTCPAlarm(client, args):
+    """Create tcp check"""
+    val = client.CreateTCPAlarm(args.iid, args.tcp_port, args.description)
+    utils.print_dict(val)
+
+
+def do_DescribeTCPAlarms(client, args):
+    """List tcp check"""
+    val = client.DescribeTCPAlarms()
+    utils.print_list(val, 'TCPAlarm')
+
+
+@utils.arg('mid', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_DeleteTCPAlarm(client, args):
+    """Delete tcp check"""
+    val = client.DeleteTCPAlarm(args.mid)
+    utils.print_dict(val)
+
+
+@utils.arg('mid', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_EnableTCPAlarm(client, args):
+    """Enable a tcp check"""
+    val = client.EnableTCPAlarm(args.mid)
+    utils.print_dict(val)
+
+
+@utils.arg('mid', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_DisableTCPAlarm(client, args):
+    """Disable a tcp check"""
+    val = client.DisableTCPAlarm(args.mid)
+    utils.print_dict(val)
+
+
 @utils.arg('id', metavar='<INSTANCE_ID>', help='ID of tempalte')
 @utils.arg('name', metavar='<TEMPLATE_NAME>', help='Name of template')
 @utils.arg('--notes', metavar='<NOTES>', help='Template Notes')
