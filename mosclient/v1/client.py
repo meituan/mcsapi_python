@@ -906,3 +906,90 @@ class Client(BaseClient):
                 raise Exception('IIlegal duration format')
 
         self.request(**kwargs)
+
+    def CreateRedisAlarm(self, rid, metric, operator, threshold, description=None):
+        """ 创建Redis指标监控
+
+        :param rid: Redis的ID
+        :type rid: string
+        :param metric: 监控指标名称
+        :type metric: string
+        :param operator: 判断操作符
+        :type operator: string
+        :param threshold: 监控阈值
+        :type threshold: string
+        :param description: 描述
+        :type description: string
+
+        :returns: 请求是否成功
+        """
+        kwargs = {}
+        kwargs['RedisId'] = rid
+        kwargs['Metric'] = metric
+        kwargs['Operator'] = operator
+        kwargs['Threshold'] = threshold
+        if description:
+            kwargs['Description'] = description
+        val = self.request(**kwargs)
+        return val['RedisAlarm']
+
+    def DescribeRedisAlarms(self):
+        """ 查看Redis指标监控
+
+        :returns: MetricAlarmSet，指标监控列表
+        """
+        val = self.request()
+        return val['RedisAlarmSet']
+
+    def DeleteRedisAlarm(self, mid):
+        """ 删除一个Redis指标监控项
+
+        :param mid: 监控项ID
+        :type mid: string
+
+        :returns: 请求是否成功
+        """
+        kwargs = {}
+        kwargs['MonitorId'] = mid
+        val = self.request(**kwargs)
+        return val
+
+    def DisableRedisAlarm(self, mid):
+        """ 禁用一个Redis指标监控项
+
+        :param mid: 监控项ID
+        :type mid: string
+
+        :returns: 请求是否成功
+        """
+        kwargs = {}
+        kwargs['MonitorId'] = mid
+        val = self.request(**kwargs)
+        return val
+
+    def EnableRedisAlarm(self, mid):
+        """ 启用一个Redis指标监控项
+
+        :param mid: 监控项ID
+        :type mid: string
+
+        :returns: 请求是否成功
+        """
+        kwargs = {}
+        kwargs['MonitorId'] = mid
+        val = self.request(**kwargs)
+        return val
+
+    def DescribeRedisMetrics(self, rid=None):
+        """ 查看Redis监控项
+
+        :param rid: Redis ID
+        :type rid: string
+
+        :returns: MetricSet，包含监控项列表
+        """
+        kwargs = {}
+        if rid:
+            kwargs['RedisId'] = rid
+        val = self.request(**kwargs)
+        return val['MetricSet']

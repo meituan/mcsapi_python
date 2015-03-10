@@ -444,3 +444,48 @@ def do_GetRedisContractInfo(client, args):
     """ Query redis contract information """
     val = client.GetRedisContractInfo(args.id)
     utils.print_dict(val)
+
+
+@utils.arg('--rid', metavar='<REDIS_ID>', required=True, help='Redis ID')
+@utils.arg('--metric', metavar='<METRIC>', required=True, help='Metric Name')
+@utils.arg('--threshold', metavar='<THRESHOLD>', required=True, help='Threshold')
+@utils.arg('--operator', metavar='<OPERATOR>', choices=['GT', 'EQ', 'LT'], required=True, help='Operator')
+@utils.arg('--description', metavar='<DESCRIPTION>', help='Monitor description')
+def do_CreateRedisAlarm(client, args):
+    """Create redis metric check monitor"""
+    val = client.CreateRedisAlarm(args.rid, args.metric, args.operator, args.threshold, args.description)
+    utils.print_dict(val)
+
+
+def do_DescribeRedisAlarms(client, args):
+    """List redis metric check"""
+    val = client.DescribeRedisAlarms()
+    utils.print_list(val, 'RedisAlarm')
+
+
+@utils.arg('mid', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_DeleteRedisAlarm(client, args):
+    """Delete redis metric check"""
+    val = client.DeleteRedisAlarm(args.mid)
+    utils.print_dict(val)
+
+
+@utils.arg('mid', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_EnableRedisAlarm(client, args):
+    """Enable a metric check"""
+    val = client.EnableRedisAlarm(args.mid)
+    utils.print_dict(val)
+
+
+@utils.arg('mid', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_DisableRedisAlarm(client, args):
+    """Disable a metric check"""
+    val = client.DisableRedisAlarm(args.mid)
+    utils.print_dict(val)
+
+
+@utils.arg('--rid', metavar='<REDIS_ID>', help='ID of redis')
+def do_DescribeRedisMetrics(client, args):
+    """List monitor metrics"""
+    val = client.DescribeRedisMetrics(args.rid)
+    utils.print_list(val, 'Metric')
