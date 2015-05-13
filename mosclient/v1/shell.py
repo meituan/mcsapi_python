@@ -379,13 +379,113 @@ def do_RevokeSecurityGroupIngress(client, args):
     """ Revoke an ingress rule from a security group """
     client.RevokeSecurityGroupIngress(args.id, args.rule)
 
+
 @utils.arg('iid', metavar='<INSTANCE_ID>', help='ID of instance')
 @utils.arg('gid', metavar='<GROUP_ID>', help='ID of security group')
 def do_InstanceAssignSecurityGroup(client, args):
     """ Assign a security group to an instance """
     client.InstanceAssignSecurityGroup(args.iid, args.gid)
 
+
 @utils.arg('iid', metavar='<INSTANCE_ID>', help='ID of instance')
 def do_InstanceRevokeSecurityGroup(client, args):
     """ Revoke a security group from an instance """
     client.InstanceRevokeSecurityGroup(args.iid)
+
+
+@utils.arg('--id', metavar='<ID>', action='append', help='ID of redis')
+@utils.arg('--name', metavar='<NAME>', action='append', help='Name of redis')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Limit')
+@utils.arg('--filter', metavar='<FILTER>', action='append', help='Filter')
+def do_DescribeRedis(client, args):
+    """ Get details of all or specified redis """
+    val = client.DescribeRedis(args.id, args.name, args.limit, args.offset, utils.convert_filter(args.filter))
+    utils.print_list(val, 'Redis')
+
+
+@utils.arg('--mem', metavar='<MEMORY>', required=True, type=int, help='Redis memory size(GB)')
+@utils.arg('--duration', metavar='<DURATION>', help='Reserved redis duration, in H or M, e.g. 72H, 1M')
+@utils.arg('--name', metavar='<NAME>', help='Optional redis name')
+@utils.arg('--zone', metavar='<ZONE>', help='Zone')
+def do_CreateRedis(client, args):
+    """ Create redis """
+    val = client.CreateRedis(args.mem,
+                            duration=args.duration,
+                            name=args.name,
+                            zone=args.zone)
+
+    utils.print_dict(val)
+
+
+@utils.arg('id', metavar='<ID>', help='ID of redis')
+def do_TerminateRedis(client, args):
+    """ Terminate a Redis"""
+    client.TerminateRedis(args.id)
+
+
+@utils.arg('id', metavar='<ID>', help='ID of Redis')
+@utils.arg('--duration', metavar='<DURATION>', help='Renew redis duration, in H or M, eg 72H, 1M')
+def do_RenewRedis(client, args):
+    """ Renew a Redis """
+    client.RenewRedis(args.id, duration=args.duration)
+
+
+@utils.arg('id', metavar='<ID>', help='ID of redis')
+@utils.arg('memory', metavar='<MEMORY>', help='Redis memory size(GB)')
+@utils.arg('--duration', metavar='<DURATION>', help='Reserved redis duration, in H or M, e.g. 72H, 1M')
+def do_ChangeRedisType(client, args):
+    """ Change Redis type """
+    client.ChangeRedisType(args.id, args.memory, duration=args.duration)
+
+
+@utils.arg('id', metavar='<ID>', help='ID of redis')
+def do_GetRedisContractInfo(client, args):
+    """ Query redis contract information """
+    val = client.GetRedisContractInfo(args.id)
+    utils.print_dict(val)
+
+
+@utils.arg('--rid', metavar='<REDIS_ID>', required=True, help='Redis ID')
+@utils.arg('--metric', metavar='<METRIC>', required=True, help='Metric Name')
+@utils.arg('--threshold', metavar='<THRESHOLD>', required=True, help='Threshold')
+@utils.arg('--operator', metavar='<OPERATOR>', choices=['GT', 'EQ', 'LT'], required=True, help='Operator')
+@utils.arg('--description', metavar='<DESCRIPTION>', help='Monitor description')
+def do_CreateRedisAlarm(client, args):
+    """Create redis metric check monitor"""
+    val = client.CreateRedisAlarm(args.rid, args.metric, args.operator, args.threshold, args.description)
+    utils.print_dict(val)
+
+
+def do_DescribeRedisAlarms(client, args):
+    """List redis metric check"""
+    val = client.DescribeRedisAlarms()
+    utils.print_list(val, 'RedisAlarm')
+
+
+@utils.arg('mid', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_DeleteRedisAlarm(client, args):
+    """Delete redis metric check"""
+    val = client.DeleteRedisAlarm(args.mid)
+    utils.print_dict(val)
+
+
+@utils.arg('mid', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_EnableRedisAlarm(client, args):
+    """Enable a metric check"""
+    val = client.EnableRedisAlarm(args.mid)
+    utils.print_dict(val)
+
+
+@utils.arg('mid', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_DisableRedisAlarm(client, args):
+    """Disable a metric check"""
+    val = client.DisableRedisAlarm(args.mid)
+    utils.print_dict(val)
+
+
+@utils.arg('--rid', metavar='<REDIS_ID>', help='ID of redis')
+def do_DescribeRedisMetrics(client, args):
+    """List monitor metrics"""
+    val = client.DescribeRedisMetrics(args.rid)
+    utils.print_list(val, 'Metric')

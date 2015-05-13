@@ -792,3 +792,204 @@ class Client(BaseClient):
         kwargs['InstanceId'] = iid
         self.request(**kwargs)
 
+    def DescribeRedis(self, ids=None, names=None, limit=0, offset=0,
+                                filters=None):
+        """ 获得所有Redis
+
+        :param ids: 期望获取的RedisID列表
+        :type ids: list
+        :param names: 期望获取信息的Redis名称列表
+        :type names: list
+        :param limit: 最多返回数量
+        :type limit: int
+        :param offset: 返回Redis的偏移量，用于分页显示
+        :type offset: int
+        :param filters: 过滤器，一个dict，包含过滤字段名和值，可能过滤字段为：name, status
+        :type filters: dict
+
+        :returns: RedisSet，包含Redis列表
+        """
+        kwargs = {}
+        if isinstance(ids, list) and len(ids) > 0:
+            kwargs['RedisId'] = ids
+        if isinstance(names, list) and len(names) > 0:
+            kwargs['RedisName'] = names
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['RedisSet']
+
+    def CreateRedis(self, memory, duration=None, name=None, zone=None):
+        """ 创建Redis
+
+        :param memory: Redis的内存大小(GB)
+        :type memory: int
+        :param duration: Redis租期, 缺省为'1M'，即一个月
+        :type duration: string
+        :param name: Redis名称(可选)
+        :type name: string
+        :param zone: 可用区
+        :type zone: string
+
+        :returns: 创建成功的Redis信息
+        """
+        kwargs = {}
+        kwargs['Memory'] = memory
+        if duration is not None:
+            if match_duration(duration):
+                kwargs['Duration'] = duration
+            else:
+                raise Exception('Illegal duration format')
+        if name is not None:
+            kwargs['RedisName'] = name
+        if zone is not None:
+            kwargs['AvailabilityZoneId'] = zone
+        val = self.request(**kwargs)
+        return val['Redis']
+
+    def TerminateRedis(self, rid):
+        """ 删除Redis
+
+        :param rid: Redis ID
+        :type rid: string
+        """
+        kwargs = {}
+        kwargs['RedisId'] = rid
+        self.request(**kwargs)
+
+    def RenewRedis(self, rid, duration=None):
+        """ Redis租期续费
+
+        :param rid: Redis ID
+        :type rid: string
+        :param duration: 续费租期，缺省为'1M'，即一个月
+        :type duration: string
+        """
+        kwargs = {}
+        kwargs['RedisId'] = rid
+        if duration is not None:
+            if match_duration(duration):
+                kwargs['Duration'] = duration
+            else:
+                raise Exception('Illegal duration %s' % duration)
+        self.request(**kwargs)
+
+    def GetRedisContractInfo(self, rid):
+        """ 获取Redis的租期信息
+
+        :param rid: Redis ID
+        :type rid: string
+
+        :returns: Redis租期信息，包含过期时间、自动删除时间
+        """
+        kwargs = {}
+        kwargs['RedisId'] = rid
+        return self.request(**kwargs)
+
+    def ChangeRedisType(self, rid, memory, duration=None):
+        """ 更改Redis类型
+
+        :param rid: Redis ID
+        :type rid: string
+        :param memory: 指定更改的Redis内存大小，单位GB
+        :type memory: int
+        :param duration: 指定更改后的初始租期，缺省为'1M'，即一个月
+        :type duration: string
+
+        """
+        kwargs = {}
+        kwargs['RedisId'] = rid
+        kwargs['Memory'] = memory
+        if duration is not None:
+            if match_duration(duration):
+                kwargs['Duration'] = duration
+            else:
+                raise Exception('IIlegal duration format')
+
+        self.request(**kwargs)
+
+    def CreateRedisAlarm(self, rid, metric, operator, threshold, description=None):
+        """ 创建Redis指标监控
+
+        :param rid: Redis的ID
+        :type rid: string
+        :param metric: 监控指标名称
+        :type metric: string
+        :param operator: 判断操作符
+        :type operator: string
+        :param threshold: 监控阈值
+        :type threshold: string
+        :param description: 描述
+        :type description: string
+
+        :returns: 请求是否成功
+        """
+        kwargs = {}
+        kwargs['RedisId'] = rid
+        kwargs['Metric'] = metric
+        kwargs['Operator'] = operator
+        kwargs['Threshold'] = threshold
+        if description:
+            kwargs['Description'] = description
+        val = self.request(**kwargs)
+        return val['RedisAlarm']
+
+    def DescribeRedisAlarms(self):
+        """ 查看Redis指标监控
+
+        :returns: MetricAlarmSet，指标监控列表
+        """
+        val = self.request()
+        return val['RedisAlarmSet']
+
+    def DeleteRedisAlarm(self, mid):
+        """ 删除一个Redis指标监控项
+
+        :param mid: 监控项ID
+        :type mid: string
+
+        :returns: 请求是否成功
+        """
+        kwargs = {}
+        kwargs['MonitorId'] = mid
+        val = self.request(**kwargs)
+        return val
+
+    def DisableRedisAlarm(self, mid):
+        """ 禁用一个Redis指标监控项
+
+        :param mid: 监控项ID
+        :type mid: string
+
+        :returns: 请求是否成功
+        """
+        kwargs = {}
+        kwargs['MonitorId'] = mid
+        val = self.request(**kwargs)
+        return val
+
+    def EnableRedisAlarm(self, mid):
+        """ 启用一个Redis指标监控项
+
+        :param mid: 监控项ID
+        :type mid: string
+
+        :returns: 请求是否成功
+        """
+        kwargs = {}
+        kwargs['MonitorId'] = mid
+        val = self.request(**kwargs)
+        return val
+
+    def DescribeRedisMetrics(self, rid=None):
+        """ 查看Redis监控项
+
+        :param rid: Redis ID
+        :type rid: string
+
+        :returns: MetricSet，包含监控项列表
+        """
+        kwargs = {}
+        if rid:
+            kwargs['RedisId'] = rid
+        val = self.request(**kwargs)
+        return val['MetricSet']
