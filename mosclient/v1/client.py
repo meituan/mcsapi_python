@@ -401,7 +401,6 @@ class Client(BaseClient):
         kwargs['KeyName'] = kid
         self.request(**kwargs)
 
-
     def DescribeInstanceMetrics(self, iid=None):
         """ 查看虚拟机监控项
 
@@ -739,7 +738,6 @@ class Client(BaseClient):
         """
 
         kwargs = {}
-        idx = 0
         kwargs['GroupId'] = gid
         if rules:
             kwargs['Rule'] = rules
@@ -759,7 +757,6 @@ class Client(BaseClient):
         """
 
         kwargs = {}
-        idx = 0
         kwargs['GroupId'] = gid
         if rules:
             kwargs['Rule'] = rules
@@ -791,6 +788,23 @@ class Client(BaseClient):
         kwargs = {}
         kwargs['InstanceId'] = iid
         self.request(**kwargs)
+
+    def DescribeAvailabilityZones(self, limit=0, offset=0, filters=None):
+        """ 获取Zone（可用区）
+
+        :param limit: 返回Zone数量的上限（可选）
+        :type limit: int
+        :param offset: 返回Zone数量的偏移量，用于分页显示（可选）
+        :type offset: int
+        :param filters: 过滤条件，key/value分别指定过滤字段名称和值，支持的字段名称为：name，status（可选）
+        :type filters: dict
+
+        :returns: ZoneSet，包含系统支持的Zone列表
+        """
+        kwargs = {}
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['ZoneSet']
 
     def DescribeRedis(self, ids=None, names=None, limit=0, offset=0,
                                 filters=None):
@@ -827,7 +841,7 @@ class Client(BaseClient):
         :type duration: string
         :param name: Redis名称(可选)
         :type name: string
-        :param zone: 可用区
+        :param zone: 可用区，可通过DescribeAvailabilityZones方法查询（可选）
         :type zone: string
 
         :returns: 创建成功的Redis信息
@@ -993,3 +1007,147 @@ class Client(BaseClient):
             kwargs['RedisId'] = rid
         val = self.request(**kwargs)
         return val['MetricSet']
+
+    def CreateMysql(self, mtype, datadisk, username, password, name, duration=None, zone=None):
+        """ 创建Mysql
+
+        :param mtype: Mysql类型ID，可通过DescribeMysqlTypes方法查询
+        :type mtype: string
+        :param datadisk: Mysql使用的额外存储空间，单位为GB
+        :type datadisk: int
+        :param username: Mysql的用户名
+        :type username: string
+        :param password: Mysql的用户密码
+        :type password: string
+        :param name: Mysql的名称
+        :type name: string
+        :param duration: Mysql租期，单位：'H'(小时)、'M'(月)，缺省为'1M'，即一个月（可选）
+        :type duration: string
+        :param zone: 可用区，可通过DescribeAvailabilityZones方法查询（可选）
+        :type zone: string
+
+        :returns: 创建成功的Mysql信息
+        """
+        kwargs = {}
+        kwargs['MysqlType'] = mtype
+        kwargs['ExtraExtDisksize'] = datadisk
+        kwargs['MysqlUsername'] = username
+        kwargs['MysqlPassword'] = password
+        kwargs['MysqlName'] = name
+        if duration is not None:
+            if match_duration(duration):
+                kwargs['Duration'] = duration
+            else:
+                raise Exception('Illegal duration format')
+        if zone is not None:
+            kwargs['AvailabilityZoneId'] = zone
+        val = self.request(**kwargs)
+        return val['Mysql']
+
+    def DescribeMysqls(self, ids=None, names=None, limit=0, offset=0, filters=None):
+        """ 获取Mysql信息
+
+        :param ids: 期望获取的MysqlID列表（可选）
+        :type ids: list
+        :param names: 期望获取的Mysql名称列表（可选）
+        :type names: list
+        :param limit: 返回Mysql数量的上限（可选）
+        :type limit: int
+        :param offset: 返回Mysql数量的偏移量，用于分页显示（可选）
+        :type offset: int
+        :param filters: 过滤条件，key/value分别指定过滤字段名称和值，支持的字段名称为：name，status（可选）
+        :type filters: dict
+
+        :returns: MysqlSet, 包含Mysql列表
+        """
+        kwargs = {}
+        if isinstance(ids, list) and len(ids) > 0:
+            kwargs['MysqlIds'] = ids
+        if isinstance(names, list) and len(names) > 0:
+            kwargs['MysqlNames'] = names
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['MysqlSet']
+
+    def TerminateMysql(self, mid):
+        """ 删除Mysql
+
+        :param mid: Mysql ID
+        :type mid: string
+
+        """
+        kwargs = {}
+        kwargs['MysqlId'] = mid
+        self.request(**kwargs)
+
+    def ChangeMysqlType(self, mid, mtype, datadisk=None, duration=None):
+        """ 更改Mysql类型
+
+        :param mid: Mysql ID
+        :type mid: string
+        :param mtype: 指定更改的Mysql类型ID，可通过DescribeMysqlTypes方法查询
+        :type mtype: string
+        :param datadisk: 指定更改的Mysql额外存储空间，单位GB（可选）
+        :type datadisk: int
+        :param duration:  指定更改的Mysql租期，单位：'H'(小时)、'M'(月)，缺省为'1M'，即一个月（可选）
+        :type duration: string
+
+        """
+        kwargs = {}
+        kwargs['MysqlId'] = mid
+        kwargs['MysqlType'] = mtype
+        if datadisk is not None:
+            kwargs['ExtraExtDisksize'] = datadisk
+        if duration is not None:
+            if match_duration(duration):
+                kwargs['Duration'] = duration
+            else:
+                raise Exception('Illegal duration format')
+        self.request(**kwargs)
+
+    def DescribeMysqlTypes(self, limit=0, offset=0, filters=None):
+        """ 获取Mysql类型
+
+        :param limit: 返回Mysql类型数量的上限（可选）
+        :type limit: int
+        :param offset: 返回Mysql类型数量的偏移量，用于分页显示（可选）
+        :type offset: int
+        :param filters: 过滤条件，key/value分别指定过滤字段名称和值，支持的字段名称为：name，status（可选）
+        :type filters: dict
+
+        :returns: MysqlTypeSet，包含系统支持的Mysql类型列表
+        """
+        kwargs = {}
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['MysqlTypeSet']
+
+    def RenewMysql(self, mid, duration=None):
+        """ Mysql租期续费
+
+        :param mid: Mysql ID
+        :type mid: string
+        :param duration: 续费周期，单位：'H'(小时)、'M'(月)，缺省为'1M'，即一个月（可选）
+        :type duration: string
+
+        """
+        kwargs = {}
+        kwargs['MysqlId'] = mid
+        if duration is not None:
+            if match_duration(duration):
+                kwargs['Duration'] = duration
+            else:
+                raise Exception('Illegal duration format')
+        self.request(**kwargs)
+
+    def GetMysqlContractInfo(self, mid):
+        """ 获取Mysql的租期信息
+
+        :param mid: Mysql ID
+        :type mid: string
+
+        :returns: Mysql租期信息，包含过期时间、自动删除时间
+        """
+        kwargs = {}
+        kwargs['MysqlId'] = mid
+        return self.request(**kwargs)
