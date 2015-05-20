@@ -110,7 +110,7 @@ def do_StartInstance(client, args):
 
 
 @utils.arg('id', metavar='<ID>', help='ID of instance')
-@utils.arg('--force', action='store_true', help='Force stop running isntance')
+@utils.arg('--force', action='store_true', help='Force stop running instance')
 def do_StopInstance(client, args):
     """ Stop an instance """
     client.StopInstance(args.id, force=args.force)
@@ -530,6 +530,25 @@ def do_DescribeRDS(client, args):
     """ Get details of all or specified rds """
     val = client.DescribeRDS(args.id, args.name, args.limit, args.offset, utils.convert_filter(args.filter))
     utils.print_list(val, 'RDS')
+
+
+@utils.arg('id', metavar='<ID>', help='ID of rds')
+def do_StartRDS(client, args):
+    """ Start an rds """
+    client.StartRDS(args.id)
+
+
+@utils.arg('id', metavar='<ID>', help='ID of rds')
+@utils.arg('--force', action='store_true', help='Force stop running rds')
+def do_StopRDS(client, args):
+    """ Stop an rds """
+    client.StopRDS(args.id, force=args.force)
+
+
+@utils.arg('id', metavar='<ID>', help='ID of rds')
+def do_RestartRDS(client, args):
+    """ Reboot an rds """
+    client.RestartRDS(args.id)
 
 
 @utils.arg('id', metavar='<ID>', help='ID of rds')

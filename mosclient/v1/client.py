@@ -1071,6 +1071,40 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val['RDSSet']
 
+    def StartRDS(self, rid):
+        """ 启动RDS
+
+        :param rid: RDS ID
+        :type rid: string
+        """
+        kwargs = {}
+        kwargs['RDSId'] = rid
+        self.request(**kwargs)
+
+    def StopRDS(self, rid, force=False):
+        """ 停止RDS
+
+        :param rid: RDS ID
+        :type rid: string
+        :param force: 是否强制停止RDS
+        :type param: bool
+        """
+        kwargs = {}
+        kwargs['RDSId'] = rid
+        if force:
+            kwargs['Force'] = force
+        self.request(**kwargs)
+
+    def RestartRDS(self, rid):
+        """ 重启RDS
+
+        :param rid: RDS ID
+        :type rid: string
+        """
+        kwargs = {}
+        kwargs['RDSId'] = rid
+        self.request(**kwargs)
+
     def TerminateRDS(self, rid):
         """ 删除RDS
 
