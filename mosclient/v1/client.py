@@ -1013,9 +1013,9 @@ class Client(BaseClient):
 
         :param rtype: RDS类型ID，可通过DescribeRDSTypes方法查询
         :type rtype: string
-        :param datadisk: RDS使用的额外存储空间，单位为GB
+        :param datadisk: RDS使用的数据盘大小，单位为GB
         :type datadisk: int
-        :param driver: RDS的驱动名称，可通过DescribeRDSDrivers方法查询
+        :param driver: RDS的引擎名称，可通过DescribeRDSDrivers方法查询
         :type driver: string
         :param username: RDS的用户名
         :type username: string
@@ -1023,7 +1023,7 @@ class Client(BaseClient):
         :type password: string
         :param name: RDS的名称
         :type name: string
-        :param zone: 可用区名称(name)，可通过DescribeAvailabilityZones方法查询
+        :param zone: 可用区，可通过DescribeAvailabilityZones方法查询
         :type zone: string
         :param duration: RDS租期，单位：'H'(小时)、'M'(月)，缺省为'1M'，即一个月（可选）
         :type duration: string
@@ -1089,7 +1089,7 @@ class Client(BaseClient):
         :type rid: string
         :param rtype: 指定更改的RDS类型ID，可通过DescribeRDSTypes方法查询
         :type rtype: string
-        :param datadisk: 指定更改的RDS额外存储空间，单位GB（可选）
+        :param datadisk: 指定更改的RDS数据盘大小，单位GB（可选）
         :type datadisk: int
         :param duration:  指定更改的RDS租期，单位：'H'(小时)、'M'(月)，缺省为'1M'，即一个月（可选）
         :type duration: string
@@ -1124,20 +1124,12 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val['RDSTypeSet']
 
-    def DescribeRDSDrivers(self, limit=0, offset=0, filters=None):
-        """ 获取所有RDS驱动
+    def DescribeRDSDrivers(self):
+        """ 获取所有RDS引擎
 
-        :param limit: 最大返回数量（可选）
-        :type limit: int
-        :param offset: 返回RDS驱动的偏移量，用于分页显示（可选）
-        :type offset: int
-        :param filters: 过滤条件，key/value分别指定过滤字段名称和值，支持的字段名称为：name，status（可选）
-        :type filters: dict
-
-        :returns: RDSDriverSet，包含系统支持的RDS驱动列表
+        :returns: RDSDriverSet，包含系统支持的RDS引擎列表
         """
         kwargs = {}
-        self.parse_list_params(limit, offset, filters, kwargs)
         val = self.request(**kwargs)
         return val['RDSDriverSet']
 

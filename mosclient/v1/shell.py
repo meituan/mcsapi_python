@@ -556,12 +556,9 @@ def do_DescribeRDSTypes(client, args):
     utils.print_list(val, 'RDSType')
 
 
-@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
-@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
-@utils.arg('--filter', metavar='<FILTER>', action='append', help='Filter')
 def do_DescribeRDSDrivers(client, args):
     """ List all rds drivers """
-    val = client.DescribeRDSDrivers(args.limit, args.offset, utils.convert_filter(args.filter))
+    val = client.DescribeRDSDrivers()
     utils.print_list(val, 'RDSDriver')
 
 
