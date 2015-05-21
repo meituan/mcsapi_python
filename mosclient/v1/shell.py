@@ -503,7 +503,7 @@ def do_DescribeRedisMetrics(client, args):
 @utils.arg('rds_type', metavar='<RDS_TYPE>', help='RDS type')
 @utils.arg('datadisk', metavar='<DISKSIZE>', type=int, help='Extra disksize in GB')
 @utils.arg('name', metavar='<NAME>', help='RDS name')
-@utils.arg('--driver', metavar='<DRIVER>', required=True, help='RDS driver')
+@utils.arg('--engine', metavar='<ENGINE>', required=True, help='RDS engine')
 @utils.arg('--username', metavar='<USERNAME>', required=True, help='RDS username')
 @utils.arg('--password', metavar='<PASSWORD>', required=True, help='RDS password')
 @utils.arg('--zone', metavar='<ZONE>', required=True, help='Availabble zone')
@@ -512,7 +512,7 @@ def do_CreateRDS(client, args):
     """ Create rds """
     val = client.CreateRDS(args.rds_type,
                         args.datadisk,
-                        args.driver,
+                        args.engine,
                         args.username,
                         args.password,
                         args.name,
@@ -575,10 +575,10 @@ def do_DescribeRDSTypes(client, args):
     utils.print_list(val, 'RDSType')
 
 
-def do_DescribeRDSDrivers(client, args):
-    """ List all rds drivers """
-    val = client.DescribeRDSDrivers()
-    utils.print_list(val, 'RDSDriver')
+def do_DescribeRDSEngines(client, args):
+    """ List all rds engines """
+    val = client.DescribeRDSEngines()
+    utils.print_list(val, 'RDSEngine')
 
 
 @utils.arg('id', metavar='<ID>', help='ID of rds')

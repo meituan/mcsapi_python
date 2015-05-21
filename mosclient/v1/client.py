@@ -1008,15 +1008,15 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val['MetricSet']
 
-    def CreateRDS(self, rtype, datadisk, driver, username, password, name, zone, duration=None):
+    def CreateRDS(self, rtype, datadisk, engine, username, password, name, zone, duration=None):
         """ 创建RDS
 
         :param rtype: RDS类型ID，可通过DescribeRDSTypes方法查询
         :type rtype: string
         :param datadisk: RDS使用的数据盘大小，单位为GB
         :type datadisk: int
-        :param driver: RDS的引擎名称，可通过DescribeRDSDrivers方法查询
-        :type driver: string
+        :param engine: RDS的引擎名称，可通过DescribeRDSEngines方法查询
+        :type engine: string
         :param username: RDS的用户名
         :type username: string
         :param password: RDS的用户密码
@@ -1033,7 +1033,7 @@ class Client(BaseClient):
         kwargs = {}
         kwargs['RDSType'] = rtype
         kwargs['ExtraExtDisksize'] = datadisk
-        kwargs['Driver'] = driver
+        kwargs['Engine'] = engine
         kwargs['RDSUsername'] = username
         kwargs['RDSPassword'] = password
         kwargs['RDSName'] = name
@@ -1158,14 +1158,14 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val['RDSTypeSet']
 
-    def DescribeRDSDrivers(self):
+    def DescribeRDSEngines(self):
         """ 获取所有RDS引擎
 
-        :returns: RDSDriverSet，包含系统支持的RDS引擎列表
+        :returns: RDSEngineSet，包含系统支持的RDS引擎列表
         """
         kwargs = {}
         val = self.request(**kwargs)
-        return val['RDSDriverSet']
+        return val['RDSEngineSet']
 
     def RenewRDS(self, rid, duration=None):
         """ RDS租期续费
