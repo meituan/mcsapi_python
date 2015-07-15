@@ -566,6 +566,13 @@ def do_ChangeRDSType(client, args):
     client.ChangeRDSType(args.id, args.rds_type, args.datadisk, args.duration)
 
 
+@utils.arg('id', metavar='<ID>', help='ID of RDS')
+@utils.arg('--duration', metavar='<DURATION>', help='Renew RDS duration, in H or M, eg 72H, 1M')
+def do_RenewRDS(client, args):
+    """ Renew a RDS """
+    client.RenewRDS(args.id, duration=args.duration)
+
+
 @utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
 @utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
 @utils.arg('--filter', metavar='<FILTER>', action='append', help='Filter')
@@ -586,3 +593,48 @@ def do_GetRDSContractInfo(client, args):
     """ Query rds contract information """
     val = client.GetRDSContractInfo(args.id)
     utils.print_dict(val)
+
+
+@utils.arg('--rid', metavar='<RDS_ID>', required=True, help='RDS ID')
+@utils.arg('--metric', metavar='<METRIC>', required=True, help='Metric Name')
+@utils.arg('--threshold', metavar='<THRESHOLD>', required=True, help='Threshold')
+@utils.arg('--operator', metavar='<OPERATOR>', choices=['GT', 'EQ', 'LT'], required=True, help='Operator')
+@utils.arg('--description', metavar='<DESCRIPTION>', help='Monitor description')
+def do_CreateRDSAlarm(client, args):
+    """Create rds metric check monitor"""
+    val = client.CreateRDSAlarm(args.rid, args.metric, args.operator, args.threshold, args.description)
+    utils.print_dict(val)
+
+
+def do_DescribeRDSAlarms(client, args):
+    """List redis metric check"""
+    val = client.DescribeRDSAlarms()
+    utils.print_list(val, 'RDSAlarm')
+
+
+@utils.arg('mid', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_DeleteRDSAlarm(client, args):
+    """Delete redis metric check"""
+    val = client.DeleteRDSAlarm(args.mid)
+    utils.print_dict(val)
+
+
+@utils.arg('mid', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_EnableRDSAlarm(client, args):
+    """Enable a metric check"""
+    val = client.EnableRDSAlarm(args.mid)
+    utils.print_dict(val)
+
+
+@utils.arg('mid', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_DisableRDSAlarm(client, args):
+    """Disable a metric check"""
+    val = client.DisableRDSAlarm(args.mid)
+    utils.print_dict(val)
+
+
+@utils.arg('--rid', metavar='<RDS_ID>', help='ID of rds')
+def do_DescribeRDSMetrics(client, args):
+    """List monitor metrics"""
+    val = client.DescribeRDSMetrics(args.rid)
+    utils.print_list(val, 'Metric')
