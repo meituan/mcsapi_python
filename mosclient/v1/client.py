@@ -1196,3 +1196,90 @@ class Client(BaseClient):
         kwargs = {}
         kwargs['RDSId'] = rid
         return self.request(**kwargs)
+
+    def CreateRDSAlarm(self, rid, metric, operator, threshold, description=None):
+        """ 创建RDS指标监控
+
+        :param rid: RDS的ID
+        :type rid: string
+        :param metric: 监控指标名称
+        :type metric: string
+        :param operator: 判断操作符
+        :type operator: string
+        :param threshold: 监控阈值
+        :type threshold: string
+        :param description: 描述
+        :type description: string
+
+        :returns: 请求是否成功
+        """
+        kwargs = {}
+        kwargs['RDSId'] = rid
+        kwargs['Metric'] = metric
+        kwargs['Operator'] = operator
+        kwargs['Threshold'] = threshold
+        if description:
+            kwargs['Description'] = description
+        val = self.request(**kwargs)
+        return val['RDSAlarm']
+
+    def DescribeRDSAlarms(self):
+        """ 查看RDS指标监控
+
+        :returns: MetricAlarmSet，指标监控列表
+        """
+        val = self.request()
+        return val['RDSAlarmSet']
+
+    def DeleteRDSAlarm(self, mid):
+        """ 删除一个RDS指标监控项
+
+        :param mid: 监控项ID
+        :type mid: string
+
+        :returns: 请求是否成功
+        """
+        kwargs = {}
+        kwargs['MonitorId'] = mid
+        val = self.request(**kwargs)
+        return val
+
+    def DisableRDSAlarm(self, mid):
+        """ 禁用一个RDS指标监控项
+
+        :param mid: 监控项ID
+        :type mid: string
+
+        :returns: 请求是否成功
+        """
+        kwargs = {}
+        kwargs['MonitorId'] = mid
+        val = self.request(**kwargs)
+        return val
+
+    def EnableRDSAlarm(self, mid):
+        """ 启用一个RDS指标监控项
+
+        :param mid: 监控项ID
+        :type mid: string
+
+        :returns: 请求是否成功
+        """
+        kwargs = {}
+        kwargs['MonitorId'] = mid
+        val = self.request(**kwargs)
+        return val
+
+    def DescribeRDSMetrics(self, rid=None):
+        """ 查看RDS监控项
+
+        :param rid: RDS ID
+        :type rid: string
+
+        :returns: MetricSet，包含监控项列表
+        """
+        kwargs = {}
+        if rid:
+            kwargs['RDSId'] = rid
+        val = self.request(**kwargs)
+        return val['MetricSet']
