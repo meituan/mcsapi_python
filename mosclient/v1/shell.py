@@ -110,7 +110,7 @@ def do_StartInstance(client, args):
 
 
 @utils.arg('id', metavar='<ID>', help='ID of instance')
-@utils.arg('--force', action='store_true', help='Force stop running isntance')
+@utils.arg('--force', action='store_true', help='Force stop running instance')
 def do_StopInstance(client, args):
     """ Stop an instance """
     client.StopInstance(args.id, force=args.force)
@@ -355,7 +355,7 @@ def do_CreateSecurityGroup(client, args):
 @utils.arg('--filter', metavar='<FILTER>', action='append', help='Filter')
 def do_DescribeSecurityGroups(client, args):
     """ List all security groups """
-    p = utils.convert_filter(args.filter)
+    #p = utils.convert_filter(args.filter)
     val = client.DescribeSecurityGroups(args.id, args.name, args.limit, args.offset, utils.convert_filter(args.filter))
     utils.print_list(val, 'SecurityGroup')
 
@@ -391,6 +391,15 @@ def do_InstanceAssignSecurityGroup(client, args):
 def do_InstanceRevokeSecurityGroup(client, args):
     """ Revoke a security group from an instance """
     client.InstanceRevokeSecurityGroup(args.iid)
+
+
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--filter', metavar='<FILTER>', action='append', help='Filter')
+def do_DescribeAvailabilityZones(client, args):
+    """ List all availability zones """
+    val = client.DescribeAvailabilityZones(args.limit, args.offset, utils.convert_filter(args.filter))
+    utils.print_list(val, 'AvailabilityZone')
 
 
 @utils.arg('--id', metavar='<ID>', action='append', help='ID of redis')
@@ -488,4 +497,144 @@ def do_DisableRedisAlarm(client, args):
 def do_DescribeRedisMetrics(client, args):
     """List monitor metrics"""
     val = client.DescribeRedisMetrics(args.rid)
+    utils.print_list(val, 'Metric')
+
+
+@utils.arg('rds_type', metavar='<RDS_TYPE>', help='RDS type')
+@utils.arg('datadisk', metavar='<DISKSIZE>', type=int, help='Extra disksize in GB')
+@utils.arg('name', metavar='<NAME>', help='RDS name')
+@utils.arg('--engine', metavar='<ENGINE>', required=True, help='RDS engine')
+@utils.arg('--username', metavar='<USERNAME>', required=True, help='RDS username')
+@utils.arg('--password', metavar='<PASSWORD>', required=True, help='RDS password')
+@utils.arg('--zone', metavar='<ZONE>', required=True, help='Availabble zone')
+@utils.arg('--duration', metavar='<DURATION>', help='Reserved rds duration, in H or M, e.g. 72H, 1M')
+def do_CreateRDS(client, args):
+    """ Create rds """
+    val = client.CreateRDS(args.rds_type,
+                        args.datadisk,
+                        args.engine,
+                        args.username,
+                        args.password,
+                        args.name,
+                        args.zone,
+                        args.duration)
+    utils.print_dict(val)
+
+
+@utils.arg('--id', metavar='<ID>', action='append', help='ID of rds')
+@utils.arg('--name', metavar='<NAME>', action='append', help='Name of rds')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--filter', metavar='<FILTER>', action='append', help='Filter')
+def do_DescribeRDS(client, args):
+    """ Get details of all or specified rds """
+    val = client.DescribeRDS(args.id, args.name, args.limit, args.offset, utils.convert_filter(args.filter))
+    utils.print_list(val, 'RDS')
+
+
+@utils.arg('id', metavar='<ID>', help='ID of rds')
+def do_StartRDS(client, args):
+    """ Start an rds """
+    client.StartRDS(args.id)
+
+
+@utils.arg('id', metavar='<ID>', help='ID of rds')
+@utils.arg('--force', action='store_true', help='Force stop running rds')
+def do_StopRDS(client, args):
+    """ Stop an rds """
+    client.StopRDS(args.id, force=args.force)
+
+
+@utils.arg('id', metavar='<ID>', help='ID of rds')
+def do_RestartRDS(client, args):
+    """ Reboot an rds """
+    client.RestartRDS(args.id)
+
+
+@utils.arg('id', metavar='<ID>', help='ID of rds')
+def do_TerminateRDS(client, args):
+    """ Terminate an rds """
+    client.TerminateRDS(args.id)
+
+
+@utils.arg('id', metavar='<ID>', help='ID of rds')
+@utils.arg('--rds-type', metavar='<RDS_TYPE>', required=True, help='rds type')
+@utils.arg('--datadisk', metavar='<DISKSIZE>', type=int, help='Extra disksize in GB')
+@utils.arg('--duration', metavar='<DURATION>', help='Reserved rds duration, in H or M, e.g. 72H, 1M')
+def do_ChangeRDSType(client, args):
+    """ Change rds type """
+    client.ChangeRDSType(args.id, args.rds_type, args.datadisk, args.duration)
+
+
+@utils.arg('id', metavar='<ID>', help='ID of RDS')
+@utils.arg('--duration', metavar='<DURATION>', help='Renew RDS duration, in H or M, eg 72H, 1M')
+def do_RenewRDS(client, args):
+    """ Renew a RDS """
+    client.RenewRDS(args.id, duration=args.duration)
+
+
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--filter', metavar='<FILTER>', action='append', help='Filter')
+def do_DescribeRDSTypes(client, args):
+    """ List all rds types """
+    val = client.DescribeRDSTypes(args.limit, args.offset, utils.convert_filter(args.filter))
+    utils.print_list(val, 'RDSType')
+
+
+def do_DescribeRDSEngines(client, args):
+    """ List all rds engines """
+    val = client.DescribeRDSEngines()
+    utils.print_list(val, 'RDSEngine')
+
+
+@utils.arg('id', metavar='<ID>', help='ID of rds')
+def do_GetRDSContractInfo(client, args):
+    """ Query rds contract information """
+    val = client.GetRDSContractInfo(args.id)
+    utils.print_dict(val)
+
+
+@utils.arg('--rid', metavar='<RDS_ID>', required=True, help='RDS ID')
+@utils.arg('--metric', metavar='<METRIC>', required=True, help='Metric Name')
+@utils.arg('--threshold', metavar='<THRESHOLD>', required=True, help='Threshold')
+@utils.arg('--operator', metavar='<OPERATOR>', choices=['GT', 'EQ', 'LT'], required=True, help='Operator')
+@utils.arg('--description', metavar='<DESCRIPTION>', help='Monitor description')
+def do_CreateRDSAlarm(client, args):
+    """Create rds metric check monitor"""
+    val = client.CreateRDSAlarm(args.rid, args.metric, args.operator, args.threshold, args.description)
+    utils.print_dict(val)
+
+
+def do_DescribeRDSAlarms(client, args):
+    """List redis metric check"""
+    val = client.DescribeRDSAlarms()
+    utils.print_list(val, 'RDSAlarm')
+
+
+@utils.arg('mid', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_DeleteRDSAlarm(client, args):
+    """Delete redis metric check"""
+    val = client.DeleteRDSAlarm(args.mid)
+    utils.print_dict(val)
+
+
+@utils.arg('mid', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_EnableRDSAlarm(client, args):
+    """Enable a metric check"""
+    val = client.EnableRDSAlarm(args.mid)
+    utils.print_dict(val)
+
+
+@utils.arg('mid', metavar='<MONITOR_ID>', help='ID of monitor')
+def do_DisableRDSAlarm(client, args):
+    """Disable a metric check"""
+    val = client.DisableRDSAlarm(args.mid)
+    utils.print_dict(val)
+
+
+@utils.arg('--rid', metavar='<RDS_ID>', help='ID of rds')
+def do_DescribeRDSMetrics(client, args):
+    """List monitor metrics"""
+    val = client.DescribeRDSMetrics(args.rid)
     utils.print_list(val, 'Metric')

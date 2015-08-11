@@ -401,7 +401,6 @@ class Client(BaseClient):
         kwargs['KeyName'] = kid
         self.request(**kwargs)
 
-
     def DescribeInstanceMetrics(self, iid=None):
         """ 查看虚拟机监控项
 
@@ -739,7 +738,6 @@ class Client(BaseClient):
         """
 
         kwargs = {}
-        idx = 0
         kwargs['GroupId'] = gid
         if rules:
             kwargs['Rule'] = rules
@@ -759,7 +757,6 @@ class Client(BaseClient):
         """
 
         kwargs = {}
-        idx = 0
         kwargs['GroupId'] = gid
         if rules:
             kwargs['Rule'] = rules
@@ -791,6 +788,23 @@ class Client(BaseClient):
         kwargs = {}
         kwargs['InstanceId'] = iid
         self.request(**kwargs)
+
+    def DescribeAvailabilityZones(self, limit=0, offset=0, filters=None):
+        """ 获取Zone（可用区）
+
+        :param limit: 返回Zone数量的上限（可选）
+        :type limit: int
+        :param offset: 返回Zone数量的偏移量，用于分页显示（可选）
+        :type offset: int
+        :param filters: 过滤条件，key/value分别指定过滤字段名称和值，支持的字段名称为：name，status（可选）
+        :type filters: dict
+
+        :returns: AvailabilityZoneSet，包含系统支持的Zone列表
+        """
+        kwargs = {}
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['AvailabilityZoneSet']
 
     def DescribeRedis(self, ids=None, names=None, limit=0, offset=0,
                                 filters=None):
@@ -827,7 +841,7 @@ class Client(BaseClient):
         :type duration: string
         :param name: Redis名称(可选)
         :type name: string
-        :param zone: 可用区
+        :param zone: 可用区，可通过DescribeAvailabilityZones方法查询（可选）
         :type zone: string
 
         :returns: 创建成功的Redis信息
@@ -991,5 +1005,281 @@ class Client(BaseClient):
         kwargs = {}
         if rid:
             kwargs['RedisId'] = rid
+        val = self.request(**kwargs)
+        return val['MetricSet']
+
+    def CreateRDS(self, rtype, datadisk, engine, username, password, name, zone, duration=None):
+        """ 创建RDS
+
+        :param rtype: RDS类型ID，可通过DescribeRDSTypes方法查询
+        :type rtype: string
+        :param datadisk: RDS使用的数据盘大小，单位为GB
+        :type datadisk: int
+        :param engine: RDS的引擎名称，可通过DescribeRDSEngines方法查询
+        :type engine: string
+        :param username: RDS的用户名
+        :type username: string
+        :param password: RDS的用户密码
+        :type password: string
+        :param name: RDS的名称
+        :type name: string
+        :param zone: 可用区，可通过DescribeAvailabilityZones方法查询
+        :type zone: string
+        :param duration: RDS租期，单位：'H'(小时)、'M'(月)，缺省为'1M'，即一个月（可选）
+        :type duration: string
+
+        :returns: 创建成功的RDS信息
+        """
+        kwargs = {}
+        kwargs['RDSType'] = rtype
+        kwargs['ExtraExtDisksize'] = datadisk
+        kwargs['Engine'] = engine
+        kwargs['RDSUsername'] = username
+        kwargs['RDSPassword'] = password
+        kwargs['RDSName'] = name
+        kwargs['AvailabilityZoneId'] = zone
+        if duration is not None:
+            if match_duration(duration):
+                kwargs['Duration'] = duration
+            else:
+                raise Exception('Illegal duration format')
+        val = self.request(**kwargs)
+        return val['RDS']
+
+    def DescribeRDS(self, ids=None, names=None, limit=0, offset=0, filters=None):
+        """ 获取所有RDS
+
+        :param ids: 期望获取的RDS ID列表（可选）
+        :type ids: list
+        :param names: 期望获取的RDS名称列表（可选）
+        :type names: list
+        :param limit: 最多返回数量（可选）
+        :type limit: int
+        :param offset: 返回RDS的偏移量，用于分页显示（可选）
+        :type offset: int
+        :param filters: 过滤条件，key/value分别指定过滤字段名称和值，支持的字段名称为：name，status（可选）
+        :type filters: dict
+
+        :returns: RDSSet, 包含RDS列表
+        """
+        kwargs = {}
+        if isinstance(ids, list) and len(ids) > 0:
+            kwargs['RDSIds'] = ids
+        if isinstance(names, list) and len(names) > 0:
+            kwargs['RDSNames'] = names
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['RDSSet']
+
+    def StartRDS(self, rid):
+        """ 启动RDS
+
+        :param rid: RDS ID
+        :type rid: string
+        """
+        kwargs = {}
+        kwargs['RDSId'] = rid
+        self.request(**kwargs)
+
+    def StopRDS(self, rid, force=False):
+        """ 停止RDS
+
+        :param rid: RDS ID
+        :type rid: string
+        :param force: 是否强制停止RDS
+        :type param: bool
+        """
+        kwargs = {}
+        kwargs['RDSId'] = rid
+        if force:
+            kwargs['Force'] = force
+        self.request(**kwargs)
+
+    def RestartRDS(self, rid):
+        """ 重启RDS
+
+        :param rid: RDS ID
+        :type rid: string
+        """
+        kwargs = {}
+        kwargs['RDSId'] = rid
+        self.request(**kwargs)
+
+    def TerminateRDS(self, rid):
+        """ 删除RDS
+
+        :param rid: RDS ID
+        :type rid: string
+
+        """
+        kwargs = {}
+        kwargs['RDSId'] = rid
+        self.request(**kwargs)
+
+    def ChangeRDSType(self, rid, rtype, datadisk=None, duration=None):
+        """ 更改RDS类型
+
+        :param rid: RDS ID
+        :type rid: string
+        :param rtype: 指定更改的RDS类型ID，可通过DescribeRDSTypes方法查询
+        :type rtype: string
+        :param datadisk: 指定更改的RDS数据盘大小，单位GB（可选）
+        :type datadisk: int
+        :param duration:  指定更改的RDS租期，单位：'H'(小时)、'M'(月)，缺省为'1M'，即一个月（可选）
+        :type duration: string
+
+        """
+        kwargs = {}
+        kwargs['RDSId'] = rid
+        kwargs['RDSType'] = rtype
+        if datadisk is not None:
+            kwargs['ExtraExtDisksize'] = datadisk
+        if duration is not None:
+            if match_duration(duration):
+                kwargs['Duration'] = duration
+            else:
+                raise Exception('Illegal duration format')
+        self.request(**kwargs)
+
+    def DescribeRDSTypes(self, limit=0, offset=0, filters=None):
+        """ 获取所有RDS类型
+
+        :param limit: 最大返回数量（可选）
+        :type limit: int
+        :param offset: 返回RDS类型的偏移量，用于分页显示（可选）
+        :type offset: int
+        :param filters: 过滤条件，key/value分别指定过滤字段名称和值，支持的字段名称为：name，status（可选）
+        :type filters: dict
+
+        :returns: RDSTypeSet，包含系统支持的RDS类型列表
+        """
+        kwargs = {}
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['RDSTypeSet']
+
+    def DescribeRDSEngines(self):
+        """ 获取所有RDS引擎
+
+        :returns: RDSEngineSet，包含系统支持的RDS引擎列表
+        """
+        kwargs = {}
+        val = self.request(**kwargs)
+        return val['RDSEngineSet']
+
+    def RenewRDS(self, rid, duration=None):
+        """ RDS租期续费
+
+        :param rid: RDS ID
+        :type rid: string
+        :param duration: 续费周期，单位：'H'(小时)、'M'(月)，缺省为'1M'，即一个月（可选）
+        :type duration: string
+
+        """
+        kwargs = {}
+        kwargs['RDSId'] = rid
+        if duration is not None:
+            if match_duration(duration):
+                kwargs['Duration'] = duration
+            else:
+                raise Exception('Illegal duration format')
+        self.request(**kwargs)
+
+    def GetRDSContractInfo(self, rid):
+        """ 获取RDS的租期信息
+
+        :param rid: RDS ID
+        :type rid: string
+
+        :returns: RDS租期信息，包含过期时间、自动删除时间
+        """
+        kwargs = {}
+        kwargs['RDSId'] = rid
+        return self.request(**kwargs)
+
+    def CreateRDSAlarm(self, rid, metric, operator, threshold, description=None):
+        """ 创建RDS指标监控
+
+        :param rid: RDS的ID
+        :type rid: string
+        :param metric: 监控指标名称
+        :type metric: string
+        :param operator: 判断操作符
+        :type operator: string
+        :param threshold: 监控阈值
+        :type threshold: string
+        :param description: 描述
+        :type description: string
+
+        :returns: 请求是否成功
+        """
+        kwargs = {}
+        kwargs['RDSId'] = rid
+        kwargs['Metric'] = metric
+        kwargs['Operator'] = operator
+        kwargs['Threshold'] = threshold
+        if description:
+            kwargs['Description'] = description
+        val = self.request(**kwargs)
+        return val['RDSAlarm']
+
+    def DescribeRDSAlarms(self):
+        """ 查看RDS指标监控
+
+        :returns: MetricAlarmSet，指标监控列表
+        """
+        val = self.request()
+        return val['RDSAlarmSet']
+
+    def DeleteRDSAlarm(self, mid):
+        """ 删除一个RDS指标监控项
+
+        :param mid: 监控项ID
+        :type mid: string
+
+        :returns: 请求是否成功
+        """
+        kwargs = {}
+        kwargs['MonitorId'] = mid
+        val = self.request(**kwargs)
+        return val
+
+    def DisableRDSAlarm(self, mid):
+        """ 禁用一个RDS指标监控项
+
+        :param mid: 监控项ID
+        :type mid: string
+
+        :returns: 请求是否成功
+        """
+        kwargs = {}
+        kwargs['MonitorId'] = mid
+        val = self.request(**kwargs)
+        return val
+
+    def EnableRDSAlarm(self, mid):
+        """ 启用一个RDS指标监控项
+
+        :param mid: 监控项ID
+        :type mid: string
+
+        :returns: 请求是否成功
+        """
+        kwargs = {}
+        kwargs['MonitorId'] = mid
+        val = self.request(**kwargs)
+        return val
+
+    def DescribeRDSMetrics(self, rid=None):
+        """ 查看RDS监控项
+
+        :param rid: RDS ID
+        :type rid: string
+
+        :returns: MetricSet，包含监控项列表
+        """
+        kwargs = {}
+        if rid:
+            kwargs['RDSId'] = rid
         val = self.request(**kwargs)
         return val['MetricSet']
