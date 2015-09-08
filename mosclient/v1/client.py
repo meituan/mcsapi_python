@@ -1283,3 +1283,95 @@ class Client(BaseClient):
             kwargs['RDSId'] = rid
         val = self.request(**kwargs)
         return val['MetricSet']
+
+    def ListAddress(self):
+        """ 获取浮动IP信息
+
+        :return: AddressSet, 包含Address列表
+        """
+        kwargs = dict()
+        val = self.request(**kwargs)
+        return val['AddressSet']
+
+    def AllocateAddress(self, name, billing_model='bandwidth'):
+        """ 分配浮动IP
+
+        :param name:
+        :param billing_model:
+        :return: Address结构
+        """
+        kwargs = dict()
+        kwargs['Name'] = name
+        kwargs['BillingModel'] = billing_model
+        val = self.request(**kwargs)
+        return val
+
+    def DescribeAddress(self, allocation_id):
+        """ 描述浮动IP信息
+
+        :param allocation_id:
+        :return: Address结构
+        """
+        kwargs = {'AllocationId': allocation_id}
+        val = self.request(**kwargs)
+        return val
+
+    def ConfigAddress(self, allocation_id, name=None):
+        """ 配置浮动IP, 目前支持名称修改
+
+        :param allocation_id:
+        :param name:
+        :return: Address结构
+        """
+        kwargs = {'AllocationId': allocation_id}
+        if name:
+            kwargs['Name'] = name
+        val = self.request(**kwargs)
+        return val
+
+    def ConfigAddressBandwidth(self, allocation_id, bandwidth=None):
+        """ 配置浮动IP带宽
+
+        :param allocation_id:
+        :param bandwidth:
+        :return: Address结构
+        """
+        kwargs = {'AllocationId': allocation_id}
+        if bandwidth:
+            kwargs['Bandwidth'] = bandwidth
+        val = self.request(**kwargs)
+        return val
+
+    def ReleaseAddress(self, allocation_id):
+        """ 释放浮动IP
+
+        :param allocation_id:
+        :return: 请求是否成功
+        """
+        kwargs = {'AllocationId': allocation_id}
+        val = self.request(**kwargs)
+        return val
+
+    def AssociateAddress(self, allocation_id, association_type, instance_id, bandwidth):
+        """ 将浮动IP绑定到其他云产品上
+
+        :param allocation_id:
+        :param association_type: server, elb
+        :param instance_id:
+        :param bandwidth:
+        :return: Address结构
+        """
+        kwargs = {'AllocationId': allocation_id, 'AssociationType': association_type,
+                  'InstanceId': instance_id, 'Bandwidth': bandwidth}
+        val = self.request(**kwargs)
+        return val
+
+    def DisassociateAddress(self, allocation_id):
+        """ 将浮动IP解绑
+
+        :param allocation_id:
+        :return: 请求是否成功
+        """
+        kwargs = {'AllocationId': allocation_id}
+        val = self.request(**kwargs)
+        return val
