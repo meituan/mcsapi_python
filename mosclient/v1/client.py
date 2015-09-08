@@ -1284,16 +1284,19 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val['MetricSet']
 
-    def AllocateAddress(self, name, billing_model='bandwidth'):
+    def AllocateAddress(self, name, billing_model='bandwidth', availability_zone_id=None):
         """ 分配浮动IP
 
         :param name:
         :param billing_model: 代表计费方式，有效值：bandwidth，flow，分别代表按带宽和按流量计费。默认为bandwidth
+        :param availability_zone_id: 代表可用区ID, 通过DescribeAvailabilityZones接口获取
         :return: Address结构
         """
         kwargs = dict()
         kwargs['Name'] = name
         kwargs['BillingModel'] = billing_model
+        if availability_zone_id:
+            kwargs['AvailabilityZoneId'] = availability_zone_id
         val = self.request(**kwargs)
         return val
 

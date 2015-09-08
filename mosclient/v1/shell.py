@@ -643,9 +643,10 @@ def do_DescribeRDSMetrics(client, args):
 @utils.arg('--name', metavar='<Name>', required=True, help='name of EIP, e.g. "eipA"')
 @utils.arg('--billingModel', metavar='<BillingModel>', default='bandwidth', choices=['flow', 'bandwidth'],
            help='BillingType of EIP, by bandwidth or flow')
+@utils.arg('--zoneId', metavar='<AvailabilityZoneId>', type=str, help='Availability Zone')
 def do_AllocateAddress(client, args):
     """ Allocate EIP """
-    val = client.AllocateAddress(args.name, args.billingModel)
+    val = client.AllocateAddress(args.name, args.billingModel, args.zoneId)
     utils.print_dict(val)
 
 
