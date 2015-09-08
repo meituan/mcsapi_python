@@ -157,7 +157,8 @@ class Client(BaseClient):
         return self.request(**kwargs)
 
     def CreateInstance(self, imageid, itype, duration=None, name=None,
-            keypair=None, secgroup=None, datadisk=None, bandwidth=None):
+            keypair=None, secgroup=None, datadisk=None, bandwidth=None,
+            zone=None):
         """ 创建虚拟机
 
         :param imageid: 系统模板ID
@@ -176,6 +177,8 @@ class Client(BaseClient):
         :type datadisk: int
         :param bandwidth: 指定创建虚拟机使用的额外带宽，单位为Mbps
         :type bandwidth: int
+        :param zone: 指定创建虚拟机所在的数据中心, 可通过DescribeAvailabilityZones接口获取
+        :type zone: string
 
         :returns: 创建成功的虚拟机信息
         """
@@ -197,6 +200,8 @@ class Client(BaseClient):
             kwargs['ExtraExtDisksize'] = int(datadisk)
         if bandwidth is not None:
             kwargs['ExtraExtBandwidth'] = int(bandwidth)
+        if zone is not None:
+            kwargs['AvailabilityZoneId'] = zone
         val = self.request(**kwargs)
         return val['Instance']
 
