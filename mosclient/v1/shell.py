@@ -675,7 +675,7 @@ def do_ConfigAddressBandwidth(client, args):
 
 def do_DescribeAddresses(client, args):
     """Describe EIP list"""
-    val = client.DescribeAddress()
+    val = client.DescribeAddresses()
     utils.print_dict(val)
 
 
