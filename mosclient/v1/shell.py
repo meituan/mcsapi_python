@@ -638,3 +638,59 @@ def do_DescribeRDSMetrics(client, args):
     """List monitor metrics"""
     val = client.DescribeRDSMetrics(args.rid)
     utils.print_list(val, 'Metric')
+
+
+@utils.arg('--name', metavar='<Name>', required=True, help='name of EIP, e.g. "eipA"')
+@utils.arg('--billingModel', metavar='<BillingModel>', default='bandwidth', choices=['flow', 'bandwidth'],
+           help='BillingType of EIP, by bandwidth or flow')
+def do_AllocateAddress(client, args):
+    """ Allocate EIP """
+    val = client.AllocateAddress(args.name, args.billingModel)
+    utils.print_dict(val)
+
+
+@utils.arg('--id', metavar='<AllocationId>', required=True, help='ID of EIP')
+def do_ReleaseAddress(client, args):
+    """Release EIP """
+    val = client.ReleaseAddress(args.id)
+    utils.print_dict(val)
+
+
+@utils.arg('--id', metavar='<AllocationId>', required=True, help='ID of EIP')
+@utils.arg('--name', metavar='<Name>', help='name of EIP, e.g. "eipA"')
+def do_ConfigAddress(client, args):
+    """Config EIP """
+    val = client.ConfigAddress(args.id, args.name)
+    utils.print_dict(val)
+
+
+@utils.arg('--id', metavar='<AllocationId>', required=True, help='ID of EIP')
+@utils.arg('--bandwidth', metavar='<Bandwidth>', help='EIP bandwidth(Mbps), 0-1000')
+def do_ConfigAddressBandwidth(client, args):
+    """Config EIP Bandwidth"""
+    val = client.ConfigAddressBandwidth(args.id, args.bandwidth)
+    utils.print_dict(val)
+
+
+def do_DescribeAddress(client, args):
+    """Describe EIP list"""
+    val = client.DescribeAddress()
+    utils.print_dict(val)
+
+
+@utils.arg('--id', metavar='<AllocationId>', required=True, help='ID of EIP')
+@utils.arg('--associationType', metavar='<AssociationType>', required=True, choices=['server', 'elb'],
+           help='EIP Bind Instance Type')
+@utils.arg('--instanceId', metavar='<InstanceId>', required=True, help='EIP Bind Instance Id')
+@utils.arg('--bandwidth', metavar='<Bandwidth>', required=True, help='EIP Bind Instance Bandwidth (Mbps), 0-1000')
+def do_AssociateAddress(client, args):
+    """bind eip to cloud service"""
+    val = client.AssociateAddress(args.id, args.bindType, args.instanceId, args.bandwidth)
+    utils.print_dict(val)
+
+
+@utils.arg('--id', metavar='<AllocationId>', required=True, help='ID of EIP')
+def do_DisassociateAddress(client, args):
+    """unbind eip to cloud service"""
+    val = client.DisassociateAddress(args.id)
+    utils.print_dict(val)
