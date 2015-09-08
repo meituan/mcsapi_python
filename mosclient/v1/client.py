@@ -1300,7 +1300,7 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val
 
-    def DescribeAddress(self):
+    def DescribeAddresses(self):
         """ 返回浮动IP信息列表
 
         :return:返回AddressSet, 包含Address结构列表
