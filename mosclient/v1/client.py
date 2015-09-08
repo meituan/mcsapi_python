@@ -1284,15 +1284,6 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val['MetricSet']
 
-    def ListAddress(self):
-        """ 获取浮动IP信息
-
-        :return: AddressSet, 包含Address列表
-        """
-        kwargs = dict()
-        val = self.request(**kwargs)
-        return val['AddressSet']
-
     def AllocateAddress(self, name, billing_model='bandwidth'):
         """ 分配浮动IP
 
@@ -1306,13 +1297,12 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val
 
-    def DescribeAddress(self, allocation_id):
-        """ 描述浮动IP信息
+    def DescribeAddress(self):
+        """ 返回浮动IP信息列表
 
-        :param allocation_id:
-        :return: Address结构
+        :return:返回AddressSet, 包含Address结构列表
         """
-        kwargs = {'AllocationId': allocation_id}
+        kwargs = dict()
         val = self.request(**kwargs)
         return val
 
