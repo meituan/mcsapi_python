@@ -1288,3 +1288,88 @@ class Client(BaseClient):
             kwargs['RDSId'] = rid
         val = self.request(**kwargs)
         return val['MetricSet']
+
+    def AllocateAddress(self, name, billing_model='bandwidth', availability_zone_id=None):
+        """ 分配浮动IP
+
+        :param name:
+        :param billing_model: 代表计费方式，有效值：bandwidth，flow，分别代表按带宽和按流量计费。默认为bandwidth
+        :param availability_zone_id: 代表可用区ID, 通过DescribeAvailabilityZones接口获取
+        :return: Address结构
+        """
+        kwargs = dict()
+        kwargs['Name'] = name
+        kwargs['BillingModel'] = billing_model
+        if availability_zone_id:
+            kwargs['AvailabilityZoneId'] = availability_zone_id
+        val = self.request(**kwargs)
+        return val
+
+    def DescribeAddresses(self):
+        """ 返回浮动IP信息列表
+
+        :return:返回AddressSet, 包含Address结构列表
+        """
+        kwargs = dict()
+        val = self.request(**kwargs)
+        return val
+
+    def ConfigAddress(self, allocation_id, name=None):
+        """ 配置浮动IP, 目前支持名称修改
+
+        :param allocation_id: 浮动IP的ID
+        :param name: 浮动IP的名称
+        :return: Address结构
+        """
+        kwargs = {'AllocationId': allocation_id}
+        if name:
+            kwargs['Name'] = name
+        val = self.request(**kwargs)
+        return val
+
+    def ConfigAddressBandwidth(self, allocation_id, bandwidth=None):
+        """ 配置浮动IP带宽
+
+        :param allocation_id: 浮动IP的ID
+        :param bandwidth: 浮动IP的带宽
+        :return: Address结构
+        """
+        kwargs = {'AllocationId': allocation_id}
+        if bandwidth:
+            kwargs['Bandwidth'] = bandwidth
+        val = self.request(**kwargs)
+        return val
+
+    def ReleaseAddress(self, allocation_id):
+        """ 释放浮动IP
+
+        :param allocation_id: 浮动IP的ID
+        :return: 请求是否成功
+        """
+        kwargs = {'AllocationId': allocation_id}
+        val = self.request(**kwargs)
+        return val
+
+    def AssociateAddress(self, allocation_id, association_type, instance_id, bandwidth):
+        """ 将浮动IP绑定到其他云产品上
+
+        :param allocation_id: 浮动IP的ID
+        :param association_type: 绑定云产品类型。有效值为server、elb，分别代表绑定到云服务器和ELB负载均衡器
+        :param instance_id: 绑定的云产品ID
+        :param bandwidth: 绑定浮动IP的带宽限制
+        :return: Address结构
+        """
+        kwargs = {'AllocationId': allocation_id, 'AssociationType': association_type,
+                  'InstanceId': instance_id, 'Bandwidth': bandwidth}
+        val = self.request(**kwargs)
+        return val
+
+    def DisassociateAddress(self, allocation_id):
+        """ 将浮动IP解绑
+
+        :param allocation_id: 浮动IP的ID
+        :return: 请求是否成功
+        """
+        kwargs = {'AllocationId': allocation_id}
+        val = self.request(**kwargs)
+        return val
