@@ -10,7 +10,7 @@ def read(path):
 
 setuptools.setup(
     name="mosclient",
-    version='1.0.5',
+    version='1.0.6',
     description="Client library for Meituan Cloud Platform EC2 API",
 
     long_description = (read('README.rst') + '\n\n' +
