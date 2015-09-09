@@ -45,6 +45,7 @@ def do_GetInstanceContractInfo(client, args):
 @utils.arg('--secgroup', metavar='<SECGROUP>', help='Security group ID')
 @utils.arg('--datadisk', metavar='<DISKSIZE>', type=int, help='Extra disksize in GB')
 @utils.arg('--bandwidth', metavar='<BANDWIDTH>', type=int, help='Extra external bandwidth in Mbps')
+@utils.arg('--zone', metavar='<AVAILABILITYZONE>', type=str, help='Availability Zone')
 def do_CreateInstance(client, args):
     """ Create servers """
     val = client.CreateInstance(args.image, args.instance_type,
@@ -53,7 +54,8 @@ def do_CreateInstance(client, args):
                                 keypair=args.keypair,
                                 secgroup=args.secgroup,
                                 datadisk=args.datadisk,
-                                bandwidth=args.bandwidth)
+                                bandwidth=args.bandwidth,
+                                zone=args.zone)
     utils.print_dict(val)
 
 
