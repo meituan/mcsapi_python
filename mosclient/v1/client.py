@@ -1305,14 +1305,25 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val
 
-    def DescribeAddresses(self):
-        """ 返回浮动IP信息列表
-
-        :return:返回AddressSet, 包含Address结构列表
+    def DescribeAddresses(self, allocation_ids=None, limit=0, offset=0, filters=None):
+        """ 返回所有或者部分浮动IP列表信息列表
+        :param allocation_ids:  希望获取的Address ID列表
+        :type allocation_ids: list
+        :param limit:
+        :type limit: int
+        :param offset:
+        :type offset: int
+        :param filters:
+        :type filters: dict
+        :return: AddressSet, 包含Address列表
         """
         kwargs = dict()
+        if isinstance(allocation_ids, list) and len(allocation_ids) > 0:
+            kwargs['AllocationId'] = allocation_ids
+
+        self.parse_list_params(limit, offset, filters, kwargs)
         val = self.request(**kwargs)
-        return val
+        return val['AddressSet']
 
     def ConfigAddress(self, allocation_id, name=None):
         """ 配置浮动IP, 目前支持名称修改
