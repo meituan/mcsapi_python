@@ -259,6 +259,9 @@ class Client(BaseClient):
         :type iid: string
         :param force: 是否强制停止虚拟机
         :type param: bool
+
+        异常说明：因为有可能因为主机状态不是running而出现异常，需要捕获并且处理
+
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
@@ -1307,6 +1310,7 @@ class Client(BaseClient):
 
     def DescribeAddresses(self, allocation_ids=None, limit=0, offset=0, filters=None):
         """ 返回所有或者部分浮动IP列表信息列表
+
         :param allocation_ids:  希望获取的Address ID列表
         :type allocation_ids: list
         :param limit:
