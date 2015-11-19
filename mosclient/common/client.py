@@ -49,6 +49,34 @@ class BaseClient(object):
         signer = ec2utils.Ec2Signer(self.secret)
         return signer.generate(cred_dict)
 
+    def get_httperror(self, e, debug):
+        details = e.read()
+        if debug:
+            print details
+        try:
+            if 'application/xml' in e.headers.get('Content-Type', None):
+                from common.xmltodict import parse
+                details = parse(details)
+            else:
+                import json
+                details = json.loads(details)
+            if 'ErrorResponse' in details:
+                details = details['ErrorResponse']
+            if 'Error' in details:
+                details = details['Error']
+            if 'error' in details:
+                details = details['error']
+            if 'message' in details:
+                details = details['message']
+            elif 'details' in details:
+                details = details['details']
+        except:
+            pass
+        if not isinstance(details, basestring):
+            details = str(details)
+        return '%s(%d): %s' % (e.msg, e.code, details)
+
+
     def _request(self, **kwargs):
         params = {}
         params['Action'] = self._get_action(3)
@@ -74,14 +102,23 @@ class BaseClient(object):
         if self.debug:
             print self.url + '?' + data
         req = urllib2.Request(self.url, data, headers)
-        resp = urllib2.urlopen(req, None, self.timeout)
-        return resp
+
+        try:
+            resp = urllib2.urlopen(req, None, self.timeout)
+            return resp
+        except urllib2.HTTPError, e:
+            print self.get_httperror(e, self.debug)
+        except Exception, e:
+            raise e
+
 
     def raw_request(self, **kwargs):
         return self._request(**kwargs)
 
     def request(self, **kwargs):
         resp = self._request(**kwargs)
+        if not resp:
+            return
         body = resp.read()
         if self.debug:
             print resp.headers
