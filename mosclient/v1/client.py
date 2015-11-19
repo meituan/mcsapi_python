@@ -260,8 +260,6 @@ class Client(BaseClient):
         :param force: 是否强制停止虚拟机
         :type param: bool
 
-        异常说明：因为有可能因为主机状态不是running而出现异常，需要捕获并且处理
-
         """
         kwargs = {}
         kwargs['InstanceId'] = iid
