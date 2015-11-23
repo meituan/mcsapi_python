@@ -1311,11 +1311,11 @@ class Client(BaseClient):
 
         :param allocation_ids:  希望获取的Address ID列表
         :type allocation_ids: list
-        :param limit:
+        :param limit: 返回的数量限制，用于分页控制
         :type limit: int
-        :param offset:
+        :param offset: 返回的偏移量，用于分页控制
         :type offset: int
-        :param filters:
+        :param filters: 过滤器，一个dict，包含过滤字段名和值
         :type filters: dict
         :return: AddressSet, 包含Address列表
         """
