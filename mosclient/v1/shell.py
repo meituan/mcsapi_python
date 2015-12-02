@@ -700,3 +700,66 @@ def do_DisassociateAddress(client, args):
     """unbind eip to cloud service"""
     val = client.DisassociateAddress(args.id)
     utils.print_dict(val)
+
+##
+#
+#   EBS code
+#
+@utils.arg('--name', metavar='<NAME>', help='Optional ebs name')
+@utils.arg('--disksize', metavar='<DISKSIZE>', help='ebs size G')
+@utils.arg('--zone', metavar='<ZONE>', help='Zone')
+def do_CreateEBS(client, args):
+    """ Create ElasticBlockStore """
+    val = client.CreateEBS(args.name,
+                            disksize=args.disksize,
+                            zone=args.zone)
+
+    utils.print_dict(val)
+
+@utils.arg('--ElasticBlockStoreId', metavar='<ElasticBlockStoreId>', help='ElasticBlockStore Id')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+def do_DescribeEBS(client, args):
+    """Describe specific EBS listener info"""
+    val = client.DescribeEBS(args.ElasticBlockStoreId, args.limit, args.offset)
+    utils.print_list(val, 'ElasticBlockStore')
+
+@utils.arg('--ebs_id', metavar='<ElasticBlockStoreId>', required=True, help='ID of EBS')
+@utils.arg('--instance_id', metavar='<InstanceId>', required=True, help='ID of Instance')
+def do_AttachEBS(client, args):
+    """Attach EBS on Instance"""
+    val = client.AttachEBS(args.ebs_id, args.instance_id)
+    utils.print_dict(val)
+
+@utils.arg('--ebs_id', metavar='<ElasticBlockStoreId>', required=True, help='ID of EBS')
+@utils.arg('--instance_id', metavar='<InstanceId>', required=True, help='ID of Instance')
+def do_DetachEBS(client, args):
+    """Detach EBS"""
+    val = client.DetachEBS(args.ebs_id, args.instance_id)
+    utils.print_dict(val)
+
+@utils.arg('--ebs_id', metavar='<ElasticBlockStoreId>', required=True, help='ID of EBS')
+def do_DeleteEBS(client, args):
+    """Delete EBS"""
+    val = client.DeleteEBS(args.ebs_id)
+    utils.print_dict(val)
+
+@utils.arg('--mebsSnapshotId', metavar='<mebsSnapshotId>', help='mebsSnapshot Id')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+def do_DescribeEBSSnapshot(client, args):
+    """Describe specific EBS Snapshot listener info"""
+    val = client.DescribeEBSSnapshot(args.mebsSnapshotId, args.limit, args.offset)
+    utils.print_list(val, 'mebsSnapshot')
+
+@utils.arg('--ebs_snapshot_id', metavar='<mebsSnapshotId>', required=True, help='ID of EBS snapshot')
+def do_RecoverEBS(client, args):
+    """Recover EBS"""
+    val = client.RecoverEBS(args.ebs_snapshot_id)
+    utils.print_dict(val)
+
+@utils.arg('--ebs_snapshot_id', metavar='<mebsSnapshotId>', required=True, help='ID of EBS snapshot')
+def do_DeleteEBSSnapshot(client, args):
+    """Delete EBS Snapshot"""
+    val = client.DeleteEBSSnapshot(args.ebs_snapshot_id)
+    utils.print_dict(val)
