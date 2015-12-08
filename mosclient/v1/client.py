@@ -1390,7 +1390,7 @@ class Client(BaseClient):
     ##
     #   EBS code
     #
-    def CreateEBS(self, name, disksize, zone=None):
+    def CreateVolume(self, name, disksize, zone=None):
         """ 创建EBS
 
         :param name: EBS 的name
@@ -1400,19 +1400,19 @@ class Client(BaseClient):
         :param zone: 可用区，可通过DescribeAvailabilityZones方法查询（可选）
         :type zone: string
 
-        :return: ElasticBlockStore, 包含ElasticBlockStore结构列表
+        :return: Volume, 包含Volume结构列表
         """
         kwargs = {}
-        kwargs['DiskSize'] = disksize
+        kwargs['Size'] = disksize
         if name is not None:
-            kwargs['EBSName'] = name
+            kwargs['VolumeName'] = name
         if zone is not None:
             kwargs['AvailabilityZoneId'] = zone
         val = self.request(**kwargs)
         return val
 
-    def DescribeEBS(self, ebs_ids=None, limit=0, offset=0, filters=None):
-        """ 获取ELB实例列表
+    def DescribeVolumes(self, ebs_ids=None, limit=0, offset=0, filters=None):
+        """ 获取EBS实例列表
         :param ebs_ids:  EBS ID列表
         :type ebs_ids: list
         :param limit:
@@ -1421,48 +1421,48 @@ class Client(BaseClient):
         :type offset: int
         :param filters:
         :type filters: dict
-        :returns: ElasticBlockStore, 包含ElasticBlockStore结构列表
+        :returns: VolumeSet, 包含Volume结构列表
         """
         kwargs = dict()
         if isinstance(ebs_ids, list) and len(ebs_ids) > 0:
-            kwargs['ElasticBlockStoreId'] = ebs_ids
+            kwargs['VolumeIds'] = ebs_ids
         self.parse_list_params(limit, offset, filters, kwargs)
         val = self.request(**kwargs)
-        return val['ElasticBlockStoreSet']
+        return val['VolumeSet']
 
-    def AttachEBS(self, ebs_id, instance_id):
+    def AttachVolume(self, ebs_id, instance_id):
         """ 绑定EBS 到 实例
 
         :param instance_id: 实例的ID
         :param ebs_id: EBS的ID
         :return: 请求是否成功
         """
-        kwargs = {'InstanceId': instance_id, 'ElasticBlockStoreId': ebs_id}
+        kwargs = {'InstanceId': instance_id, 'VolumeId': ebs_id}
         val = self.request(**kwargs)
         return val
 
-    def DetachEBS(self, ebs_id, instance_id):
+    def DetachVolume(self, ebs_id, instance_id):
         """ 卸载EBS
 
         :param ebs_id: EBS的ID
         :return: 请求是否成功
         """
-        kwargs = {'ElasticBlockStoreId': ebs_id, 'InstanceId': instance_id}
+        kwargs = {'VolumeId': ebs_id, 'InstanceId': instance_id}
         val = self.request(**kwargs)
         return val
 
-    def DeleteEBS(self, ebs_id):
+    def DeleteVolume(self, ebs_id):
         """ 删除EBS
 
         :param ebs_id: EBS的ID
         :return: 请求是否成功
         """
-        kwargs = {'ElasticBlockStoreId': ebs_id}
+        kwargs = {'VolumeId': ebs_id}
         val = self.request(**kwargs)
         return val
 
-    def DescribeEBSSnapshot(self, ebs_snapshot_ids=None, limit=0, offset=0, filters=None):
-        """ 获取ELB实例列表
+    def DescribeVolumeSnapshots(self, ebs_snapshot_ids=None, limit=0, offset=0, filters=None):
+        """ 获取EBS快照实例列表
         :param ebs_snapshot_ids:  EBS ID列表
         :type ebs_snapshot_ids: list
         :param limit:
@@ -1471,43 +1471,43 @@ class Client(BaseClient):
         :type offset: int
         :param filters:
         :type filters: dict
-        :return: mebsSnapshotSet, 包含mebsSnapshotSet结构列表
+        :return: VolumeSnapshotSet, 包含VolumeSnapshot结构列表
         """
         kwargs = dict()
         if isinstance(ebs_snapshot_ids, list) and len(ebs_snapshot_ids) > 0:
-            kwargs['mebsSnapshotId'] = ebs_snapshot_ids
+            kwargs['VolumeSnapshotIds'] = ebs_snapshot_ids
         self.parse_list_params(limit, offset, filters, kwargs)
         val = self.request(**kwargs)
-        return val['mebsSnapshotSet']
+        return val['VolumeSnapshotSet']
 
-    def CreateEBSSnapshot(self, name, ebs_id):
+    def CreateVolumeSnapshot(self, name, ebs_id):
         """ 创建EBS快照
 
         :param name: 快照的名称
         :param ebs_id: EBS的ID
         :return: 请求是否成功
         """
-        kwargs = {'KeyName': name, 'ElasticBlockStoreId': ebs_id}
+        kwargs = {'VolumeSnapshotName': name, 'VolumeId': ebs_id}
         val = self.request(**kwargs)
         return val
 
-    def RecoverEBS(self, ebs_snapshot_id):
+    def RecoverVolume(self, ebs_snapshot_id):
         """ 用快照恢复EBS
 
         :param ebs_snapshot_id: EBS快照的ID
         :return: 请求是否成功
         """
-        kwargs = {'mebsSnapshotId': ebs_snapshot_id}
+        kwargs = {'VolumeSnapshotId': ebs_snapshot_id}
         val = self.request(**kwargs)
         return val
 
-    def DeleteEBSSnapshot(self, ebs_snapshot_id):
+    def DeleteVolumeSnapshot(self, ebs_snapshot_id):
         """ 删除EBS快照
 
         :param ebs_snapshot_id: EBS快照的ID
         :return: 请求是否成功
         """
-        kwargs = {'mebsSnapshotId': ebs_snapshot_id}
+        kwargs = {'VolumeSnapshotId': ebs_snapshot_id}
         val = self.request(**kwargs)
         return val
 
