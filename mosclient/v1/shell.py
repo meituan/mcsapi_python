@@ -681,7 +681,7 @@ def do_ConfigAddressBandwidth(client, args):
 def do_DescribeAddresses(client, args):
     """Describe EIP list"""
     val = client.DescribeAddresses(args.id, args.limit, args.offset)
-    utils.print_dict(val)
+    utils.print_list(val, 'Address')
 
 
 @utils.arg('--id', metavar='<AllocationId>', required=True, help='ID of EIP')
@@ -691,7 +691,7 @@ def do_DescribeAddresses(client, args):
 @utils.arg('--bandwidth', metavar='<Bandwidth>', required=True, help='EIP Bind Instance Bandwidth (Mbps), 0-1000')
 def do_AssociateAddress(client, args):
     """bind eip to cloud service"""
-    val = client.AssociateAddress(args.id, args.bindType, args.instanceId, args.bandwidth)
+    val = client.AssociateAddress(args.id, args.associationType, args.instanceId, args.bandwidth)
     utils.print_dict(val)
 
 
