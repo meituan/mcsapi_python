@@ -652,14 +652,14 @@ def do_AllocateAddress(client, args):
     utils.print_dict(val)
 
 
-@utils.arg('--id', metavar='<AllocationId>', required=True, help='ID of EIP')
+@utils.arg('id', metavar='<AllocationId>', help='ID of EIP')
 def do_ReleaseAddress(client, args):
     """Release EIP """
     val = client.ReleaseAddress(args.id)
     utils.print_dict(val)
 
 
-@utils.arg('--id', metavar='<AllocationId>', required=True, help='ID of EIP')
+@utils.arg('id', metavar='<AllocationId>', help='ID of EIP')
 @utils.arg('--name', metavar='<Name>', help='name of EIP, e.g. "eipA"')
 def do_ConfigAddress(client, args):
     """Config EIP """
@@ -667,7 +667,7 @@ def do_ConfigAddress(client, args):
     utils.print_dict(val)
 
 
-@utils.arg('--id', metavar='<AllocationId>', required=True, help='ID of EIP')
+@utils.arg('id', metavar='<AllocationId>', help='ID of EIP')
 @utils.arg('--bandwidth', metavar='<Bandwidth>', help='EIP bandwidth(Mbps), 0-1000')
 def do_ConfigAddressBandwidth(client, args):
     """Config EIP Bandwidth"""
@@ -684,7 +684,7 @@ def do_DescribeAddresses(client, args):
     utils.print_list(val, 'Address')
 
 
-@utils.arg('--id', metavar='<AllocationId>', required=True, help='ID of EIP')
+@utils.arg('id', metavar='<AllocationId>', help='ID of EIP')
 @utils.arg('--associationType', metavar='<AssociationType>', required=True, choices=['server', 'elb'],
            help='EIP Bind Instance Type')
 @utils.arg('--instanceId', metavar='<InstanceId>', required=True, help='EIP Bind Instance Id')
@@ -695,8 +695,15 @@ def do_AssociateAddress(client, args):
     utils.print_dict(val)
 
 
-@utils.arg('--id', metavar='<AllocationId>', required=True, help='ID of EIP')
+@utils.arg('id', metavar='<AllocationId>', help='ID of EIP')
 def do_DisassociateAddress(client, args):
     """unbind eip to cloud service"""
     val = client.DisassociateAddress(args.id)
+    utils.print_dict(val)
+
+@utils.arg('id', metavar='<AllocationId>', help='ID of EIP')
+@utils.arg('--newId', metavar='<NewAllocationId>', required=True, help='ID of new EIP')
+def do_ReplaceAddress(client, args):
+    """unbind eip to cloud service"""
+    val = client.ReplaceAddress(args.id, args.newId)
     utils.print_dict(val)
