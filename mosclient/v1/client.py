@@ -1399,4 +1399,4 @@ class Client(BaseClient):
             'NewAllocationId': new_allocation_id
         }
         val = self.request(**kwargs)
-        return val
+        return val['Address']
