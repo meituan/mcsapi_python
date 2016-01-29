@@ -1330,7 +1330,7 @@ class Client(BaseClient):
     def ConfigAddress(self, allocation_id, name=None):
         """ 配置浮动IP, 目前支持名称修改
 
-        :param allocation_id: 浮动IP的ID
+        :param allocation_id: 浮动IP的ID（或者IP）
         :param name: 浮动IP的名称
         :return: Address结构
         """
@@ -1343,7 +1343,7 @@ class Client(BaseClient):
     def ConfigAddressBandwidth(self, allocation_id, bandwidth=None):
         """ 配置浮动IP带宽
 
-        :param allocation_id: 浮动IP的ID
+        :param allocation_id: 浮动IP的ID（或者IP）
         :param bandwidth: 浮动IP的带宽
         :return: Address结构
         """
@@ -1356,7 +1356,7 @@ class Client(BaseClient):
     def ReleaseAddress(self, allocation_id):
         """ 释放浮动IP
 
-        :param allocation_id: 浮动IP的ID
+        :param allocation_id: 浮动IP的ID（或者IP）
         :return: 请求是否成功
         """
         kwargs = {'AllocationId': allocation_id}
@@ -1366,7 +1366,7 @@ class Client(BaseClient):
     def AssociateAddress(self, allocation_id, association_type, instance_id, bandwidth):
         """ 将浮动IP绑定到其他云产品上
 
-        :param allocation_id: 浮动IP的ID
+        :param allocation_id: 浮动IP的ID（或者IP）
         :param association_type: 绑定云产品类型。有效值为server、elb，分别代表绑定到云服务器和ELB负载均衡器
         :param instance_id: 绑定的云产品ID
         :param bandwidth: 绑定浮动IP的带宽限制
@@ -1380,7 +1380,7 @@ class Client(BaseClient):
     def DisassociateAddress(self, allocation_id):
         """ 将浮动IP解绑
 
-        :param allocation_id: 浮动IP的ID
+        :param allocation_id: 浮动IP的ID（或者IP）
         :return: 请求是否成功
         """
         kwargs = {'AllocationId': allocation_id}
@@ -1390,8 +1390,8 @@ class Client(BaseClient):
     def ReplaceAddress(self, allocation_id, new_allocation_id):
         """ 将浮动IP换绑
 
-        :param allocation_id: 浮动IP的ID
-        :param new_allocation_id: 新的浮动IP的ID
+        :param allocation_id: 浮动IP的ID（或者IP）
+        :param new_allocation_id: 新的浮动IP的ID（或者IP）
         :return: 请求是否成功
         """
         kwargs = {
