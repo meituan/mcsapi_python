@@ -33,4 +33,5 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
-sftp-config.json
+sftp-config*
+*.DS_Store

@@ -1400,3 +1400,127 @@ class Client(BaseClient):
         }
         val = self.request(**kwargs)
         return val['Address']
+
+    ##
+    #   EBS code
+    #
+    def CreateVolume(self, name, disksize, zone=None):
+        """ 创建EBS
+
+        :param name: EBS 的name
+        :type name: string
+        :param disksize: EBS 的大小 单位G
+        :type disksize: string
+        :param zone: 可用区，可通过DescribeAvailabilityZones方法查询（可选）
+        :type zone: string
+
+        :return: Volume, 包含Volume结构列表
+        """
+        kwargs = {}
+        kwargs['Size'] = disksize
+        if name is not None:
+            kwargs['VolumeName'] = name
+        if zone is not None:
+            kwargs['AvailabilityZoneId'] = zone
+        val = self.request(**kwargs)
+        return val
+
+    def DescribeVolumes(self, ebs_ids=None, limit=0, offset=0, filters=None):
+        """ 获取EBS实例列表
+        :param ebs_ids:  EBS ID列表
+        :type ebs_ids: list
+        :param limit:
+        :type limit: int
+        :param offset:
+        :type offset: int
+        :param filters:
+        :type filters: dict
+        :returns: VolumeSet, 包含Volume结构列表
+        """
+        kwargs = dict()
+        if isinstance(ebs_ids, list) and len(ebs_ids) > 0:
+            kwargs['VolumeIds'] = ebs_ids
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['VolumeSet']
+
+    def AttachVolume(self, ebs_id, instance_id):
+        """ 绑定EBS 到 实例
+
+        :param instance_id: 实例的ID
+        :param ebs_id: EBS的ID
+        :return: 请求是否成功
+        """
+        kwargs = {'InstanceId': instance_id, 'VolumeId': ebs_id}
+        val = self.request(**kwargs)
+        return val
+
+    def DetachVolume(self, ebs_id, instance_id):
+        """ 卸载EBS
+
+        :param ebs_id: EBS的ID
+        :return: 请求是否成功
+        """
+        kwargs = {'VolumeId': ebs_id, 'InstanceId': instance_id}
+        val = self.request(**kwargs)
+        return val
+
+    def DeleteVolume(self, ebs_id):
+        """ 删除EBS
+
+        :param ebs_id: EBS的ID
+        :return: 请求是否成功
+        """
+        kwargs = {'VolumeId': ebs_id}
+        val = self.request(**kwargs)
+        return val
+
+    def DescribeVolumeSnapshots(self, ebs_snapshot_ids=None, limit=0, offset=0, filters=None):
+        """ 获取EBS快照实例列表
+        :param ebs_snapshot_ids:  EBS ID列表
+        :type ebs_snapshot_ids: list
+        :param limit:
+        :type limit: int
+        :param offset:
+        :type offset: int
+        :param filters:
+        :type filters: dict
+        :return: VolumeSnapshotSet, 包含VolumeSnapshot结构列表
+        """
+        kwargs = dict()
+        if isinstance(ebs_snapshot_ids, list) and len(ebs_snapshot_ids) > 0:
+            kwargs['VolumeSnapshotIds'] = ebs_snapshot_ids
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['VolumeSnapshotSet']
+
+    def CreateVolumeSnapshot(self, name, ebs_id):
+        """ 创建EBS快照
+
+        :param name: 快照的名称
+        :param ebs_id: EBS的ID
+        :return: 请求是否成功
+        """
+        kwargs = {'VolumeSnapshotName': name, 'VolumeId': ebs_id}
+        val = self.request(**kwargs)
+        return val
+
+    def RecoverVolume(self, ebs_snapshot_id):
+        """ 用快照恢复EBS
+
+        :param ebs_snapshot_id: EBS快照的ID
+        :return: 请求是否成功
+        """
+        kwargs = {'VolumeSnapshotId': ebs_snapshot_id}
+        val = self.request(**kwargs)
+        return val
+
+    def DeleteVolumeSnapshot(self, ebs_snapshot_id):
+        """ 删除EBS快照
+
+        :param ebs_snapshot_id: EBS快照的ID
+        :return: 请求是否成功
+        """
+        kwargs = {'VolumeSnapshotId': ebs_snapshot_id}
+        val = self.request(**kwargs)
+        return val

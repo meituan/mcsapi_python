@@ -706,4 +706,66 @@ def do_DisassociateAddress(client, args):
 def do_ReplaceAddress(client, args):
     """unbind eip to cloud service"""
     val = client.ReplaceAddress(args.id, args.newId)
+
+##
+#
+#   EBS code
+#
+@utils.arg('--name', metavar='<NAME>', help='Optional ebs name')
+@utils.arg('--disksize', metavar='<DISKSIZE>', help='ebs size G')
+@utils.arg('--zone', metavar='<ZONE>', help='Zone')
+def do_CreateVolume(client, args):
+    """ Create Volume """
+    val = client.CreateVolume(args.name,
+                            disksize=args.disksize,
+                            zone=args.zone)
+
+    utils.print_dict(val)
+
+@utils.arg('--ebs_id', metavar='<VolumeId>', help='Volume Id')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+def do_DescribeVolumes(client, args):
+    """Describe specific Volume listener info"""
+    val = client.DescribeVolumes(args.ebs_id, args.limit, args.offset)
+    utils.print_list(val, 'Volume')
+
+@utils.arg('--ebs_id', metavar='<VolumeId>', required=True, help='ID of Volume')
+@utils.arg('--instance_id', metavar='<InstanceId>', required=True, help='ID of Instance')
+def do_AttachVolume(client, args):
+    """Attach Volume on Instance"""
+    val = client.AttachVolume(args.ebs_id, args.instance_id)
+    utils.print_dict(val)
+
+@utils.arg('--ebs_id', metavar='<VolumeId>', required=True, help='ID of Volume')
+@utils.arg('--instance_id', metavar='<InstanceId>', required=True, help='ID of Instance')
+def do_DetachVolume(client, args):
+    """Detach Volume"""
+    val = client.DetachVolume(args.ebs_id, args.instance_id)
+    utils.print_dict(val)
+
+@utils.arg('--ebs_id', metavar='<VolumeId>', required=True, help='ID of Volume')
+def do_DeleteVolume(client, args):
+    """Delete Volume"""
+    val = client.DeleteVolume(args.ebs_id)
+    utils.print_dict(val)
+
+@utils.arg('--ebs_snapshot_ids', metavar='<VolumeSnapshotId>', help='mebsSnapshot Id')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+def do_DescribeVolumeSnapshots(client, args):
+    """Describe specific Volume Snapshot listener info"""
+    val = client.DescribeVolumeSnapshots(args.ebs_snapshot_ids, args.limit, args.offset)
+    utils.print_list(val, 'VolumeSnapshot')
+
+@utils.arg('--ebs_snapshot_id', metavar='<VolumeSnapshotId>', required=True, help='ID of Volume snapshot')
+def do_RecoverVolume(client, args):
+    """Recover Volume"""
+    val = client.RecoverVolume(args.ebs_snapshot_id)
+    utils.print_dict(val)
+
+@utils.arg('--ebs_snapshot_id', metavar='<VolumeSnapshotId>', required=True, help='ID of Volume snapshot')
+def do_DeleteVolumeSnapshot(client, args):
+    """Delete Volume Snapshot"""
+    val = client.DeleteVolumeSnapshot(args.ebs_snapshot_id)
     utils.print_dict(val)
