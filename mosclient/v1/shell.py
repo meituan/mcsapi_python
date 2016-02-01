@@ -704,7 +704,7 @@ def do_DisassociateAddress(client, args):
 @utils.arg('id', metavar='<AllocationId>', help='ID of EIP')
 @utils.arg('--newId', metavar='<NewAllocationId>', required=True, help='ID of new EIP')
 def do_ReplaceAddress(client, args):
-    """unbind eip to cloud service"""
+    """replace old eip with new eip"""
     val = client.ReplaceAddress(args.id, args.newId)
 
 ##

@@ -1392,7 +1392,7 @@ class Client(BaseClient):
 
         :param allocation_id: 浮动IP的ID（或者IP）
         :param new_allocation_id: 新的浮动IP的ID（或者IP）
-        :return: 请求是否成功
+        :return: Address结构
         """
         kwargs = {
             'AllocationId': allocation_id,
