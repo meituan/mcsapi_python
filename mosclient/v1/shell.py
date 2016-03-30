@@ -1,3 +1,5 @@
+#-*- encoding: utf-8 -*-
+
 import sys
 from mosclient.common import utils
 
@@ -76,12 +78,13 @@ def do_GetPasswordData(client, args):
 
 @utils.arg('--id', metavar='<ID>', action='append', help='ID of instance')
 @utils.arg('--name', metavar='<NAME>', action='append', help='Name of instance')
+@utils.arg('--group', metavar='<Group>', help='Name or ID of Group')
 @utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
 @utils.arg('--offset', metavar='<OFFSET>', type=int, help='Limit')
 @utils.arg('--filter', metavar='<FILTER>', action='append', help='Filter')
 def do_DescribeInstances(client, args):
     """ Get details of all or specified instances """
-    val = client.DescribeInstances(args.id, args.name, args.limit, args.offset, utils.convert_filter(args.filter))
+    val = client.DescribeInstances(args.id, args.name, args.group, args.limit, args.offset, utils.convert_filter(args.filter))
     utils.print_list(val, 'Instance')
 
 
@@ -722,12 +725,13 @@ def do_CreateVolume(client, args):
 
     utils.print_dict(val)
 
-@utils.arg('--ebs_id', metavar='<VolumeId>', help='Volume Id')
+@utils.arg('--ebs_id', metavar='<VolumeId>', action='append', help='Volume Id')
 @utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
 @utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--filter', metavar='<FILTER>', action='append', help='Offset')
 def do_DescribeVolumes(client, args):
     """Describe specific Volume listener info"""
-    val = client.DescribeVolumes(args.ebs_id, args.limit, args.offset)
+    val = client.DescribeVolumes(args.ebs_id, args.limit, args.offset, utils.convert_filter(args.filter))
     utils.print_list(val, 'Volume')
 
 @utils.arg('--ebs_id', metavar='<VolumeId>', required=True, help='ID of Volume')
@@ -750,12 +754,13 @@ def do_DeleteVolume(client, args):
     val = client.DeleteVolume(args.ebs_id)
     utils.print_dict(val)
 
-@utils.arg('--ebs_snapshot_ids', metavar='<VolumeSnapshotId>', help='mebsSnapshot Id')
+@utils.arg('--ebs_snapshot_ids', metavar='<VolumeSnapshotId>', action='append', help='mebsSnapshot Id')
 @utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
 @utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--filter', metavar='<FILTER>', action='append', help='Offset')
 def do_DescribeVolumeSnapshots(client, args):
     """Describe specific Volume Snapshot listener info"""
-    val = client.DescribeVolumeSnapshots(args.ebs_snapshot_ids, args.limit, args.offset)
+    val = client.DescribeVolumeSnapshots(args.ebs_snapshot_ids, args.limit, args.offset, utils.convert_filter(args.filter))
     utils.print_list(val, 'VolumeSnapshot')
 
 @utils.arg('--ebs_snapshot_id', metavar='<VolumeSnapshotId>', required=True, help='ID of Volume snapshot')
@@ -768,4 +773,55 @@ def do_RecoverVolume(client, args):
 def do_DeleteVolumeSnapshot(client, args):
     """Delete Volume Snapshot"""
     val = client.DeleteVolumeSnapshot(args.ebs_snapshot_id)
+    utils.print_dict(val)
+
+"""
+    主机分组
+"""
+@utils.arg('--ebs_snapshot_ids', metavar='<ServerGroupId>', action='append', help='ServerGroup Id')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--filter', metavar='<FILTER>', action='append', help='Offset')
+def do_DescribeServerGroup(client, args):
+    """Describe ServerGroup info"""
+    val = client.DescribeServerGroup(args.ebs_snapshot_ids, args.limit, args.offset, utils.convert_filter(args.filter))
+    utils.print_list(val, 'ServerGroup')
+
+@utils.arg('name', metavar='<Name>', help='Name')
+@utils.arg('--zone', metavar='<AvailabilityZoneId>', help='AvailabilityZoneId')
+def do_CreateServerGroup(client, args):
+    """Create ServerGroup"""
+    val = client.CreateServerGroup(args.name, args.zone)
+    utils.print_dict(val, 'ServerGroup')
+
+@utils.arg('group', metavar='<Group>', help='Group name')
+def do_ReleaseServerGroup(client, args):
+    """Delete Group"""
+    val = client.ReleaseServerGroup(args.group)
+    utils.print_dict(val)
+
+# @utils.arg('instance_id', metavar='<instanceId>', help='instanceId')
+# def do_ServerGroupShow(client, args):
+#     """Create ServerGroup"""
+#     val = client.ServerGroupShow(args.instance_id)
+#     utils.print_dict(val, 'ServerGroup')
+
+@utils.arg('--group', metavar='<Group>', help='Group name')
+def do_DescribeServerByGroup(client, args):
+    """Describe group instance info"""
+    val = client.DescribeServerByGroup(args.group)
+    utils.print_list(val, 'GroupGuest')
+
+@utils.arg('instance_id', metavar='<instanceId>', help='instanceId')
+@utils.arg('group', metavar='<Group>', help='Group Name or ID')
+def do_ServerJoinGroup(client, args):
+    """join ServerGroup"""
+    val = client.ServerJoinGroup(args.group, args.instance_id)
+    utils.print_dict(val, 'GroupGuest')
+
+@utils.arg('instance_id', metavar='<instanceId>', help='instanceId')
+@utils.arg('group', metavar='<Group>', help='Group Name or ID')
+def do_ServerLeaveGroup(client, args):
+    """remove ServerGroup"""
+    val = client.ServerLeaveGroup(args.group, args.instance_id)
     utils.print_dict(val)

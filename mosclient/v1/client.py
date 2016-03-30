@@ -62,14 +62,15 @@ class Client(BaseClient):
         val = self.request()
         return val
 
-    def DescribeInstances(self, ids=None, names=None, limit=0, offset=0,
-                                filters=None):
+    def DescribeInstances(self, ids=None, names=None, group=None, limit=0, offset=0, filters=None):
         """ 获得所有虚拟机
 
         :param ids: 期望获取的虚拟机ID列表
         :type ids: list
         :param names: 期望获取信息的虚拟机名称列表
         :type names: list
+        :param group: 分组名称 or ID
+        :type group: string
         :param limit: 最多返回数量
         :type limit: int
         :param offset: 返回虚拟机的偏移量，用于分页显示
@@ -84,6 +85,8 @@ class Client(BaseClient):
             kwargs['InstanceId'] = ids
         if isinstance(names, list) and len(names) > 0:
             kwargs['InstanceName'] = names
+        if group:
+            kwargs['Group'] = group
         self.parse_list_params(limit, offset, filters, kwargs)
         val = self.request(**kwargs)
         return val['InstanceSet']
@@ -1524,3 +1527,109 @@ class Client(BaseClient):
         kwargs = {'VolumeSnapshotId': ebs_snapshot_id}
         val = self.request(**kwargs)
         return val
+
+    """
+        主机分组
+    """
+    def DescribeServerGroup(self, servergroup_ids=None, limit=0, offset=0, filters=None):
+        """ 获取分组列表
+        :param servergroup_ids:  分组 ID列表
+        :type servergroup_ids: list
+        :param limit:
+        :type limit: int
+        :param offset:
+        :type offset: int
+        :param filters:
+        :type filters: dict
+        :return: ServerGroupSet, 包含ServerGroup结构列表
+        """
+        kwargs = dict()
+        if isinstance(servergroup_ids, list) and len(servergroup_ids) > 0:
+            kwargs['ServerGroupIds'] = servergroup_ids
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['ServerGroupSet']
+
+    def CreateServerGroup(self, name, zone=None):
+        """ 创建分组
+        :param name: 分组 Name
+        :type name:string
+        :param zone: 分区 ID or Name
+        :type zone: string
+        :return: ServerGroup结构列表
+
+        """
+        kwargs = {}
+        kwargs['Name'] = name
+        if zone is not None:
+            kwargs['AvailabilityZoneId'] = zone
+
+        val = self.request(**kwargs)
+        return val
+
+    def ReleaseServerGroup(self, group):
+        """ 删除分组
+        :param group: 分组 名称 or ID
+        :type grop: string
+        :return: return
+        """
+
+        kwargs = {}
+        kwargs['Group'] = group
+        val = self.request(**kwargs)
+        return val
+
+    # def ServerGroupShow(self, instance_id, zone=None):
+
+    #     kwargs = {}
+    #     kwargs['InstanceId'] = instance_id
+    #     val = self.request(**kwargs)
+    #     return val
+
+    def DescribeServerByGroup(self, group=None):
+        """ 分组内机器资源列表
+        :param group: 分组 名称 or ID
+        :type grop: string
+        :return: GroupGuestSet, 包含GroupGuest结构列表
+        """
+
+        kwargs = {}
+        if group:
+            kwargs['Group'] = group
+        val = self.request(**kwargs)
+        return val['GroupGuestSet']
+
+    def ServerJoinGroup(self, group, instance_id, tag=None):
+        """ 添加实例到分组里面
+        :param group: 分组 名称 or ID
+        :type grop: string
+        :param instance_id: InstanceId 对应的实例资源
+        :type instance_id: string
+        :return: GroupGuest结构列表
+        """
+
+        kwargs = {}
+        kwargs['Group'] = group
+        kwargs['InstanceId'] = instance_id
+        if tag:
+            kwargs['Tag'] = tag
+        val = self.request(**kwargs)
+        return val
+
+    def ServerLeaveGroup(self, group, instance_id):
+        """ 将实例从分组里面移除
+        :param group: 分组 名称 or ID
+        :type grop: string
+        :param instance_id: InstanceId 对应的实例资源
+        :type instance_id: string
+        :return: return
+        """
+
+        kwargs = {}
+        kwargs['Group'] = group
+        kwargs['InstanceId'] = instance_id
+        val = self.request(**kwargs)
+        return val
+
+
+
