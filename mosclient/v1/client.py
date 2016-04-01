@@ -1307,7 +1307,7 @@ class Client(BaseClient):
         if availability_zone_id:
             kwargs['AvailabilityZoneId'] = availability_zone_id
         val = self.request(**kwargs)
-        return val['Address']
+        return val
 
     def DescribeAddresses(self, allocation_ids=None, limit=0, offset=0, filters=None):
         """ 返回所有或者部分浮动IP列表信息列表
@@ -1341,7 +1341,7 @@ class Client(BaseClient):
         if name:
             kwargs['Name'] = name
         val = self.request(**kwargs)
-        return val['Address']
+        return val
 
     def ConfigAddressBandwidth(self, allocation_id, bandwidth=None):
         """ 配置浮动IP带宽
@@ -1378,7 +1378,7 @@ class Client(BaseClient):
         kwargs = {'AllocationId': allocation_id, 'AssociationType': association_type,
                   'InstanceId': instance_id, 'Bandwidth': bandwidth}
         val = self.request(**kwargs)
-        return val['Address']
+        return val
 
     def DisassociateAddress(self, allocation_id):
         """ 将浮动IP解绑
@@ -1402,7 +1402,7 @@ class Client(BaseClient):
             'NewAllocationId': new_allocation_id
         }
         val = self.request(**kwargs)
-        return val['Address']
+        return val
 
     ##
     #   EBS code

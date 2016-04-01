@@ -652,7 +652,7 @@ def do_DescribeRDSMetrics(client, args):
 def do_AllocateAddress(client, args):
     """ Allocate EIP """
     val = client.AllocateAddress(args.name, args.billingModel, args.zoneId)
-    utils.print_dict(val)
+    utils.print_dict(val, 'Address')
 
 
 @utils.arg('id', metavar='<AllocationId>', help='ID of EIP')
@@ -667,7 +667,7 @@ def do_ReleaseAddress(client, args):
 def do_ConfigAddress(client, args):
     """Config EIP """
     val = client.ConfigAddress(args.id, args.name)
-    utils.print_dict(val)
+    utils.print_dict(val, 'Address')
 
 
 @utils.arg('id', metavar='<AllocationId>', help='ID of EIP')
@@ -675,7 +675,7 @@ def do_ConfigAddress(client, args):
 def do_ConfigAddressBandwidth(client, args):
     """Config EIP Bandwidth"""
     val = client.ConfigAddressBandwidth(args.id, args.bandwidth)
-    utils.print_dict(val)
+    utils.print_dict(val, 'Address')
 
 
 @utils.arg('--id', metavar='<ID>', action='append', help='AllocationId of IP')
@@ -695,7 +695,7 @@ def do_DescribeAddresses(client, args):
 def do_AssociateAddress(client, args):
     """bind eip to cloud service"""
     val = client.AssociateAddress(args.id, args.associationType, args.instanceId, args.bandwidth)
-    utils.print_dict(val)
+    utils.print_dict(val, 'Address')
 
 
 @utils.arg('id', metavar='<AllocationId>', help='ID of EIP')
@@ -709,6 +709,7 @@ def do_DisassociateAddress(client, args):
 def do_ReplaceAddress(client, args):
     """replace old eip with new eip"""
     val = client.ReplaceAddress(args.id, args.newId)
+    utils.print_dict(val, Address)
 
 ##
 #
@@ -778,13 +779,13 @@ def do_DeleteVolumeSnapshot(client, args):
 """
     主机分组
 """
-@utils.arg('--ebs_snapshot_ids', metavar='<ServerGroupId>', action='append', help='ServerGroup Id')
+@utils.arg('--servergroup_ids', metavar='<ServerGroupId>', action='append', help='ServerGroup Id')
 @utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
 @utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
 @utils.arg('--filter', metavar='<FILTER>', action='append', help='Offset')
 def do_DescribeServerGroup(client, args):
     """Describe ServerGroup info"""
-    val = client.DescribeServerGroup(args.ebs_snapshot_ids, args.limit, args.offset, utils.convert_filter(args.filter))
+    val = client.DescribeServerGroup(args.servergroup_ids, args.limit, args.offset, utils.convert_filter(args.filter))
     utils.print_list(val, 'ServerGroup')
 
 @utils.arg('name', metavar='<Name>', help='Name')
@@ -794,7 +795,7 @@ def do_CreateServerGroup(client, args):
     val = client.CreateServerGroup(args.name, args.zone)
     utils.print_dict(val, 'ServerGroup')
 
-@utils.arg('group', metavar='<Group>', help='Group name')
+@utils.arg('group', metavar='<Group>', help='Group name or ID')
 def do_ReleaseServerGroup(client, args):
     """Delete Group"""
     val = client.ReleaseServerGroup(args.group)
@@ -806,7 +807,7 @@ def do_ReleaseServerGroup(client, args):
 #     val = client.ServerGroupShow(args.instance_id)
 #     utils.print_dict(val, 'ServerGroup')
 
-@utils.arg('--group', metavar='<Group>', help='Group name')
+@utils.arg('--group', metavar='<Group>', help='Group name or ID')
 def do_DescribeServerByGroup(client, args):
     """Describe group instance info"""
     val = client.DescribeServerByGroup(args.group)
