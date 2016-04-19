@@ -84,7 +84,7 @@ def do_GetPasswordData(client, args):
 @utils.arg('--filter', metavar='<FILTER>', action='append', help='Filter')
 def do_DescribeInstances(client, args):
     """ Get details of all or specified instances """
-    val = client.DescribeInstances(args.id, args.name, args.group, args.limit, args.offset, utils.convert_filter(args.filter))
+    val = client.DescribeInstances(args.id, args.name, args.limit, args.offset, utils.convert_filter(args.filter), args.group)
     utils.print_list(val, 'Instance')
 
 

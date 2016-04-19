@@ -62,7 +62,7 @@ class Client(BaseClient):
         val = self.request()
         return val
 
-    def DescribeInstances(self, ids=None, names=None, group=None, limit=0, offset=0, filters=None):
+    def DescribeInstances(self, ids=None, names=None, limit=0, offset=0, filters=None, group=None):
         """ 获得所有虚拟机
 
         :param ids: 期望获取的虚拟机ID列表
