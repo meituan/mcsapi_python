@@ -62,7 +62,7 @@ class Client(BaseClient):
         val = self.request()
         return val
 
-    def DescribeInstances(self, ids=None, names=None, limit=0, offset=0, filters=None, group=None):
+    def DescribeInstances(self, ids=None, names=None, limit=0, offset=0, filters=None, group=None, zone=None):
         """ 获得所有虚拟机
 
         :param ids: 期望获取的虚拟机ID列表
@@ -71,6 +71,8 @@ class Client(BaseClient):
         :type names: list
         :param group: 分组名称 or ID
         :type group: string
+        :param zone: 指定创建虚拟机所在的数据中心, 可通过DescribeAvailabilityZones接口获取
+        :type zone: string
         :param limit: 最多返回数量
         :type limit: int
         :param offset: 返回虚拟机的偏移量，用于分页显示
@@ -87,6 +89,8 @@ class Client(BaseClient):
             kwargs['InstanceName'] = names
         if group:
             kwargs['Group'] = group
+        if zone is not None:
+            kwargs['AvailabilityZoneId'] = zone
         self.parse_list_params(limit, offset, filters, kwargs)
         val = self.request(**kwargs)
         return val['InstanceSet']
@@ -1612,7 +1616,7 @@ class Client(BaseClient):
         return val['GroupGuestSet']
 
     def ServerJoinGroup(self, group, instance_id, tag=None):
-        """ 添加实例到分组里面
+        """ 添加实例到指定分组
         :param group: 分组 名称 or ID
         :type grop: string
         :param instance_id: InstanceId 对应的实例资源
