@@ -1309,7 +1309,7 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val
 
-    def DescribeAddresses(self, allocation_ids=None, limit=0, offset=0, filters=None):
+    def DescribeAddresses(self, allocation_ids=None, limit=0, offset=0, filters=None, zone=None):
         """ 返回所有或者部分浮动IP列表信息列表
 
         :param allocation_ids:  希望获取的Address ID列表
@@ -1325,7 +1325,8 @@ class Client(BaseClient):
         kwargs = dict()
         if isinstance(allocation_ids, list) and len(allocation_ids) > 0:
             kwargs['AllocationId'] = allocation_ids
-
+        if zone is not None:
+            kwargs['AvailabilityZoneId'] = zone
         self.parse_list_params(limit, offset, filters, kwargs)
         val = self.request(**kwargs)
         return val['AddressSet']
@@ -1428,7 +1429,7 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val
 
-    def DescribeVolumes(self, ebs_ids=None, limit=0, offset=0, filters=None):
+    def DescribeVolumes(self, ebs_ids=None, zone=None, limit=0, offset=0, filters=None):
         """ 获取EBS实例列表
         :param ebs_ids:  EBS ID列表
         :type ebs_ids: list
@@ -1443,6 +1444,8 @@ class Client(BaseClient):
         kwargs = dict()
         if isinstance(ebs_ids, list) and len(ebs_ids) > 0:
             kwargs['VolumeIds'] = ebs_ids
+        if zone is not None:
+            kwargs['AvailabilityZoneId'] = zone
         self.parse_list_params(limit, offset, filters, kwargs)
         val = self.request(**kwargs)
         return val['VolumeSet']
@@ -1478,7 +1481,7 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val
 
-    def DescribeVolumeSnapshots(self, ebs_snapshot_ids=None, limit=0, offset=0, filters=None):
+    def DescribeVolumeSnapshots(self, ebs_snapshot_ids=None, zone=None, limit=0, offset=0, filters=None):
         """ 获取EBS快照实例列表
         :param ebs_snapshot_ids:  EBS ID列表
         :type ebs_snapshot_ids: list
@@ -1493,6 +1496,9 @@ class Client(BaseClient):
         kwargs = dict()
         if isinstance(ebs_snapshot_ids, list) and len(ebs_snapshot_ids) > 0:
             kwargs['VolumeSnapshotIds'] = ebs_snapshot_ids
+        if zone is not None:
+            kwargs['AvailabilityZoneId'] = zone
+
         self.parse_list_params(limit, offset, filters, kwargs)
         val = self.request(**kwargs)
         return val['VolumeSnapshotSet']
@@ -1531,7 +1537,7 @@ class Client(BaseClient):
     """
         主机分组
     """
-    def DescribeServerGroup(self, servergroup_ids=None, limit=0, offset=0, filters=None):
+    def DescribeServerGroup(self, servergroup_ids=None, zone=None, limit=0, offset=0, filters=None):
         """ 获取分组列表
         :param servergroup_ids:  分组 ID列表
         :type servergroup_ids: list
@@ -1546,6 +1552,9 @@ class Client(BaseClient):
         kwargs = dict()
         if isinstance(servergroup_ids, list) and len(servergroup_ids) > 0:
             kwargs['ServerGroupIds'] = servergroup_ids
+        if zone is not None:
+            kwargs['AvailabilityZoneId'] = zone
+
         self.parse_list_params(limit, offset, filters, kwargs)
         val = self.request(**kwargs)
         return val['ServerGroupSet']
@@ -1586,7 +1595,7 @@ class Client(BaseClient):
     #     val = self.request(**kwargs)
     #     return val
 
-    def DescribeServerByGroup(self, group=None):
+    def DescribeServerByGroup(self, group=None, zone=None, limit=0, offset=0, filters=None):
         """ 分组内机器资源列表
         :param group: 分组 名称 or ID
         :type grop: string
@@ -1596,6 +1605,9 @@ class Client(BaseClient):
         kwargs = {}
         if group:
             kwargs['Group'] = group
+        if zone is not None:
+            kwargs['AvailabilityZoneId'] = zone
+        self.parse_list_params(limit, offset, filters, kwargs)
         val = self.request(**kwargs)
         return val['GroupGuestSet']
 

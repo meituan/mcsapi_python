@@ -679,11 +679,12 @@ def do_ConfigAddressBandwidth(client, args):
 
 
 @utils.arg('--id', metavar='<ID>', action='append', help='AllocationId of IP')
+@utils.arg('--zone', metavar='<AVAILABILITYZONE>', type=str, help='Availability Zone')
 @utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
 @utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
 def do_DescribeAddresses(client, args):
     """Describe EIP list"""
-    val = client.DescribeAddresses(args.id, args.limit, args.offset)
+    val = client.DescribeAddresses(args.id, args.limit, args.offset, args.zone)
     utils.print_list(val, 'Address')
 
 
@@ -727,12 +728,13 @@ def do_CreateVolume(client, args):
     utils.print_dict(val)
 
 @utils.arg('--ebs_id', metavar='<VolumeId>', action='append', help='Volume Id')
+@utils.arg('--zone', metavar='<AVAILABILITYZONE>', type=str, help='Availability Zone')
 @utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
 @utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
 @utils.arg('--filter', metavar='<FILTER>', action='append', help='Offset')
 def do_DescribeVolumes(client, args):
     """Describe specific Volume listener info"""
-    val = client.DescribeVolumes(args.ebs_id, args.limit, args.offset, utils.convert_filter(args.filter))
+    val = client.DescribeVolumes(args.ebs_id, args.zone, args.limit, args.offset, utils.convert_filter(args.filter))
     utils.print_list(val, 'Volume')
 
 @utils.arg('--ebs_id', metavar='<VolumeId>', required=True, help='ID of Volume')
@@ -756,12 +758,13 @@ def do_DeleteVolume(client, args):
     utils.print_dict(val)
 
 @utils.arg('--ebs_snapshot_ids', metavar='<VolumeSnapshotId>', action='append', help='mebsSnapshot Id')
+@utils.arg('--zone', metavar='<AVAILABILITYZONE>', type=str, help='Availability Zone')
 @utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
 @utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
 @utils.arg('--filter', metavar='<FILTER>', action='append', help='Offset')
 def do_DescribeVolumeSnapshots(client, args):
     """Describe specific Volume Snapshot listener info"""
-    val = client.DescribeVolumeSnapshots(args.ebs_snapshot_ids, args.limit, args.offset, utils.convert_filter(args.filter))
+    val = client.DescribeVolumeSnapshots(args.ebs_snapshot_ids, args.zone, args.limit, args.offset, utils.convert_filter(args.filter))
     utils.print_list(val, 'VolumeSnapshot')
 
 @utils.arg('--ebs_snapshot_id', metavar='<VolumeSnapshotId>', required=True, help='ID of Volume snapshot')
@@ -780,12 +783,13 @@ def do_DeleteVolumeSnapshot(client, args):
     主机分组
 """
 @utils.arg('--servergroup_ids', metavar='<ServerGroupId>', action='append', help='ServerGroup Id')
+@utils.arg('--zone', metavar='<AVAILABILITYZONE>', type=str, help='Availability Zone')
 @utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
 @utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
 @utils.arg('--filter', metavar='<FILTER>', action='append', help='Offset')
 def do_DescribeServerGroup(client, args):
     """Describe ServerGroup info"""
-    val = client.DescribeServerGroup(args.servergroup_ids, args.limit, args.offset, utils.convert_filter(args.filter))
+    val = client.DescribeServerGroup(args.servergroup_ids, args.zone, args.limit, args.offset, utils.convert_filter(args.filter))
     utils.print_list(val, 'ServerGroup')
 
 @utils.arg('name', metavar='<Name>', help='Name')
@@ -808,9 +812,13 @@ def do_ReleaseServerGroup(client, args):
 #     utils.print_dict(val, 'ServerGroup')
 
 @utils.arg('--group', metavar='<Group>', help='Group name or ID')
+@utils.arg('--zone', metavar='<AVAILABILITYZONE>', type=str, help='Availability Zone')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--filter', metavar='<FILTER>', action='append', help='Offset')
 def do_DescribeServerByGroup(client, args):
     """Describe group instance info"""
-    val = client.DescribeServerByGroup(args.group)
+    val = client.DescribeServerByGroup(args.group, args.zone, args.limit, args.offset, utils.convert_filter(args.filter))
     utils.print_list(val, 'GroupGuest')
 
 @utils.arg('instance_id', metavar='<instanceId>', help='instanceId')
