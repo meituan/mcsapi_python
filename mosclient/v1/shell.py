@@ -685,7 +685,7 @@ def do_ConfigAddressBandwidth(client, args):
 @utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
 def do_DescribeAddresses(client, args):
     """Describe EIP list"""
-    val = client.DescribeAddresses(args.id, args.limit, args.offset, args.zone)
+    val = client.DescribeAddresses(args.id, args.limit, args.offset, zone=args.zone)
     utils.print_list(val, 'Address')
 
 
