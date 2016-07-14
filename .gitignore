@@ -1,3 +1,5 @@
+.gitignore
+.idea/
 *.py[cod]
 
 # C extensions
