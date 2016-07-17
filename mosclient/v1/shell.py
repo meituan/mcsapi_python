@@ -514,6 +514,8 @@ def do_DescribeRedisMetrics(client, args):
 @utils.arg('--password', metavar='<PASSWORD>', required=True, help='RDS password')
 @utils.arg('--zone', metavar='<ZONE>', required=True, help='Availabble zone')
 @utils.arg('--duration', metavar='<DURATION>', help='Reserved rds duration, in H or M, e.g. 72H, 1M')
+@utils.arg('--slave_count', metavar='<SLAVE_COUNT>', help='slave count')
+@utils.arg('--proxy_count', metavar='<PROXY_COUNT>', help='proxy count')
 def do_CreateRDS(client, args):
     """ Create rds """
     val = client.CreateRDS(args.rds_type,
@@ -523,7 +525,10 @@ def do_CreateRDS(client, args):
                         args.password,
                         args.name,
                         args.zone,
-                        args.duration)
+                        args.duration,
+                        slave_count=args.slave_count,
+                        proxy_count=args.proxy_count,
+                        )
     utils.print_dict(val)
 
 
@@ -834,4 +839,79 @@ def do_ServerJoinGroup(client, args):
 def do_ServerLeaveGroup(client, args):
     """remove ServerGroup"""
     val = client.ServerLeaveGroup(args.group, args.instance_id)
+    utils.print_dict(val)
+
+"""
+    ECS API
+"""
+@utils.arg('--ecs', metavar='<ECS>', help='ECS name or ID')
+@utils.arg('--zone', metavar='<AVAILABILITYZONE>', type=str, help='Availability Zone')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--filter', metavar='<FILTER>', action='append', help='Offset')
+def do_DescribeECS(client, args):
+    """Describe esc instance info"""
+    val = client.DescribeECS(args.ecs, args.zone, args.limit, args.offset, utils.convert_filter(args.filter))
+    utils.print_list(val, 'ECS')
+
+@utils.arg('name', metavar='<Name>', help='Name')
+@utils.arg('flavor', metavar='<Flavor>', help='ECS Type')
+@utils.arg('driver', metavar='<Driver>', help='ECS driver (Memcached)')
+@utils.arg('--master_count', metavar='<MASTER_COUNT>', type=int ,help='ECS master count')
+@utils.arg('--zone', metavar='<AvailabilityZoneId>', help='AvailabilityZoneId')
+def do_CreateECS(client, args):
+    """Create ECS"""
+    val = client.CreateECS(args.name, args.flavor, args.driver, args.master_count, args.zone)
+    utils.print_dict(val, 'ECS')
+
+@utils.arg('ecs_id', metavar='<ECS_ID>', help='ECS ID')
+@utils.arg('flavor', metavar='<Flavor>', help='ECS Type')
+def do_ChangeECSType(client, args):
+    """Change ECS Type"""
+    val = client.ChangeECSType(args.ecs_id, args.flavor)
+    utils.print_dict(val)
+
+@utils.arg('ecs_id', metavar='<ECS_ID>', help='ECS ID')
+def do_DeleteECS(client, args):
+    """Delete ECS"""
+    val = client.DeleteECS(args.ecs_id)
+    utils.print_dict(val)
+
+@utils.arg('ecs', metavar='<ECS>', help='ECS name or ID')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--filter', metavar='<FILTER>', action='append', help='Offset')
+def do_DescribeECSNode(client, args):
+    """Describe esc node instance info"""
+    val = client.DescribeECSNode(args.ecs, args.limit, args.offset, utils.convert_filter(args.filter))
+    utils.print_list(val, 'RDSNode')
+
+@utils.arg('ecs_id', metavar='<ECS_ID>', help='ECS ID')
+@utils.arg('--count', metavar='<COUNT>', help='ECS COUNT')
+def do_CreateECSNode(client, args):
+    """Create ECS node"""
+    val = client.CreateECSNode(args.ecs_id, args.count)
+    utils.print_dict(val)
+
+@utils.arg('node_id', metavar='<NODE_ID>', help='NODE ID')
+def do_DeleteCDSNode(client, args):
+    """Delete ECS node"""
+    val = client.DeleteCDSNode(args.ecs_id)
+    utils.print_dict(val)
+
+@utils.arg('rds', metavar='<RDS>', help='RDS name or ID')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--filter', metavar='<FILTER>', action='append', help='Offset')
+def do_DescribeRDSNode(client, args):
+    """Describe RDS node instance info"""
+    val = client.DescribeRDSNode(args.rds, args.limit, args.offset, utils.convert_filter(args.filter))
+    utils.print_list(val, 'RDSNode')
+
+@utils.arg('rds', metavar='<RDS>', help='RDS ID')
+@utils.arg('role', metavar='<ROLE>', help='Node Role, choices=(slave, proxy)')
+@utils.arg('--count', metavar='<COUNT>', help='ECS COUNT')
+def do_CreateRDSNode(client, args):
+    """Create RDS node"""
+    val = client.CreateRDSNode(args.rds, args.role, args.count)
     utils.print_dict(val)
