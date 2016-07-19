@@ -1395,7 +1395,7 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val
 
-    def ReplaceAddress(self, allocation_id, new_allocation_id):
+    def ReplaceAddress(self, allocation_id, new_allocation_id, sync=False, timeout=300):
         """ 将浮动IP换绑
 
         :param allocation_id: 浮动IP的ID（或者IP）
@@ -1404,7 +1404,9 @@ class Client(BaseClient):
         """
         kwargs = {
             'AllocationId': allocation_id,
-            'NewAllocationId': new_allocation_id
+            'NewAllocationId': new_allocation_id,
+            'Sync': sync,
+            'Timeout': timeout,
         }
         val = self.request(**kwargs)
         return val
