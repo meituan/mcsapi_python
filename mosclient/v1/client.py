@@ -95,6 +95,40 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val['InstanceSet']
 
+
+    def SearchAssociatedAddresses(self, ids=None, names=None, limit=0, offset=0, filters=None, group=None, zone=None):
+        """ 获得所有虚拟机的浮动IP绑定情况
+
+        :param ids: 期望获取的虚拟机ID列表
+        :type ids: list
+        :param names: 期望获取信息的虚拟机名称列表
+        :type names: list
+        :param group: 分组名称 or ID
+        :type group: string
+        :param zone: 指定创建虚拟机所在的数据中心, 可通过DescribeAvailabilityZones接口获取
+        :type zone: string
+        :param limit: 最多返回数量
+        :type limit: int
+        :param offset: 返回虚拟机的偏移量，用于分页显示
+        :type offset: int
+        :param filters: 过滤器，一个dict，包含过滤字段名和值，可能过滤字段为：name, status
+        :type filters: dict
+
+        :returns: InstanceSet，包含虚拟机列表
+        """
+        kwargs = {}
+        if isinstance(ids, list) and len(ids) > 0:
+            kwargs['InstanceId'] = ids
+        if isinstance(names, list) and len(names) > 0:
+            kwargs['InstanceName'] = names
+        if group:
+            kwargs['Group'] = group
+        if zone is not None:
+            kwargs['AvailabilityZoneId'] = zone
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['InstanceEipInfoSet']
+
     def DescribeInstanceVolumes(self, iid, limit=0, offset=0, filters=None):
         """ 获取指定虚拟机的虚拟磁盘信息
 
