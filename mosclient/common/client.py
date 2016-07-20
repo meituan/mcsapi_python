@@ -78,8 +78,6 @@ class BaseClient(object):
 
 
     def _request(self, **kwargs):
-        for key in kwargs:
-            print"keyword arg: %s: %s" % (key, kwargs[key])
         params = {}
         params['Action'] = self._get_action(3)
         params['AWSAccessKeyId'] = self.access
