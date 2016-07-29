@@ -93,7 +93,7 @@ def do_DescribeInstances(client, args):
 @utils.arg('--name', metavar='<NAME>', action='append', help='Name of instance')
 def do_SearchAssociatedAddresses(client, args):
     """ Get details of all or specified instances """
-    val = client.SearchAssociatedAddresses(args.id, args.name, args.limit, args.offset, utils.convert_filter(args.filter), args.group, args.zone)
+    val = client.SearchAssociatedAddresses(args.id, args.name)
     utils.print_list(val, 'InstanceEipInfo')
 
 
