@@ -1050,10 +1050,13 @@ class Client(BaseClient):
         kwargs['RDSUsername'] = username
         kwargs['RDSPassword'] = password
         kwargs['RDSName'] = name
-        kwargs['AvailabilityZoneId'] = zone
 
-        kwargs['SlaveCount'] = param.get('slave_count', 0)
-        kwargs['ProxyCount'] = param.get('proxy_count', 0)
+        if zone:
+            kwargs['AvailabilityZoneId'] = zone
+        if param.get('slave_count'):
+            kwargs['SlaveCount'] = param.get('slave_count')
+        if param.get('proxy_count'):
+            kwargs['ProxyCount'] = param.get('proxy_count', 0)
 
         if duration is not None:
             if match_duration(duration):
@@ -1063,7 +1066,7 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val['RDS']
 
-    def DescribeRDS(self, ids=None, names=None, limit=0, offset=0, filters=None):
+    def DescribeRDS(self, ids=None, names=None, limit=0, offset=0, filters=None, zone=None):
         """ 获取所有RDS
 
         :param ids: 期望获取的RDS ID列表（可选）
@@ -1085,6 +1088,8 @@ class Client(BaseClient):
         if isinstance(names, list) and len(names) > 0:
             kwargs['RDSNames'] = names
         self.parse_list_params(limit, offset, filters, kwargs)
+        if zone:
+            kwargs['AvailabilityZoneId'] = zone
         val = self.request(**kwargs)
         return val['RDSSet']
 

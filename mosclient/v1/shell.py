@@ -512,10 +512,10 @@ def do_DescribeRedisMetrics(client, args):
 @utils.arg('--engine', metavar='<ENGINE>', required=True, help='RDS engine')
 @utils.arg('--username', metavar='<USERNAME>', required=True, help='RDS username')
 @utils.arg('--password', metavar='<PASSWORD>', required=True, help='RDS password')
-@utils.arg('--zone', metavar='<ZONE>', required=True, help='Availabble zone')
+@utils.arg('--zone', metavar='<ZONE>', help='Availabble zone')
 @utils.arg('--duration', metavar='<DURATION>', help='Reserved rds duration, in H or M, e.g. 72H, 1M')
-@utils.arg('--slave_count', metavar='<SLAVE_COUNT>', help='slave count')
-@utils.arg('--proxy_count', metavar='<PROXY_COUNT>', help='proxy count')
+@utils.arg('--slave_count', metavar='<SLAVE_COUNT>', type=int, help='slave count')
+@utils.arg('--proxy_count', metavar='<PROXY_COUNT>', type=int, help='proxy count')
 def do_CreateRDS(client, args):
     """ Create rds """
     val = client.CreateRDS(args.rds_type,
@@ -537,9 +537,10 @@ def do_CreateRDS(client, args):
 @utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
 @utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
 @utils.arg('--filter', metavar='<FILTER>', action='append', help='Filter')
+@utils.arg('--zone', metavar='<AvailabilityZoneId>', help='AvailabilityZoneId')
 def do_DescribeRDS(client, args):
     """ Get details of all or specified rds """
-    val = client.DescribeRDS(args.id, args.name, args.limit, args.offset, utils.convert_filter(args.filter))
+    val = client.DescribeRDS(args.id, args.name, args.limit, args.offset, utils.convert_filter(args.filter), args.zone)
     utils.print_list(val, 'RDS')
 
 
@@ -817,7 +818,7 @@ def do_ReleaseServerGroup(client, args):
 #     val = client.ServerGroupShow(args.instance_id)
 #     utils.print_dict(val, 'ServerGroup')
 
-@utils.arg('--group', metavar='<Group>', help='Group name or ID')
+@utils.arg('--group', metavar='<Group>', action='append', help='Group name or ID')
 @utils.arg('--zone', metavar='<AVAILABILITYZONE>', type=str, help='Availability Zone')
 @utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
 @utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
@@ -844,7 +845,7 @@ def do_ServerLeaveGroup(client, args):
 """
     ECS API
 """
-@utils.arg('--ecs', metavar='<ECS>', help='ECS name or ID')
+@utils.arg('--ecs', metavar='<ECS>', action='append', help='ECS name or ID')
 @utils.arg('--zone', metavar='<AVAILABILITYZONE>', type=str, help='Availability Zone')
 @utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
 @utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
@@ -887,7 +888,7 @@ def do_DescribeECSNode(client, args):
     utils.print_list(val, 'RDSNode')
 
 @utils.arg('ecs_id', metavar='<ECS_ID>', help='ECS ID')
-@utils.arg('--count', metavar='<COUNT>', help='ECS COUNT')
+@utils.arg('--count', metavar='<COUNT>', type=int, help='ECS COUNT')
 def do_CreateECSNode(client, args):
     """Create ECS node"""
     val = client.CreateECSNode(args.ecs_id, args.count)
@@ -896,7 +897,7 @@ def do_CreateECSNode(client, args):
 @utils.arg('node_id', metavar='<NODE_ID>', help='NODE ID')
 def do_DeleteCDSNode(client, args):
     """Delete ECS node"""
-    val = client.DeleteCDSNode(args.ecs_id)
+    val = client.DeleteCDSNode(args.node_id)
     utils.print_dict(val)
 
 @utils.arg('rds', metavar='<RDS>', help='RDS name or ID')
@@ -910,7 +911,7 @@ def do_DescribeRDSNode(client, args):
 
 @utils.arg('rds', metavar='<RDS>', help='RDS ID')
 @utils.arg('role', metavar='<ROLE>', help='Node Role, choices=(slave, proxy)')
-@utils.arg('--count', metavar='<COUNT>', help='ECS COUNT')
+@utils.arg('--count', metavar='<COUNT>', type=int, help='ECS COUNT')
 def do_CreateRDSNode(client, args):
     """Create RDS node"""
     val = client.CreateRDSNode(args.rds, args.role, args.count)
