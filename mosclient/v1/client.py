@@ -1021,7 +1021,7 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val['MetricSet']
 
-    def CreateRDS(self, rtype, datadisk, engine, username, password, name, zone, duration=None):
+    def CreateRDS(self, rtype, datadisk, engine, username, password, name, zone, duration=None, **param):
         """ 创建RDS
 
         :param rtype: RDS类型ID，可通过DescribeRDSTypes方法查询
@@ -1050,7 +1050,14 @@ class Client(BaseClient):
         kwargs['RDSUsername'] = username
         kwargs['RDSPassword'] = password
         kwargs['RDSName'] = name
-        kwargs['AvailabilityZoneId'] = zone
+
+        if zone:
+            kwargs['AvailabilityZoneId'] = zone
+        if param.get('slave_count'):
+            kwargs['SlaveCount'] = param.get('slave_count')
+        if param.get('proxy_count'):
+            kwargs['ProxyCount'] = param.get('proxy_count', 0)
+
         if duration is not None:
             if match_duration(duration):
                 kwargs['Duration'] = duration
@@ -1059,7 +1066,7 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val['RDS']
 
-    def DescribeRDS(self, ids=None, names=None, limit=0, offset=0, filters=None):
+    def DescribeRDS(self, ids=None, names=None, limit=0, offset=0, filters=None, zone=None):
         """ 获取所有RDS
 
         :param ids: 期望获取的RDS ID列表（可选）
@@ -1081,6 +1088,8 @@ class Client(BaseClient):
         if isinstance(names, list) and len(names) > 0:
             kwargs['RDSNames'] = names
         self.parse_list_params(limit, offset, filters, kwargs)
+        if zone:
+            kwargs['AvailabilityZoneId'] = zone
         val = self.request(**kwargs)
         return val['RDSSet']
 
@@ -1649,5 +1658,166 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val
 
+    """
+        ECS API
+    """
+    def DescribeECS(self, ecs_ids=None, zone=None, limit=None, offset=None, filters=None):
+        """ 获取EBS实例列表
+        :param ecs_ids:  ECS ID列表
+        :type ecs_ids: list
+        :param limit:
+        :type limit: int
+        :param offset:
+        :type offset: int
+        :param filters:
+        :type filters: dict
+        :returns: ECSSet, 包含ECS结构列表
+        """
+        kwargs = dict()
+        if isinstance(ecs_ids, list) and len(ecs_ids) > 0:
+            kwargs['ECSIds'] = ecs_ids
+        if zone is not None:
+            kwargs['AvailabilityZoneId'] = zone
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['ECSSet']
 
+    def CreateECS(self, name, flavor , driver, master_count=1, zone=None):
+        """ 创建ECS
+        :param name: ECS Name
+        :type name:string
+        :param flavor: ECS 类型
+        :type flavor: string
+        :param driver: ECS driver
+        :type driver: string
+        :param master_count: 主节点数
+        :type master_count: int
+        :param zone: 分区 ID or Name
+        :type zone: string
+        :return: ECS结构列表
 
+        """
+        kwargs = {}
+        kwargs['Name'] = name
+        kwargs['ECSType'] = flavor
+        kwargs['Driver'] = driver
+        if master_count:
+            kwargs['MasterCount'] = master_count
+        if zone is not None:
+            kwargs['AvailabilityZoneId'] = zone
+
+        val = self.request(**kwargs)
+        return val
+
+    def ChangeECSType(self, ecs_id, flavor):
+        """ 更改ECS 配置
+        :param ecs_id: ECS ID
+        :type ecs_id:string
+        :param flavor: ECS 类型
+        :type flavor: string
+        :return: return
+
+        """
+        kwargs = {}
+        kwargs['ECSId'] = ecs_id
+        kwargs['ECSType'] = flavor
+
+        val = self.request(**kwargs)
+        return val
+
+    def DeleteECS(self, ecs_id):
+        """ 删除ECS
+        :param ecs_id: ECS ID
+        :type ecs_id:string
+        :return: ECS结构列表
+
+        """
+        kwargs = {}
+        kwargs['ECSId'] = ecs_id
+
+        val = self.request(**kwargs)
+        return val
+
+    def DescribeECSNode(self, ecs, limit=None, offset=None, filters=None):
+        """ ECS Node 列表
+        :param ecs_id: ECS ID
+        :type ecs_id:string
+        :param limit:
+        :type limit: int
+        :param offset:
+        :type offset: int
+        :param filters:
+        :type filters: dict
+        :return: ECS结构列表
+
+        """
+        kwargs = {}
+        kwargs['ECSId'] = ecs
+        self.parse_list_params(limit, offset, filters, kwargs)
+
+        val = self.request(**kwargs)
+        return val['RDSNodeSet']
+
+    def CreateECSNode(self, ecs_id, count):
+        """ 创建ECS Node
+        :param ecs_id: ECS ID
+        :type ecs_id:string
+        :return: ECS结构列表
+
+        """
+        kwargs = {}
+        kwargs['ECSId'] = ecs_id
+        if count:
+            kwargs['Count'] = count
+
+        val = self.request(**kwargs)
+        return val
+
+    def DeleteCDSNode(self, node_id):
+        """ 删除CDS Node
+        :param node_id: Node ID
+        :type node_id:string
+        :return: ECS结构列表
+
+        """
+        kwargs = {}
+        kwargs['NodeId'] = node_id
+
+        val = self.request(**kwargs)
+        return val
+
+    def DescribeRDSNode(self, rds, limit=None, offset=None, filters=None):
+        """ RDS Node 列表
+        :param rds: RDS ID
+        :type rds:string
+        :param limit:
+        :type limit: int
+        :param offset:
+        :type offset: int
+        :param filters:
+        :type filters: dict
+        :return: ECS结构列表
+
+        """
+        kwargs = {}
+        kwargs['RDSId'] = rds
+        self.parse_list_params(limit, offset, filters, kwargs)
+
+        val = self.request(**kwargs)
+        return val['RDSNodeSet']
+
+    def CreateRDSNode(self, rds_id, role, count):
+        """ 创建RDS Node
+        :param rds_id: ECS ID
+        :type rds_id:string
+        :return: ECS结构列表
+
+        """
+        kwargs = {}
+        kwargs['RDSId'] = rds_id
+        kwargs['Role'] = role
+        if count:
+            kwargs['Count'] = count
+
+        val = self.request(**kwargs)
+        return val

@@ -123,6 +123,24 @@ class APIShell(object):
 
         if args.func == self.do_help:
             self.do_help(args)
+            # import cgi
+            # for cmd in self.subcommands:
+            #     # print cmd
+            #     if cmd.endswith('Node') or 'ECS' in cmd:
+            #         p = self.subcommands[cmd]
+            #         h = p.format_help()
+            #         splited = h.split('\n\n', 2)
+            #         usage, text, options = [cgi.escape(s.strip()) for s in splited]
+            #         usage = usage[len('usage: climc '):]
+            #         fmt = """
+            #                 <tr>
+            #                   <td colspan="1"><pre>{usage}</pre></td>
+            #                   <td colspan="1"><pre>{text}</pre></td>
+            #                   <td colspan="1"><pre>{options}</pre></td>
+            #                   <td colspan="1"></td>
+            #                 </tr>
+            #                 """
+                    # print fmt.format(usage=usage, text=text, options=options)
             return 0
 
         if not args.mos_access:
