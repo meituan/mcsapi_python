@@ -95,6 +95,24 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val['InstanceSet']
 
+
+    def SearchAssociatedAddresses(self, ids=None, names=None):
+        """ 获得所有虚拟机的浮动IP绑定情况
+
+        :param ids: 期望获取的虚拟机ID列表
+        :type ids: list
+        :param names: 期望获取信息的虚拟机名称列表
+        :type names: list
+        :returns: InstanceEipInfoSet，包含虚拟机eip绑定数量列表
+        """
+        kwargs = {}
+        if isinstance(ids, list) and len(ids) > 0:
+            kwargs['InstanceId'] = ids
+        if isinstance(names, list) and len(names) > 0:
+            kwargs['InstanceName'] = names
+        val = self.request(**kwargs)
+        return val['InstanceEipInfoSet']
+
     def DescribeInstanceVolumes(self, iid, limit=0, offset=0, filters=None):
         """ 获取指定虚拟机的虚拟磁盘信息
 

@@ -89,6 +89,15 @@ def do_DescribeInstances(client, args):
     utils.print_list(val, 'Instance')
 
 
+@utils.arg('--id', metavar='<ID>', action='append', help='ID of instance')
+@utils.arg('--name', metavar='<NAME>', action='append', help='Name of instance')
+def do_SearchAssociatedAddresses(client, args):
+    """ Get details of all or specified instances """
+    val = client.SearchAssociatedAddresses(args.id, args.name)
+    utils.print_list(val, 'InstanceEipInfo')
+
+
+
 @utils.arg('id', metavar='<ID>', help='ID of instance')
 @utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
 @utils.arg('--offset', metavar='<OFFSET>', type=int, help='Limit')
