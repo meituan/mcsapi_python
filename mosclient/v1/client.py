@@ -1839,3 +1839,37 @@ class Client(BaseClient):
 
         val = self.request(**kwargs)
         return val
+
+    def SDSystems(self, limit=10, offset=0, order_by='id', order='asc'):
+        """获取实时计算集群列表信息
+
+        :param limit: int, 最多获取的记录数, limit > 0 字段生效
+        :param offset: int, ID偏移量
+        :param order_by: str, 排序字段
+        :param order: str, 值只能为'desc'(升序)或者'asc'(降序)
+        :return:
+        """
+        kwargs = {}
+        kwargs['limit'] = limit
+        kwargs['offset'] = offset
+        kwargs['order_by'] = order_by
+        kwargs['order'] = order
+        val = self.request(**kwargs)
+        return val
+
+    def BDSystems(self, limit=10, offset=0, order_by='id', order='asc'):
+        """获取所有Hadoop集群集群列表信息
+
+        :param limit: int, 最多获取的记录数, limit > 0 字段生效
+        :param offset: int, 偏移量
+        :param order_by: str, 排序字段
+        :param order: str, 值只能为'desc'(升序)或者'asc'(降序)
+        :return:
+        """
+        kwargs = {}
+        kwargs['limit'] = limit
+        kwargs['offset'] = offset
+        kwargs['order_by'] = order_by
+        kwargs['order'] = order
+        val = self.request(**kwargs)
+        return val
