@@ -1855,7 +1855,7 @@ class Client(BaseClient):
         kwargs['order_by'] = order_by
         kwargs['order'] = order
         val = self.request(**kwargs)
-        return val
+        return val['StreamingSystemSet']
 
     def BDSystems(self, limit=10, offset=0, order_by='id', order='asc'):
         """获取所有Hadoop集群集群列表信息
@@ -1872,4 +1872,4 @@ class Client(BaseClient):
         kwargs['order_by'] = order_by
         kwargs['order'] = order
         val = self.request(**kwargs)
-        return val
+        return val['BigDataSystemSet']

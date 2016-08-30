@@ -927,3 +927,21 @@ def do_CreateRDSNode(client, args):
     """Create RDS node"""
     val = client.CreateRDSNode(args.rds, args.role, args.count)
     utils.print_dict(val)
+
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--order_by', metavar='<ORDER_BY>', type=str, help='ORDER_BY')
+@utils.arg('--order', metavar='<ORDER>', type=str, help='ORDER, "desc" or "asc"')
+def do_SDSystems(client, args):
+    """list all StreamingSystem"""
+    val = client.SDSystems(args.limit, args.offset, args.order_by, args.order)
+    utils.print_list(val, 'StreamingSystem')
+
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--order_by', metavar='<ORDER_BY>', type=str, help='ORDER_BY')
+@utils.arg('--order', metavar='<ORDER>', type=str, help='ORDER, "desc" or "asc"')
+def do_BDSystems(client, args):
+    """list all BigDataSystem"""
+    val = client.BDSystems(args.limit, args.offset, args.order_by, args.order)
+    utils.print_list(val, 'BigDataSystem')
