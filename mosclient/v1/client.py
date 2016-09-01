@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import json
+
 import re
 
 from mosclient.common import utils
@@ -1873,3 +1875,215 @@ class Client(BaseClient):
         kwargs['order'] = order
         val = self.request(**kwargs)
         return val['BigDataSystemSet']
+
+    def DescribeBDSystem(self, idstr):
+        """获取指定ID的Hadoop集群详细信息
+
+        :param idstr: str, 指定的Hadoop集群ID
+        :return:
+        """
+        kwargs = {}
+        kwargs['idstr'] = idstr
+        val = self.request(**kwargs)
+        return val['BigDataSystem']
+
+    def DescribeSDSystem(self, idstr):
+        """获取指定ID的实时计算集群详细信息
+
+        :param idstr: str, 指定的实时计算集群ID
+        :return:
+        """
+        kwargs = {}
+        kwargs['idstr'] = idstr
+        val = self.request(**kwargs)
+        return val['StreamingSystem']
+
+    def StartBDSystem(self, idstr):
+        """
+        启动集群
+        :param idstr: str, 集群ID
+        :return:
+        """
+        kwargs = {}
+        kwargs['idstr'] = idstr
+        self.request(**kwargs)
+
+    def StopBDSystem(self, idstr):
+        """
+        暂停集群
+        :param idstr: str, 集群ID
+        :return:
+        """
+        kwargs = {}
+        kwargs['idstr'] = idstr
+        self.request(**kwargs)
+
+    def DeleteBDSystem(self, idstr, identifier=None):
+        """
+        删除集群
+        :param idstr: str, 集群ID
+        :param identifier: str, 为删掉的集群指定部分标识, 以后恢复此集群可用
+        :return:
+        """
+        kwargs = {}
+        kwargs['idstr'] = idstr
+        kwargs['identifier'] = identifier
+        self.request(**kwargs)
+
+    def ScaleUpBDSystem(self, idstr, delta=0):
+        """
+        扩容集群
+        :param idstr: str, 集群ID
+        :param delta: int, 扩容的nodes数量
+        :return:
+        """
+        kwargs = {}
+        kwargs['idstr'] = idstr
+        kwargs['delta'] = delta
+        self.request(**kwargs)
+
+    def ScaleDownBDSystem(self, idstr, delta=0):
+        """
+        减容集群
+        :param idstr: str, 集群ID
+        :param delta: int, 减容的nodes数量
+        :return:
+        """
+        kwargs = {}
+        kwargs['idstr'] = idstr
+        kwargs['delta'] = delta
+        self.request(**kwargs)
+
+    def StartSDSystem(self, idstr):
+        """
+        启动集群
+        :param idstr: str, 集群ID
+        :return:
+        """
+        kwargs = {}
+        kwargs['idstr'] = idstr
+        self.request(**kwargs)
+
+    def StopSDSystem(self, idstr):
+        """
+        暂停集群
+        :param idstr: str, 集群ID
+        :return:
+        """
+        kwargs = {}
+        kwargs['idstr'] = idstr
+        self.request(**kwargs)
+
+    def DeleteSDSystem(self, idstr, identifier=None):
+        """
+        删除集群
+        :param idstr: str, 集群ID
+        :param identifier: str, 为删掉的集群指定部分标识, 以后恢复此集群可用
+        :return:
+        """
+        kwargs = {}
+        kwargs['idstr'] = idstr
+        kwargs['identifier'] = identifier
+        self.request(**kwargs)
+
+    def ScaleUpSDSystem(self, idstr, delta=0):
+        """
+        扩容集群
+        :param idstr: str, 集群ID
+        :param delta: int, 扩容的nodes数量
+        :return:
+        """
+        kwargs = {}
+        kwargs['idstr'] = idstr
+        kwargs['delta'] = delta
+        self.request(**kwargs)
+
+    def ScaleDownSDSystem(self, idstr, delta=0):
+        """
+        减容集群
+        :param idstr: str, 集群ID
+        :param delta: int, 减容的nodes数量
+        :return:
+        """
+        kwargs = {}
+        kwargs['idstr'] = idstr
+        kwargs['delta'] = delta
+        self.request(**kwargs)
+
+    def CreateBDSystem(self,
+                       name, architecture, slave_count, bds_flavor_id,
+                       rds_flavor_id, zone_id, admin_pass,
+                       parameters=None, admin_parameters=None,
+                       description=None, image_version=None):
+        """
+        创建Hadoop集群
+        :param name: str, 集群名称
+        :param architecture: str, 集群架构,【'single_master'】
+        :param slave_count: int, 集群规模
+        :param bds_flavor_id: str，集群选用的配置，flavor的type需为‘bds'
+        :param rds_flavor_id: str，rds选用的配置，flavor的type需为’bds‘
+        :param zone_id: str，可以为zone的name或者id
+        :param admin_pass: str, 管理员密码
+        :param parameters: dict
+        :param admin_parameters: dict
+        :param description: str
+        :param image_version: str
+        :return:
+        """
+        kwargs = {}
+        kwargs['name'] = name
+        kwargs['architecture'] = architecture
+        kwargs['slave_count'] = slave_count
+        kwargs['bds_flavor_id'] = bds_flavor_id
+        kwargs['rds_flavor_id'] = rds_flavor_id
+        kwargs['zone_id'] = zone_id
+        kwargs['admin_pass'] = admin_pass
+        # warning: urllib.urlencode(key=None) to key='None'
+        if parameters and type(parameters) == dict:
+            kwargs['parameters'] = json.dumps(parameters)
+        if admin_parameters and type(admin_parameters) == dict:
+            kwargs['admin_parameters'] = json.dumps(admin_parameters)
+        if description:
+            kwargs['description'] = description
+        if image_version:
+            kwargs['image_version'] = image_version
+        val = self.request(**kwargs)
+        return val['BigDataSystem']
+
+    def CreateSDSystem(self,
+                       name, architecture, slave_count,
+                       bds_flavor_id, zone_id, admin_pass,
+                       parameters=None, admin_parameters=None,
+                       description=None, image_version=None):
+        """
+        创建实时计算集群
+        :param name: str, 集群名称
+        :param architecture: str, 集群架构,【'single_master'】
+        :param slave_count: int, 集群规模
+        :param bds_flavor_id: str，集群选用的配置，flavor的type需为‘sds'
+        :param zone_id: str，可以为zone的name或者id
+        :param admin_pass: str, 管理员密码
+        :param parameters: dict
+        :param admin_parameters: dict
+        :param description: str
+        :param image_version: str
+        :return:
+        """
+        kwargs = {}
+        kwargs['name'] = name
+        kwargs['architecture'] = architecture
+        kwargs['slave_count'] = slave_count
+        kwargs['bds_flavor_id'] = bds_flavor_id
+        kwargs['zone_id'] = zone_id
+        kwargs['admin_pass'] = admin_pass
+        # warning: urllib.urlencode(key=None) to key='None'
+        if parameters and type(parameters) == dict:
+            kwargs['parameters'] = json.dumps(parameters)
+        if admin_parameters and type(admin_parameters) == dict:
+            kwargs['admin_parameters'] = json.dumps(admin_parameters)
+        if description:
+            kwargs['description'] = description
+        if image_version:
+            kwargs['image_version'] = image_version
+        val = self.request(**kwargs)
+        return val['StreamingSystem']

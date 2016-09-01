@@ -937,6 +937,7 @@ def do_SDSystems(client, args):
     val = client.SDSystems(args.limit, args.offset, args.order_by, args.order)
     utils.print_list(val, 'StreamingSystem')
 
+
 @utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
 @utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
 @utils.arg('--order_by', metavar='<ORDER_BY>', type=str, help='ORDER_BY')
@@ -945,3 +946,142 @@ def do_BDSystems(client, args):
     """list all BigDataSystem"""
     val = client.BDSystems(args.limit, args.offset, args.order_by, args.order)
     utils.print_list(val, 'BigDataSystem')
+
+
+@utils.arg('id', metavar='<BDS_ID>', type=str, help='ID of BDSystem')
+def do_DescribeBDSystem(client, args):
+    """Describe BDSystem instance info"""
+    val = client.DescribeBDSystem(args.id)
+    utils.print_dict(val)
+
+
+@utils.arg('id', metavar='<BDS_ID>', type=str, help='ID of BDSystem')
+def do_StartBDSystem(client, args):
+    """Start the BDSystem"""
+    client.StartBDSystem(args.id)
+
+
+@utils.arg('id', metavar='<BDS_ID>', type=str, help='ID of BDSystem')
+def do_StopBDSystem(client, args):
+    """Stop the BDSystem"""
+    client.StopBDSystem(args.id)
+
+
+@utils.arg('id', metavar='<BDS_ID>', type=str, help='ID of BDSystem')
+@utils.arg('identifier', metavar='<IDENTIFIER>', type=str, help='identifier')
+def do_DeleteBDSystem(client, args):
+    """Delete the BDSystem"""
+    client.DeleteBDSystem(args.id, args.identifier)
+
+
+@utils.arg('id', metavar='<BDS_ID>', type=str, help='ID of BDsystem')
+@utils.arg('delta', metavar='<DELTA>', type=int, help='number of nodes')
+def do_ScaleUpBDSystem(client, args):
+    """Scale-up the BDSystem"""
+    client.ScaleUpBDSystem(args.id, args.delta)
+
+
+@utils.arg('id', metavar='<BDS_ID>', type=str, help='ID of BDSystem')
+@utils.arg('delta', metavar='<DELTA>', type=int, help='number of nodes')
+def do_ScaleDownBDSystem(client, args):
+    """Scale-down the BDSystem"""
+    client.ScaleDownBDSystem(args.id, args.delta)
+
+
+@utils.arg('id', metavar='<SDS_ID>', type=str, help='ID of SDSystem')
+def do_DescribeSDSystem(client, args):
+    """Describe SDSystem instance info"""
+    val = client.DescribeSDSystem(args.id)
+    utils.print_dict(val)
+
+
+@utils.arg('id', metavar='<SDS_ID>', type=str, help='ID of SDSystem')
+def do_StartSDSystem(client, args):
+    """Start the SDSystem"""
+    client.StartSDSystem(args.id)
+
+
+@utils.arg('id', metavar='<SDS_ID>', type=str, help='ID of SDSystem')
+def do_StopSDSystem(client, args):
+    """Stop the SDSystem"""
+    client.StopSDSystem(args.id)
+
+
+@utils.arg('id', metavar='<SDS_ID>', type=str, help='ID of SDSystem')
+@utils.arg('identifier', metavar='<IDENTIFIER>', type=str, help='identifier')
+def do_DeleteSDSystem(client, args):
+    """Delete the SDSystem"""
+    client.DeleteSDSystem(args.id, args.identifier)
+
+
+@utils.arg('id', metavar='<SDS_ID>', type=str, help='ID of SDSystem')
+@utils.arg('delta', metavar='<DELTA>', type=int, help='number of nodes')
+def do_ScaleUpSDSystem(client, args):
+    """Scale-up the SDSystem"""
+    client.ScaleUpSDSystem(args.id, args.delta)
+
+
+@utils.arg('id', metavar='<SDS_ID>', type=str, help='ID of SDSystem')
+@utils.arg('delta', metavar='<DELTA>', type=int, help='number of nodes')
+def do_ScaleDownSDSystem(client, args):
+    """Scale-down the SDSystem"""
+    client.ScaleDownSDSystem(args.id, args.delta)
+
+
+@utils.arg('name', metavar='<BDS_NAME>', type=str, help='NAME of BDSystem')
+@utils.arg('architecture', metavar='<BDS_ARCHITECTURE>', type=str,
+           help='ARCHITECTURE of BDSystem')
+@utils.arg('slave_count', metavar='<BDS_SLAVE_COUNT>', type=int,
+           help='SLAVE_COUNT of BDSystem')
+@utils.arg('--bds_flavor', metavar='<BDS_FLAVOR>', required=True, type=str,
+           help='ID of FLAVOR for BDS')
+@utils.arg('--rds_flavor', metavar='<RDS-FLAVOR>', required=True, type=str,
+           help='ID of FLAVOR for RDS')
+@utils.arg('--zone', metavar='<ZONE>', required=True, type=str,
+           help='ID or NAME of ZONE')
+@utils.arg('--admin_pass', metavar='<PASSWORD>', required=True, type=str,
+           help='PASSWORD of ADMINISTRATOR')
+@utils.arg('--params', metavar='<PARAMETERS>', action='append',
+           type=lambda kv: kv.split(':'), help='PARAMETERS')
+@utils.arg('--admin_params', metavar='<ADMIN_PARAMETERS>', action='append',
+           type=lambda kv: kv.split(':'), help='ADMIN_PARAMETERS')
+@utils.arg('--desc', metavar='<DESCRIPTION>', type=str,
+           help='DESCRIPTION')
+@utils.arg('--image', metavar='<IMAGE_VERSION>', type=str,
+           help='VERSION OF IMAGE')
+def do_CreateBDSystem(client, args):
+    val = client.CreateBDSystem(args.name, args.architecture,
+                                args.slave_count, args.bds_flavor,
+                                args.rds_flavor, args.zone,
+                                args.admin_pass,
+                                dict(args.params), dict(args.admin_params),
+                                args.desc, args.image)
+    utils.print_dict(val)
+
+
+@utils.arg('name', metavar='<SDS_NAME>', type=str, help='NAME of SDSystem')
+@utils.arg('architecture', metavar='<SDS_ARCHITECTURE>', type=str,
+           help='ARCHITECTURE of SDSystem')
+@utils.arg('slave_count', metavar='<SDS_SLAVE_COUNT>', type=int,
+           help='SLAVE_COUNT of SDSystem')
+@utils.arg('--bds_flavor', metavar='<SDS_FLAVOR>', required=True, type=str,
+           help='ID of FLAVOR for SDS')
+@utils.arg('--zone', metavar='<ZONE>', required=True, type=str,
+           help='ID or NAME of ZONE')
+@utils.arg('--admin_pass', metavar='<PASSWORD>', required=True, type=str,
+           help='PASSWORD of ADMINISTRATOR')
+@utils.arg('--params', metavar='<PARAMETERS>', action='append',
+           type=lambda kv: kv.split(':'), help='PARAMETERS')
+@utils.arg('--admin_params', metavar='<ADMIN_PARAMETERS>', action='append',
+           type=lambda kv: kv.split(':'), help='ADMIN_PARAMETERS')
+@utils.arg('--desc', metavar='<DESCRIPTION>', type=str,
+           help='DESCRIPTION')
+@utils.arg('--image', metavar='<IMAGE_VERSION>', type=str,
+           help='VERSION OF IMAGE')
+def do_CreateSDSystem(client, args):
+    val = client.CreateSDSystem(args.name, args.architecture,
+                                args.slave_count, args.bds_flavor,
+                                args.zone, args.admin_pass,
+                                dict(args.params), dict(args.admin_params),
+                                args.desc, args.image)
+    utils.print_dict(val)
