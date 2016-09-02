@@ -1039,8 +1039,6 @@ def do_ScaleDownSDSystem(client, args):
            help='SLAVE_COUNT of BDSystem')
 @utils.arg('--bds_flavor', metavar='<BDS_FLAVOR>', required=True, type=str,
            help='ID of FLAVOR for BDS')
-@utils.arg('--rds_flavor', metavar='<RDS-FLAVOR>', required=True, type=str,
-           help='ID of FLAVOR for RDS')
 @utils.arg('--zone', metavar='<ZONE>', required=True, type=str,
            help='ID or NAME of ZONE')
 @utils.arg('--admin_pass', metavar='<PASSWORD>', required=True, type=str,
@@ -1051,15 +1049,13 @@ def do_ScaleDownSDSystem(client, args):
            type=lambda kv: kv.split(':'), help='ADMIN_PARAMETERS')
 @utils.arg('--desc', metavar='<DESCRIPTION>', type=str,
            help='DESCRIPTION')
-@utils.arg('--image', metavar='<IMAGE_VERSION>', type=str,
-           help='VERSION OF IMAGE')
 def do_CreateBDSystem(client, args):
     val = client.CreateBDSystem(args.name, args.architecture,
                                 args.slave_count, args.bds_flavor,
-                                args.rds_flavor, args.zone,
+                                args.zone,
                                 args.admin_pass,
                                 dict(args.params), dict(args.admin_params),
-                                args.desc, args.image)
+                                args.desc)
     utils.print_dict(val)
 
 
@@ -1080,12 +1076,10 @@ def do_CreateBDSystem(client, args):
            type=lambda kv: kv.split(':'), help='ADMIN_PARAMETERS')
 @utils.arg('--desc', metavar='<DESCRIPTION>', type=str,
            help='DESCRIPTION')
-@utils.arg('--image', metavar='<IMAGE_VERSION>', type=str,
-           help='VERSION OF IMAGE')
 def do_CreateSDSystem(client, args):
     val = client.CreateSDSystem(args.name, args.architecture,
                                 args.slave_count, args.bds_flavor,
                                 args.zone, args.admin_pass,
                                 dict(args.params), dict(args.admin_params),
-                                args.desc, args.image)
+                                args.desc)
     utils.print_dict(val)
