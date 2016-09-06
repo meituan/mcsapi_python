@@ -1842,7 +1842,10 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val
 
-    def SDSystems(self, limit=10, offset=0, order_by='id', order='asc'):
+    """
+        BigData API
+    """
+    def DescribeSDSystems(self, limit=10, offset=0, order_by='id', order='asc'):
         """ 获取实时计算集群列表信息
 
         :param limit: 最多获取的记录数, limit > 0 字段生效
@@ -1856,14 +1859,14 @@ class Client(BaseClient):
         :return: SDS结构列表
         """
         kwargs = {}
-        kwargs['limit'] = limit
-        kwargs['offset'] = offset
-        kwargs['order_by'] = order_by
-        kwargs['order'] = order
+        kwargs['Limit'] = limit
+        kwargs['Offset'] = offset
+        kwargs['OrderBy'] = order_by
+        kwargs['Order'] = order
         val = self.request(**kwargs)
         return val['StreamingSystemSet']
 
-    def BDSystems(self, limit=10, offset=0, order_by='id', order='asc'):
+    def DescribeBDSystems(self, limit=10, offset=0, order_by='id', order='asc'):
         """ 获取所有Hadoop集群集群列表信息
 
         :param limit: 最多获取的记录数, limit > 0 字段生效
@@ -1877,10 +1880,10 @@ class Client(BaseClient):
         :return: BDS结构列表
         """
         kwargs = {}
-        kwargs['limit'] = limit
-        kwargs['offset'] = offset
-        kwargs['order_by'] = order_by
-        kwargs['order'] = order
+        kwargs['Limit'] = limit
+        kwargs['Offset'] = offset
+        kwargs['OrderBy'] = order_by
+        kwargs['Order'] = order
         val = self.request(**kwargs)
         return val['BigDataSystemSet']
 
@@ -1892,7 +1895,7 @@ class Client(BaseClient):
         :return: BDS结构
         """
         kwargs = {}
-        kwargs['idstr'] = idstr
+        kwargs['BDSystemID'] = idstr
         val = self.request(**kwargs)
         return val['BigDataSystem']
 
@@ -1904,7 +1907,7 @@ class Client(BaseClient):
         :return: SDS结构
         """
         kwargs = {}
-        kwargs['idstr'] = idstr
+        kwargs['SDSystemID'] = idstr
         val = self.request(**kwargs)
         return val['StreamingSystem']
 
@@ -1916,7 +1919,7 @@ class Client(BaseClient):
         :return:
         """
         kwargs = {}
-        kwargs['idstr'] = idstr
+        kwargs['BDSystemID'] = idstr
         self.request(**kwargs)
 
     def StopBDSystem(self, idstr):
@@ -1927,7 +1930,7 @@ class Client(BaseClient):
         :return:
         """
         kwargs = {}
-        kwargs['idstr'] = idstr
+        kwargs['BDSystemID'] = idstr
         self.request(**kwargs)
 
     def DeleteBDSystem(self, idstr, identifier=None):
@@ -1940,7 +1943,7 @@ class Client(BaseClient):
         :return:
         """
         kwargs = {}
-        kwargs['idstr'] = idstr
+        kwargs['BDSystemID'] = idstr
         kwargs['identifier'] = identifier
         self.request(**kwargs)
 
@@ -1954,8 +1957,8 @@ class Client(BaseClient):
         :return:
         """
         kwargs = {}
-        kwargs['idstr'] = idstr
-        kwargs['delta'] = delta
+        kwargs['BDSystemID'] = idstr
+        kwargs['Delta'] = delta
         self.request(**kwargs)
 
     def ScaleDownBDSystem(self, idstr, delta=0):
@@ -1968,8 +1971,8 @@ class Client(BaseClient):
         :return:
         """
         kwargs = {}
-        kwargs['idstr'] = idstr
-        kwargs['delta'] = delta
+        kwargs['BDSystemID'] = idstr
+        kwargs['Delta'] = delta
         self.request(**kwargs)
 
     def StartSDSystem(self, idstr):
@@ -1980,7 +1983,7 @@ class Client(BaseClient):
         :return:
         """
         kwargs = {}
-        kwargs['idstr'] = idstr
+        kwargs['SDSystemID'] = idstr
         self.request(**kwargs)
 
     def StopSDSystem(self, idstr):
@@ -1991,7 +1994,7 @@ class Client(BaseClient):
         :return:
         """
         kwargs = {}
-        kwargs['idstr'] = idstr
+        kwargs['SDSystemID'] = idstr
         self.request(**kwargs)
 
     def DeleteSDSystem(self, idstr, identifier=None):
@@ -2004,7 +2007,7 @@ class Client(BaseClient):
         :return:
         """
         kwargs = {}
-        kwargs['idstr'] = idstr
+        kwargs['SDSystemID'] = idstr
         kwargs['identifier'] = identifier
         self.request(**kwargs)
 
@@ -2018,8 +2021,8 @@ class Client(BaseClient):
         :return:
         """
         kwargs = {}
-        kwargs['idstr'] = idstr
-        kwargs['delta'] = delta
+        kwargs['SDSystemID'] = idstr
+        kwargs['Delta'] = delta
         self.request(**kwargs)
 
     def ScaleDownSDSystem(self, idstr, delta=0):
@@ -2032,13 +2035,13 @@ class Client(BaseClient):
         :return:
         """
         kwargs = {}
-        kwargs['idstr'] = idstr
-        kwargs['delta'] = delta
+        kwargs['SDSystemID'] = idstr
+        kwargs['Delta'] = delta
         self.request(**kwargs)
 
     def CreateBDSystem(self,
                        name, architecture, slave_count, bds_flavor_id,
-                       zone_id, admin_pass,
+                       zone, admin_pass,
                        parameters=None, admin_parameters=None,
                        description=None):
         """ 创建Hadoop集群
@@ -2051,8 +2054,8 @@ class Client(BaseClient):
         :type slave_count: int
         :param bds_flavor_id: 集群选用的配置，flavor的type需为‘bds'
         :type bds_flavor_id: str
-        :param zone_id: 可以为zone的name或者id
-        :type zone_id: str
+        :param zone: 可以为zone的name或者id
+        :type zone: str
         :param admin_pass: 管理员密码
         :type admin_pass: str
         :param parameters:
@@ -2064,25 +2067,25 @@ class Client(BaseClient):
         :return: BDS结构
         """
         kwargs = {}
-        kwargs['name'] = name
-        kwargs['architecture'] = architecture
-        kwargs['slave_count'] = slave_count
-        kwargs['bds_flavor_id'] = bds_flavor_id
-        kwargs['zone_id'] = zone_id
-        kwargs['admin_pass'] = admin_pass
+        kwargs['BDSystemName'] = name
+        kwargs['Architecture'] = architecture
+        kwargs['SlaveCount'] = slave_count
+        kwargs['BDSFlavorId'] = bds_flavor_id
+        kwargs['Zone'] = zone
+        kwargs['AdminPassword'] = admin_pass
         # warning: urllib.urlencode(key=None) to key='None'
         if parameters and type(parameters) == dict:
-            kwargs['parameters'] = json.dumps(parameters)
+            kwargs['Parameters'] = json.dumps(parameters)
         if admin_parameters and type(admin_parameters) == dict:
-            kwargs['admin_parameters'] = json.dumps(admin_parameters)
+            kwargs['AdminParameters'] = json.dumps(admin_parameters)
         if description:
-            kwargs['description'] = description
+            kwargs['Description'] = description
         val = self.request(**kwargs)
         return val['BigDataSystem']
 
     def CreateSDSystem(self,
                        name, architecture, slave_count,
-                       bds_flavor_id, zone_id, admin_pass,
+                       bds_flavor_id, zone, admin_pass,
                        parameters=None, admin_parameters=None,
                        description=None):
         """ 创建实时计算集群
@@ -2095,8 +2098,8 @@ class Client(BaseClient):
         :type slave_count: int
         :param bds_flavor_id: 集群选用的配置，flavor的type需为‘sds'
         :type bds_flavor_id: str
-        :param zone_id: 可以为zone的name或者id
-        :type zone_id: str
+        :param zone: 可以为zone的name或者id
+        :type zone: str
         :param admin_pass: 管理员密码
         :type admin_pass: str
         :param parameters:
@@ -2108,18 +2111,18 @@ class Client(BaseClient):
         :return: SDS结构
         """
         kwargs = {}
-        kwargs['name'] = name
-        kwargs['architecture'] = architecture
-        kwargs['slave_count'] = slave_count
-        kwargs['bds_flavor_id'] = bds_flavor_id
-        kwargs['zone_id'] = zone_id
-        kwargs['admin_pass'] = admin_pass
+        kwargs['SDSystemName'] = name
+        kwargs['Architecture'] = architecture
+        kwargs['SlaveCount'] = slave_count
+        kwargs['BDSFlavorId'] = bds_flavor_id
+        kwargs['Zone'] = zone
+        kwargs['AdminPassword'] = admin_pass
         # warning: urllib.urlencode(key=None) to key='None'
         if parameters and type(parameters) == dict:
-            kwargs['parameters'] = json.dumps(parameters)
+            kwargs['Parameters'] = json.dumps(parameters)
         if admin_parameters and type(admin_parameters) == dict:
-            kwargs['admin_parameters'] = json.dumps(admin_parameters)
+            kwargs['AdminParameters'] = json.dumps(admin_parameters)
         if description:
-            kwargs['description'] = description
+            kwargs['Description'] = description
         val = self.request(**kwargs)
         return val['StreamingSystem']
