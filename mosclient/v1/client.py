@@ -1843,13 +1843,17 @@ class Client(BaseClient):
         return val
 
     def SDSystems(self, limit=10, offset=0, order_by='id', order='asc'):
-        """获取实时计算集群列表信息
+        """ 获取实时计算集群列表信息
 
-        :param limit: int, 最多获取的记录数, limit > 0 字段生效
-        :param offset: int, ID偏移量
-        :param order_by: str, 排序字段
-        :param order: str, 值只能为'desc'(升序)或者'asc'(降序)
-        :return:
+        :param limit: 最多获取的记录数, limit > 0 字段生效
+        :type limit: int
+        :param offset: 偏移量
+        :type offset: int
+        :param order_by: 排序字段
+        :type order_by: str
+        :param order: 值只能为'desc'(升序)或者'asc'(降序)
+        :type order: str
+        :return: SDS结构列表
         """
         kwargs = {}
         kwargs['limit'] = limit
@@ -1860,13 +1864,17 @@ class Client(BaseClient):
         return val['StreamingSystemSet']
 
     def BDSystems(self, limit=10, offset=0, order_by='id', order='asc'):
-        """获取所有Hadoop集群集群列表信息
+        """ 获取所有Hadoop集群集群列表信息
 
-        :param limit: int, 最多获取的记录数, limit > 0 字段生效
-        :param offset: int, 偏移量
-        :param order_by: str, 排序字段
-        :param order: str, 值只能为'desc'(升序)或者'asc'(降序)
-        :return:
+        :param limit: 最多获取的记录数, limit > 0 字段生效
+        :type limit: int
+        :param offset: 偏移量
+        :type offset: int
+        :param order_by: 排序字段
+        :type: order_by: str
+        :param order: 值只能为'desc'(升序)或者'asc'(降序)
+        :type: order: str
+        :return: BDS结构列表
         """
         kwargs = {}
         kwargs['limit'] = limit
@@ -1877,10 +1885,11 @@ class Client(BaseClient):
         return val['BigDataSystemSet']
 
     def DescribeBDSystem(self, idstr):
-        """获取指定ID的Hadoop集群详细信息
+        """ 获取指定ID的Hadoop集群详细信息
 
-        :param idstr: str, 指定的Hadoop集群ID
-        :return:
+        :param idstr: 指定的Hadoop集群ID
+        :type idstr: str
+        :return: BDS结构
         """
         kwargs = {}
         kwargs['idstr'] = idstr
@@ -1888,10 +1897,11 @@ class Client(BaseClient):
         return val['BigDataSystem']
 
     def DescribeSDSystem(self, idstr):
-        """获取指定ID的实时计算集群详细信息
+        """ 获取指定ID的实时计算集群详细信息
 
-        :param idstr: str, 指定的实时计算集群ID
-        :return:
+        :param idstr: 指定的实时计算集群ID
+        :type idstr: str
+        :return: SDS结构
         """
         kwargs = {}
         kwargs['idstr'] = idstr
@@ -1899,9 +1909,10 @@ class Client(BaseClient):
         return val['StreamingSystem']
 
     def StartBDSystem(self, idstr):
-        """
-        启动集群
-        :param idstr: str, 集群ID
+        """ 启动集群
+
+        :param idstr: 集群ID
+        :type idstr: str
         :return:
         """
         kwargs = {}
@@ -1909,9 +1920,10 @@ class Client(BaseClient):
         self.request(**kwargs)
 
     def StopBDSystem(self, idstr):
-        """
-        暂停集群
-        :param idstr: str, 集群ID
+        """ 暂停集群
+
+        :param idstr: 集群ID
+        :type idstr: str
         :return:
         """
         kwargs = {}
@@ -1919,10 +1931,12 @@ class Client(BaseClient):
         self.request(**kwargs)
 
     def DeleteBDSystem(self, idstr, identifier=None):
-        """
-        删除集群
-        :param idstr: str, 集群ID
-        :param identifier: str, 为删掉的集群指定部分标识, 以后恢复此集群可用
+        """ 删除集群
+
+        :param idstr: 集群ID
+        :type idstr: str
+        :param identifier: 为删掉的集群指定部分标识, 以后恢复此集群可用
+        :type identifier: str
         :return:
         """
         kwargs = {}
@@ -1931,10 +1945,12 @@ class Client(BaseClient):
         self.request(**kwargs)
 
     def ScaleUpBDSystem(self, idstr, delta=0):
-        """
-        扩容集群
-        :param idstr: str, 集群ID
-        :param delta: int, 扩容的nodes数量
+        """ 扩容集群
+
+        :param idstr: 集群ID
+        :type idstr: str
+        :param delta: 扩容的nodes数量
+        :type delta: int
         :return:
         """
         kwargs = {}
@@ -1943,10 +1959,12 @@ class Client(BaseClient):
         self.request(**kwargs)
 
     def ScaleDownBDSystem(self, idstr, delta=0):
-        """
-        减容集群
-        :param idstr: str, 集群ID
-        :param delta: int, 减容的nodes数量
+        """ 减容集群
+
+        :param idstr: 集群ID
+        :type idstr: str
+        :param delta: 减容的nodes数量
+        :type delta: int
         :return:
         """
         kwargs = {}
@@ -1955,9 +1973,10 @@ class Client(BaseClient):
         self.request(**kwargs)
 
     def StartSDSystem(self, idstr):
-        """
-        启动集群
-        :param idstr: str, 集群ID
+        """ 启动集群
+
+        :param idstr: 集群ID
+        :type idstr: str
         :return:
         """
         kwargs = {}
@@ -1965,9 +1984,10 @@ class Client(BaseClient):
         self.request(**kwargs)
 
     def StopSDSystem(self, idstr):
-        """
-        暂停集群
-        :param idstr: str, 集群ID
+        """ 暂停集群
+
+        :param idstr: 集群ID
+        :type idstr: str
         :return:
         """
         kwargs = {}
@@ -1975,10 +1995,12 @@ class Client(BaseClient):
         self.request(**kwargs)
 
     def DeleteSDSystem(self, idstr, identifier=None):
-        """
-        删除集群
-        :param idstr: str, 集群ID
-        :param identifier: str, 为删掉的集群指定部分标识, 以后恢复此集群可用
+        """ 删除集群
+
+        :param idstr: 集群ID
+        :type idstr: str
+        :param identifier: 为删掉的集群指定部分标识, 以后恢复此集群可用
+        :type identifier: str
         :return:
         """
         kwargs = {}
@@ -1987,10 +2009,12 @@ class Client(BaseClient):
         self.request(**kwargs)
 
     def ScaleUpSDSystem(self, idstr, delta=0):
-        """
-        扩容集群
-        :param idstr: str, 集群ID
-        :param delta: int, 扩容的nodes数量
+        """ 扩容集群
+
+        :param idstr: 集群ID
+        :type idstr: str
+        :param delta: 扩容的nodes数量
+        :type delta: int
         :return:
         """
         kwargs = {}
@@ -1999,10 +2023,12 @@ class Client(BaseClient):
         self.request(**kwargs)
 
     def ScaleDownSDSystem(self, idstr, delta=0):
-        """
-        减容集群
-        :param idstr: str, 集群ID
-        :param delta: int, 减容的nodes数量
+        """ 减容集群
+
+        :param idstr: 集群ID
+        :type idstr: str
+        :param delta: 减容的nodes数量
+        :type delta: int
         :return:
         """
         kwargs = {}
@@ -2015,18 +2041,27 @@ class Client(BaseClient):
                        zone_id, admin_pass,
                        parameters=None, admin_parameters=None,
                        description=None):
-        """
-        创建Hadoop集群
-        :param name: str, 集群名称
-        :param architecture: str, 集群架构,【'single_master'】
-        :param slave_count: int, 集群规模
-        :param bds_flavor_id: str，集群选用的配置，flavor的type需为‘bds'
-        :param zone_id: str，可以为zone的name或者id
-        :param admin_pass: str, 管理员密码
-        :param parameters: dict
-        :param admin_parameters: dict
-        :param description: str
-        :return:
+        """ 创建Hadoop集群
+
+        :param name: 集群名称
+        :type name: str
+        :param architecture: 集群架构,【'single_master'】
+        :type architecture: str
+        :param slave_count: 集群规模
+        :type slave_count: int
+        :param bds_flavor_id: 集群选用的配置，flavor的type需为‘bds'
+        :type bds_flavor_id: str
+        :param zone_id: 可以为zone的name或者id
+        :type zone_id: str
+        :param admin_pass: 管理员密码
+        :type admin_pass: str
+        :param parameters:
+        :type parameters: dict
+        :param admin_parameters:
+        :type admin_parameters: dict
+        :param description:
+        :type description: str
+        :return: BDS结构
         """
         kwargs = {}
         kwargs['name'] = name
@@ -2050,18 +2085,27 @@ class Client(BaseClient):
                        bds_flavor_id, zone_id, admin_pass,
                        parameters=None, admin_parameters=None,
                        description=None):
-        """
-        创建实时计算集群
-        :param name: str, 集群名称
-        :param architecture: str, 集群架构,【'single_master'】
-        :param slave_count: int, 集群规模
-        :param bds_flavor_id: str，集群选用的配置，flavor的type需为‘sds'
-        :param zone_id: str，可以为zone的name或者id
-        :param admin_pass: str, 管理员密码
-        :param parameters: dict
-        :param admin_parameters: dict
-        :param description: str
-        :return:
+        """ 创建实时计算集群
+
+        :param name: 集群名称
+        :type name: str
+        :param architecture: 集群架构,【'single_master'】
+        :type architecture: str
+        :param slave_count: 集群规模
+        :type slave_count: int
+        :param bds_flavor_id: 集群选用的配置，flavor的type需为‘sds'
+        :type bds_flavor_id: str
+        :param zone_id: 可以为zone的name或者id
+        :type zone_id: str
+        :param admin_pass: 管理员密码
+        :type admin_pass: str
+        :param parameters:
+        :type parameters: dict
+        :param admin_parameters:
+        :type admin_parameters: dict
+        :param description:
+        :type description: str
+        :return: SDS结构
         """
         kwargs = {}
         kwargs['name'] = name

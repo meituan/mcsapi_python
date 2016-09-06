@@ -1050,6 +1050,7 @@ def do_ScaleDownSDSystem(client, args):
 @utils.arg('--desc', metavar='<DESCRIPTION>', type=str,
            help='DESCRIPTION')
 def do_CreateBDSystem(client, args):
+    """Create a BDSystem"""
     val = client.CreateBDSystem(args.name, args.architecture,
                                 args.slave_count, args.bds_flavor,
                                 args.zone,
@@ -1077,6 +1078,7 @@ def do_CreateBDSystem(client, args):
 @utils.arg('--desc', metavar='<DESCRIPTION>', type=str,
            help='DESCRIPTION')
 def do_CreateSDSystem(client, args):
+    """Create a SDSystem"""
     val = client.CreateSDSystem(args.name, args.architecture,
                                 args.slave_count, args.bds_flavor,
                                 args.zone, args.admin_pass,
