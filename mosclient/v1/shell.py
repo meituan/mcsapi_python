@@ -1070,3 +1070,21 @@ def do_CreateSDSystem(client, args):
                                 args.zone, args.admin_pass,
                                 args.desc)
     utils.print_dict(val)
+
+
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--filter', metavar='<FILTER>', action='append', help='Filter')
+def do_DescribeBDSTypes(client, args):
+    """List all BigDataSystem types."""
+    val = client.DescribeBDSTypes(args.limit, args.offset, utils.convert_filter(args.filter))
+    utils.print_list(val, 'BDSType')
+
+
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--filter', metavar='<FILTER>', action='append', help='Filter')
+def do_DescribeSDSTypes(client, args):
+    """List all StreamingSystem types."""
+    val = client.DescribeSDSTypes(args.limit, args.offset, utils.convert_filter(args.filter))
+    utils.print_list(val, 'SDSType')

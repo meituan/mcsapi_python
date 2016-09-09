@@ -2052,7 +2052,7 @@ class Client(BaseClient):
         :type architecture: string
         :param slave_count: 集群规模
         :type slave_count: int
-        :param bds_type: 集群选用的配置类型，type须为‘bds'
+        :param bds_type: 集群选用的配置类型，通过DescribeBDSTypes查找
         :type bds_type: string
         :param zone: 可以为zone的name或者id
         :type zone: string
@@ -2086,7 +2086,7 @@ class Client(BaseClient):
         :type architecture: string
         :param slave_count: 集群规模数量
         :type slave_count: int
-        :param bds_type: 集群选用的配置类型，type须为‘sds'
+        :param bds_type: 集群选用的配置类型，通过DescribeSDSTypes查找
         :type bds_type: string
         :param zone: 可以为zone的name或者id
         :type zone: string
@@ -2107,3 +2107,35 @@ class Client(BaseClient):
             kwargs['Description'] = description
         val = self.request(**kwargs)
         return val['StreamingSystem']
+
+    def DescribeBDSTypes(self, limit=0, offset=0, filters=None):
+        u"""获取所有BigDataSystem(简称BDS)类型.
+
+        :param limit: 最大返回数量（可选）
+        :type limit: int
+        :param offset: 返回BDS类型的偏移量，用于分页显示（可选）
+        :type offset: int
+        :param filters: 过滤条件，key/value分别指定过滤字段名称和值，支持的字段名称为：name，status（可选）
+        :type filters: dict
+        :returns: BDSTypeSet，包含系统支持的BDS类型列表
+        """
+        kwargs = {}
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['BDSTypeSet']
+
+    def DescribeSDSTypes(self, limit=0, offset=0, filters=None):
+        u"""获取所有StreamingSystem(简称SDS)类型.
+
+        :param limit: 最大返回数量（可选）
+        :type limit: int
+        :param offset: 返回SDS类型的偏移量，用于分页显示（可选）
+        :type offset: int
+        :param filters: 过滤条件，key/value分别指定过滤字段名称和值，支持的字段名称为：name，status（可选）
+        :type filters: dict
+        :returns: SDSTypeSet，包含系统支持的SDS类型列表
+        """
+        kwargs = {}
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['SDSTypeSet']
