@@ -1845,239 +1845,230 @@ class Client(BaseClient):
     """
         BigData API
     """
-    def DescribeSDSystems(self, limit=10, offset=0, order_by='id', order='asc'):
-        """ 获取实时计算集群列表信息
+    def DescribeSDSystems(self, ids=None, names=None, zone=None, filters=None,
+                          limit=10, offset=0, order_by='id', order='asc'):
+        u"""获取实时计算集群列表信息.
 
-        :param limit: 最多获取的记录数, limit > 0 字段生效
+        :param ids: 期望获取的StreamingSystemID列表
+        :type ids: list
+        :param names: 期望获取信息的StreamingSystem名称列表
+        :type names: list
+        :param zone: 指定创建StreamingSystem所在的数据中心
+        :type zone: string
+        :param limit: 最多返回数量
         :type limit: int
-        :param offset: 偏移量
+        :param offset: 返回StreamingSystem的偏移量，用于分页显示
         :type offset: int
+        :param filters: 过滤器，一个dict，包含过滤字段名和值，可能过滤字段为：name, status
+        :type filters: dict
         :param order_by: 排序字段
-        :type order_by: str
+        :type order_by: string
         :param order: 值只能为'desc'(升序)或者'asc'(降序)
-        :type order: str
-        :return: SDS结构列表
+        :type order: string
+
+        :returns: StreamingSystemSet，包含StreamingSystem列表
         """
         kwargs = {}
-        kwargs['Limit'] = limit
-        kwargs['Offset'] = offset
-        kwargs['OrderBy'] = order_by
-        kwargs['Order'] = order
+        if isinstance(ids, list) and len(ids) > 0:
+            kwargs['StreamingSystemId'] = ids
+        if isinstance(names, list) and len(names) > 0:
+            kwargs['SteamingSystemName'] = names
+        if zone is not None:
+            kwargs['ZoneId'] = zone
+        if order_by and order:
+            kwargs['OrderBy'] = order_by
+            kwargs['Order'] = order
+        self.parse_list_params(limit, offset, filters, kwargs)
         val = self.request(**kwargs)
         return val['StreamingSystemSet']
 
-    def DescribeBDSystems(self, limit=10, offset=0, order_by='id', order='asc'):
-        """ 获取所有Hadoop集群集群列表信息
+    def DescribeBDSystems(self, ids=None, names=None, zone=None, filters=None,
+                          limit=10, offset=0, order_by='id', order='asc'):
+        u"""获取所有Hadoop集群集群列表信息.
 
-        :param limit: 最多获取的记录数, limit > 0 字段生效
+        :param ids: 期望获取的BigDataSystemID列表
+        :type ids: list
+        :param names: 期望获取信息的BigDataSystem名称列表
+        :type names: list
+        :param zone: 指定创建BigDataSystem所在的数据中心名称
+        :type zone: string
+        :param limit: 最多返回数量
         :type limit: int
-        :param offset: 偏移量
+        :param offset: 返回BigDataSystem的偏移量，用于分页显示
         :type offset: int
+        :param filters: 过滤器，一个dict，包含过滤字段名和值，可能过滤字段为：name, status
+        :type filters: dict
         :param order_by: 排序字段
-        :type: order_by: str
+        :type order_by: string
         :param order: 值只能为'desc'(升序)或者'asc'(降序)
-        :type: order: str
-        :return: BDS结构列表
+        :type order: string
+
+        :returns: BigDataSystemSet，包含BigDataSystem列表
         """
         kwargs = {}
-        kwargs['Limit'] = limit
-        kwargs['Offset'] = offset
-        kwargs['OrderBy'] = order_by
-        kwargs['Order'] = order
+        if isinstance(ids, list) and len(ids) > 0:
+            kwargs['BigDataSystemId'] = ids
+        if isinstance(names, list) and len(names) > 0:
+            kwargs['BigDataSystemName'] = names
+        if zone is not None:
+            kwargs['ZoneId'] = zone
+        if order_by and order:
+            kwargs['OrderBy'] = order_by
+            kwargs['Order'] = order
+        self.parse_list_params(limit, offset, filters, kwargs)
         val = self.request(**kwargs)
         return val['BigDataSystemSet']
 
-    def DescribeBDSystem(self, idstr):
-        """ 获取指定ID的Hadoop集群详细信息
-
-        :param idstr: 指定的Hadoop集群ID
-        :type idstr: str
-        :return: BDS结构
-        """
-        kwargs = {}
-        kwargs['BDSystemID'] = idstr
-        val = self.request(**kwargs)
-        return val['BigDataSystem']
-
-    def DescribeSDSystem(self, idstr):
-        """ 获取指定ID的实时计算集群详细信息
-
-        :param idstr: 指定的实时计算集群ID
-        :type idstr: str
-        :return: SDS结构
-        """
-        kwargs = {}
-        kwargs['SDSystemID'] = idstr
-        val = self.request(**kwargs)
-        return val['StreamingSystem']
-
     def StartBDSystem(self, idstr):
-        """ 启动集群
+        u"""启动集群.
 
         :param idstr: 集群ID
-        :type idstr: str
+        :type idstr: string
         :return:
         """
         kwargs = {}
-        kwargs['BDSystemID'] = idstr
+        kwargs['BigDataSystemID'] = idstr
         self.request(**kwargs)
 
     def StopBDSystem(self, idstr):
-        """ 暂停集群
+        u"""暂停集群.
 
         :param idstr: 集群ID
-        :type idstr: str
+        :type idstr: string
         :return:
         """
         kwargs = {}
-        kwargs['BDSystemID'] = idstr
+        kwargs['BigDataSystemID'] = idstr
         self.request(**kwargs)
 
-    def DeleteBDSystem(self, idstr, identifier=None):
-        """ 删除集群
+    def DeleteBDSystem(self, idstr):
+        u"""删除集群.
 
         :param idstr: 集群ID
-        :type idstr: str
-        :param identifier: 为删掉的集群指定部分标识, 以后恢复此集群可用
-        :type identifier: str
+        :type idstr: string
         :return:
         """
         kwargs = {}
-        kwargs['BDSystemID'] = idstr
-        kwargs['identifier'] = identifier
+        kwargs['BigDataSystemID'] = idstr
         self.request(**kwargs)
 
-    def ScaleUpBDSystem(self, idstr, delta=0):
-        """ 扩容集群
+    def ScaleUpBDSystem(self, idstr, delta):
+        u"""扩容集群.
 
         :param idstr: 集群ID
-        :type idstr: str
+        :type idstr: string
         :param delta: 扩容的nodes数量
         :type delta: int
         :return:
         """
         kwargs = {}
-        kwargs['BDSystemID'] = idstr
+        kwargs['BigDataSystemID'] = idstr
         kwargs['Delta'] = delta
         self.request(**kwargs)
 
-    def ScaleDownBDSystem(self, idstr, delta=0):
-        """ 减容集群
+    def ScaleDownBDSystem(self, idstr, delta):
+        u"""减容集群.
 
         :param idstr: 集群ID
-        :type idstr: str
+        :type idstr: string
         :param delta: 减容的nodes数量
         :type delta: int
         :return:
         """
         kwargs = {}
-        kwargs['BDSystemID'] = idstr
+        kwargs['BigDataSystemID'] = idstr
         kwargs['Delta'] = delta
         self.request(**kwargs)
 
     def StartSDSystem(self, idstr):
-        """ 启动集群
+        u"""启动集群.
 
         :param idstr: 集群ID
-        :type idstr: str
+        :type idstr: string
         :return:
         """
         kwargs = {}
-        kwargs['SDSystemID'] = idstr
+        kwargs['StreamingSystemID'] = idstr
         self.request(**kwargs)
 
     def StopSDSystem(self, idstr):
-        """ 暂停集群
+        u"""暂停集群.
 
         :param idstr: 集群ID
-        :type idstr: str
+        :type idstr: string
         :return:
         """
         kwargs = {}
-        kwargs['SDSystemID'] = idstr
+        kwargs['StreamingSystemID'] = idstr
         self.request(**kwargs)
 
-    def DeleteSDSystem(self, idstr, identifier=None):
-        """ 删除集群
+    def DeleteSDSystem(self, idstr):
+        u"""删除集群.
 
         :param idstr: 集群ID
-        :type idstr: str
-        :param identifier: 为删掉的集群指定部分标识, 以后恢复此集群可用
-        :type identifier: str
+        :type idstr: string
         :return:
         """
         kwargs = {}
-        kwargs['SDSystemID'] = idstr
-        kwargs['identifier'] = identifier
+        kwargs['StreamingSystemID'] = idstr
         self.request(**kwargs)
 
-    def ScaleUpSDSystem(self, idstr, delta=0):
-        """ 扩容集群
+    def ScaleUpSDSystem(self, idstr, delta):
+        u"""扩容集群.
 
         :param idstr: 集群ID
-        :type idstr: str
+        :type idstr: string
         :param delta: 扩容的nodes数量
         :type delta: int
         :return:
         """
         kwargs = {}
-        kwargs['SDSystemID'] = idstr
+        kwargs['StreamingSystemID'] = idstr
         kwargs['Delta'] = delta
         self.request(**kwargs)
 
-    def ScaleDownSDSystem(self, idstr, delta=0):
-        """ 减容集群
+    def ScaleDownSDSystem(self, idstr, delta):
+        u"""减容集群.
 
         :param idstr: 集群ID
-        :type idstr: str
+        :type idstr: string
         :param delta: 减容的nodes数量
         :type delta: int
         :return:
         """
         kwargs = {}
-        kwargs['SDSystemID'] = idstr
+        kwargs['StreamingSystemID'] = idstr
         kwargs['Delta'] = delta
         self.request(**kwargs)
 
     def CreateBDSystem(self,
-                       name, architecture, slave_count, bds_flavor_id,
-                       zone, admin_pass,
-                       parameters=None, admin_parameters=None,
-                       description=None):
-        """ 创建Hadoop集群
+                       name, architecture, slave_count, bds_type,
+                       zone, admin_pass, description=None):
+        u"""创建Hadoop集群.
 
         :param name: 集群名称
-        :type name: str
-        :param architecture: 集群架构,【'single_master'】
-        :type architecture: str
+        :type name: string
+        :param architecture: 集群架构类型,目前只能为'single-master'
+        :type architecture: string
         :param slave_count: 集群规模
         :type slave_count: int
-        :param bds_flavor_id: 集群选用的配置，flavor的type需为‘bds'
-        :type bds_flavor_id: str
+        :param bds_type: 集群选用的配置类型，type须为‘bds'
+        :type bds_type: string
         :param zone: 可以为zone的name或者id
-        :type zone: str
+        :type zone: string
         :param admin_pass: 管理员密码
-        :type admin_pass: str
-        :param parameters:
-        :type parameters: dict
-        :param admin_parameters:
-        :type admin_parameters: dict
+        :type admin_pass: string
         :param description:
-        :type description: str
-        :return: BDS结构
+        :type description: string
+        :return: BigDataSystem结构
         """
         kwargs = {}
-        kwargs['BDSystemName'] = name
+        kwargs['BigDataSystemName'] = name
         kwargs['Architecture'] = architecture
         kwargs['SlaveCount'] = slave_count
-        kwargs['BDSFlavorId'] = bds_flavor_id
+        kwargs['BigDataSystemType'] = bds_type
         kwargs['Zone'] = zone
         kwargs['AdminPassword'] = admin_pass
-        # warning: urllib.urlencode(key=None) to key='None'
-        if parameters and type(parameters) == dict:
-            kwargs['Parameters'] = json.dumps(parameters)
-        if admin_parameters and type(admin_parameters) == dict:
-            kwargs['AdminParameters'] = json.dumps(admin_parameters)
         if description:
             kwargs['Description'] = description
         val = self.request(**kwargs)
@@ -2085,43 +2076,33 @@ class Client(BaseClient):
 
     def CreateSDSystem(self,
                        name, architecture, slave_count,
-                       bds_flavor_id, zone, admin_pass,
-                       parameters=None, admin_parameters=None,
+                       bds_type, zone, admin_pass,
                        description=None):
-        """ 创建实时计算集群
+        u"""创建实时计算集群.
 
         :param name: 集群名称
-        :type name: str
+        :type name: string
         :param architecture: 集群架构,【'single_master'】
-        :type architecture: str
-        :param slave_count: 集群规模
+        :type architecture: string
+        :param slave_count: 集群规模数量
         :type slave_count: int
-        :param bds_flavor_id: 集群选用的配置，flavor的type需为‘sds'
-        :type bds_flavor_id: str
+        :param bds_type: 集群选用的配置类型，type须为‘sds'
+        :type bds_type: string
         :param zone: 可以为zone的name或者id
-        :type zone: str
+        :type zone: string
         :param admin_pass: 管理员密码
-        :type admin_pass: str
-        :param parameters:
-        :type parameters: dict
-        :param admin_parameters:
-        :type admin_parameters: dict
+        :type admin_pass: string
         :param description:
-        :type description: str
-        :return: SDS结构
+        :type description: string
+        :return: StreamingSystem结构
         """
         kwargs = {}
-        kwargs['SDSystemName'] = name
+        kwargs['StreamingSystemName'] = name
         kwargs['Architecture'] = architecture
         kwargs['SlaveCount'] = slave_count
-        kwargs['BDSFlavorId'] = bds_flavor_id
+        kwargs['StreamingSystemType'] = bds_type
         kwargs['Zone'] = zone
         kwargs['AdminPassword'] = admin_pass
-        # warning: urllib.urlencode(key=None) to key='None'
-        if parameters and type(parameters) == dict:
-            kwargs['Parameters'] = json.dumps(parameters)
-        if admin_parameters and type(admin_parameters) == dict:
-            kwargs['AdminParameters'] = json.dumps(admin_parameters)
         if description:
             kwargs['Description'] = description
         val = self.request(**kwargs)
