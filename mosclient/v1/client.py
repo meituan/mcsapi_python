@@ -1457,7 +1457,7 @@ class Client(BaseClient):
             kwargs['AvailabilityZoneId'] = zone
         self.parse_list_params(limit, offset, filters, kwargs)
         val = self.request(**kwargs)
-        return val['NetworkSet']
+        return val['SubnetSet']
 
     def ListVPCSubnets(self, vpc_id, limit=0, offset=0, filters=None):
         """列出VPC下所有子网列表
@@ -1472,7 +1472,7 @@ class Client(BaseClient):
         kwargs["VPCId"] = vpc_id
         self.parse_list_params(limit, offset, filters, kwargs)
         val = self.request(**kwargs)
-        return val['NetworkSet']
+        return val['SubnetSet']
 
     def AllocateAddress(self, name, billing_model='bandwidth', availability_zone_id=None):
         """ 分配浮动IP
