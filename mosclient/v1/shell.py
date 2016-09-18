@@ -703,7 +703,7 @@ def do_UpdateVPC(client, args):
 @utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
 @utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
 def do_DescribeVPCs(client, args):
-    """Describe Subnet list"""
+    """Describe VPC list"""
     val = client.DescribeVPCs(args.id, args.limit, args.offset, zone=args.zone)
     utils.print_list(val, 'VPC')
 
