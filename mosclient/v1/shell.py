@@ -683,10 +683,12 @@ def do_CreateVPC(client, args):
 
 @utils.arg('id', metavar='<VPC_ID>', help='ID of VPC')
 def do_DeleteVPC(client, args):
-    """Delete VPC"""
+    """Delete VPC
+    暂未开放, 可提工单进行操作。
+    """
     # val = client.DeleteVPC(args.id)
     # utils.print_dict(val)
-    print "禁止删除,请提交工单处理!"
+    print "Delete is forbidden!"
 
 
 @utils.arg('id', metavar='<VPC_ID>', help='ID of VPC')
@@ -729,10 +731,12 @@ def do_CreateVPCSubnet(client, args):
 
 @utils.arg('id', metavar='<SUBNET_ID>', help='ID of Subnet')
 def do_DeleteVPCSubnet(client, args):
-    """Delete Subnet of VPC"""
+    """Delete Subnet of VPC
+    暂未开放, 可提工单进行操作。
+    """
     # val = client.DeleteVPCSubnet(args.id)
     # utils.print_dict(val)
-    print "禁止删除,请提交工单处理!"
+    print "Delete is forbidden!"
 
 
 @utils.arg('--id', metavar='<SUBNET_ID>', required=True, help='ID of Subnet')
