@@ -1329,9 +1329,6 @@ class Client(BaseClient):
         val = self.request(**kwargs)
         return val['MetricSet']
 
-
-
-
     def CreateVPC(self, name, cidr, desc=None):
         """ 新建VPC
 
@@ -1476,10 +1473,6 @@ class Client(BaseClient):
         self.parse_list_params(limit, offset, filters, kwargs)
         val = self.request(**kwargs)
         return val['NetworkSet']
-
-
-
-
 
     def AllocateAddress(self, name, billing_model='bandwidth', availability_zone_id=None):
         """ 分配浮动IP

@@ -667,12 +667,11 @@ def do_DescribeRDSMetrics(client, args):
     utils.print_list(val, 'Metric')
 
 
-
-
-
 """
 VPC CRUD
 """
+
+
 @utils.arg('name', metavar='<NAME>', help='Name of VPC')
 @utils.arg('--cidr', metavar='<CIDR>', required=True, help='Choose from \'10.0.0.0/8\', \'172.16.0.0/12\', \'192.168.0.0/16\'')
 @utils.arg('--desc', metavar='<VPC_DESCRIPTION>', help='Description of VPC')
@@ -712,6 +711,8 @@ def do_DescribeVPCs(client, args):
 """
 VPC Subnet CRUD
 """
+
+
 @utils.arg('name', metavar='<NAME>', help='Name of VPC')
 @utils.arg('--vpcId', metavar='<VPC_ID>', required=True, help='ID of VPC')
 @utils.arg('--zoneId', metavar='<AvailabilityZoneId>', required=True, help='Available Zone')
@@ -760,12 +761,6 @@ def do_ListVPCSubnets(client, args):
     """ List VPC Subnets """
     val = client.ListVPCSubnets(args.vid, args.limit, args.offset)
     utils.print_list(val, 'Network')
-
-
-
-
-
-
 
 
 @utils.arg('--name', metavar='<Name>', required=True, help='name of EIP, e.g. "eipA"')
