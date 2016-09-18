@@ -745,7 +745,7 @@ def do_DeleteVPCSubnet(client, args):
 def do_UpdateVPCSubnet(client, args):
     """Update Subnet in VPC"""
     val = client.UpdateVPCSubnet(args.id, args.name, args.desc)
-    utils.print_dict(val, 'Network')
+    utils.print_dict(val, 'Subnet')
 
 
 @utils.arg('--id', metavar='<SUBNET_ID>', action='append', help='ID of Subnet')
@@ -755,7 +755,7 @@ def do_UpdateVPCSubnet(client, args):
 def do_DescribeVPCSubnets(client, args):
     """Describe Subnet list"""
     val = client.DescribeVPCSubnets(args.id, args.limit, args.offset, zone=args.zone)
-    utils.print_list(val, 'Network')
+    utils.print_list(val, 'Subnet')
 
 
 @utils.arg('vid', metavar='<VPC_ID>', help='ID of VPC')
@@ -764,7 +764,7 @@ def do_DescribeVPCSubnets(client, args):
 def do_ListVPCSubnets(client, args):
     """ List VPC Subnets """
     val = client.ListVPCSubnets(args.vid, args.limit, args.offset)
-    utils.print_list(val, 'Network')
+    utils.print_list(val, 'Subnet')
 
 
 @utils.arg('--name', metavar='<Name>', required=True, help='name of EIP, e.g. "eipA"')

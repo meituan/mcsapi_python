@@ -1332,9 +1332,9 @@ class Client(BaseClient):
     def CreateVPC(self, name, cidr, desc=None):
         """ 新建VPC
 
-        :param name:
+        :param name: VPC名称
         :param cidr: 选择网段,choose from '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16'
-        :param desc:
+        :param desc: 描述
         :return: VPC实例
         """
         kwargs = dict()
@@ -1348,8 +1348,8 @@ class Client(BaseClient):
     def DeleteVPC(self, vid):
         """删除VPC
 
-        :param vpc_id:
-        :return:
+        :param vpc_id: VPC ID
+        :return: 请求是否成功
         """
         kwargs = {'VPCId': vid}
         val = self.request(**kwargs)
@@ -1358,10 +1358,10 @@ class Client(BaseClient):
     def UpdateVPC(self, vid, name, desc=None):
         """更新VPC
 
-        :param vpc_id:
-        :param name:
-        :param desc:
-        :return:
+        :param vpc_id: VPC ID
+        :param name: VPC名称
+        :param desc: VPC描述
+        :return: 返回VPC实例
         """
         kwargs = dict()
         kwargs['VPCId'] = vid
@@ -1373,12 +1373,12 @@ class Client(BaseClient):
 
     def DescribeVPCs(self, vids=None, limit=0, offset=0, filters=None, zone=None):
         """返回所有或部分VPC信息列表
-        :param vids:
-        :param limit:
-        :param offset:
-        :param filters:
-        :param zone:
-        :return:
+        :param vids: VPC ID列表
+        :param limit: 返回数量
+        :param offset: 偏移
+        :param filters: 过滤条件
+        :param zone: 可用区
+        :return: VPC实例集合
         """
         kwargs = dict()
         if isinstance(vids, list) and len(vids) > 0:
@@ -1392,14 +1392,14 @@ class Client(BaseClient):
     def CreateVPCSubnet(self, name, vpcid, zoneid, startip, endip, netmask, gateway, desc=None):
         """创建子网
 
-        :param name:
-        :param vpcid:
-        :param zoneid:
-        :param startip:
-        :param endip:
-        :param netmask:
-        :param desc:
-        :return:
+        :param name: VPC名称
+        :param vpcid: VPC ID
+        :param zoneid: 可用区ID
+        :param startip: 子网起始IP
+        :param endip: 子网结束IP
+        :param netmask: 子网掩码
+        :param desc: 描述
+        :return: 子网实例
         """
         kwargs = dict()
         kwargs['Name'] = name
@@ -1417,8 +1417,8 @@ class Client(BaseClient):
 
     def DeleteVPCSubnet(self, subnetid):
         """删除子网
-        :param subnetid:
-        :return:
+        :param subnetid: 子网ID
+        :return: 请求是否成功
         """
         kwargs = dict()
         kwargs['SubnetId'] = subnetid
@@ -1428,10 +1428,10 @@ class Client(BaseClient):
     def UpdateVPCSubnet(self, subnetid, name, desc=None):
         """更新子网
 
-        :param subnetid:
-        :param name:
-        :param desc:
-        :return:
+        :param subnetid: 子网ID
+        :param name: 名称
+        :param desc: 描述
+        :return: 子网实例
         """
         kwargs = dict()
         kwargs['SubnetId'] = subnetid
@@ -1443,12 +1443,12 @@ class Client(BaseClient):
 
     def DescribeVPCSubnets(self, subnets_ids=None, limit=0, offset=0, filters=None, zone=None):
         """ 返回所有或部分子网信息列表
-        :param subnets_ids:
-        :param limit:
-        :param offset:
-        :param filters:
-        :param zone:
-        :return:
+        :param subnets_ids: 子网ID列表
+        :param limit: 返回数量
+        :param offset: 偏移
+        :param filters: 过滤条件
+        :param zone: 可用区
+        :return: 子网实例集合
         """
         kwargs = dict()
         if isinstance(subnets_ids, list) and len(subnets_ids) > 0:
@@ -1462,11 +1462,11 @@ class Client(BaseClient):
     def ListVPCSubnets(self, vpc_id, limit=0, offset=0, filters=None):
         """列出VPC下所有子网列表
 
-        :param vpc_id:
-        :param limit:
-        :param offset:
-        :param filters:
-        :return:
+        :param vpc_id: VPC ID
+        :param limit: 返回数量
+        :param offset: 偏移
+        :param filters: 过滤条件
+        :return: 子网实例集合
         """
         kwargs = dict()
         kwargs["VPCId"] = vpc_id
