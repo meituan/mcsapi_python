@@ -2048,7 +2048,7 @@ class Client(BaseClient):
 
         :param name: 集群名称
         :type name: string
-        :param architecture: 集群架构类型,目前只能为'single_master'
+        :param architecture: 集群架构类型,目前支持'single_master'
         :type architecture: string
         :param slave_count: 集群规模
         :type slave_count: int
@@ -2082,7 +2082,7 @@ class Client(BaseClient):
 
         :param name: 集群名称
         :type name: string
-        :param architecture: 集群架构,目前只能为'single_master'
+        :param architecture: 集群架构,目前支持'single_master'
         :type architecture: string
         :param slave_count: 集群规模数量
         :type slave_count: int
