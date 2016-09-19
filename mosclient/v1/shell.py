@@ -1,6 +1,7 @@
-#-*- encoding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 
 import sys
+
 from mosclient.common import utils
 
 
@@ -927,3 +928,163 @@ def do_CreateRDSNode(client, args):
     """Create RDS node"""
     val = client.CreateRDSNode(args.rds, args.role, args.count)
     utils.print_dict(val)
+
+
+"""
+    BigData API
+"""
+@utils.arg('--id', metavar='<ID>', action='append', help='ID of StreamingSystem')
+@utils.arg('--name', metavar='<NAME>', action='append', help='Name of StreamingSystem')
+@utils.arg('--zone', metavar='<AVAILABILITYZONE>', type=str, help='ID of Zone')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--filter', metavar='<FILTER>', action='append', help='Filter')
+@utils.arg('--order_by', metavar='<ORDER_BY>', type=str, help='ORDER_BY')
+@utils.arg('--order', metavar='<ORDER>', type=str,
+           help='ORDER:["desc", "asc"]')
+def do_DescribeSDSystems(client, args):
+    """List all StreamingSystem."""
+    val = client.DescribeSDSystems(args.id, args.name, args.zone, utils.convert_filter(args.filter),
+                           args.limit, args.offset, args.order_by, args.order)
+    utils.print_list(val, 'StreamingSystem')
+
+
+@utils.arg('--id', metavar='<ID>', action='append', help='ID of BigDataSystem')
+@utils.arg('--name', metavar='<NAME>', action='append', help='Name of BigDataSystem')
+@utils.arg('--zone', metavar='<AVAILABILITYZONE>', type=str, help='ID of Zone')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--filter', metavar='<FILTER>', action='append', help='Filter')
+@utils.arg('--order_by', metavar='<ORDER_BY>', type=str, help='ORDER_BY')
+@utils.arg('--order', metavar='<ORDER>', type=str,
+           help='ORDER:["desc", "asc"]')
+def do_DescribeBDSystems(client, args):
+    """List all BigDataSystem."""
+    val = client.DescribeBDSystems(args.id, args.name, args.zone, utils.convert_filter(args.filter),
+                           args.limit, args.offset, args.order_by, args.order)
+    utils.print_list(val, 'BigDataSystem')
+
+
+@utils.arg('id', metavar='<BDS_ID>', type=str, help='ID of BDSystem')
+def do_StartBDSystem(client, args):
+    """Start the BDSystem."""
+    client.StartBDSystem(args.id)
+
+
+@utils.arg('id', metavar='<BDS_ID>', type=str, help='ID of BDSystem')
+def do_StopBDSystem(client, args):
+    """Stop the BDSystem."""
+    client.StopBDSystem(args.id)
+
+
+@utils.arg('id', metavar='<BDS_ID>', type=str, help='ID of BDSystem')
+def do_DeleteBDSystem(client, args):
+    """Delete the BDSystem."""
+    client.DeleteBDSystem(args.id)
+
+
+@utils.arg('id', metavar='<BDS_ID>', type=str, help='ID of BDsystem')
+@utils.arg('delta', metavar='<DELTA>', type=int, help='number of nodes')
+def do_ScaleUpBDSystem(client, args):
+    """Scale-up the BDSystem."""
+    client.ScaleUpBDSystem(args.id, args.delta)
+
+
+@utils.arg('id', metavar='<BDS_ID>', type=str, help='ID of BDSystem')
+@utils.arg('delta', metavar='<DELTA>', type=int, help='number of nodes')
+def do_ScaleDownBDSystem(client, args):
+    """Scale-down the BDSystem."""
+    client.ScaleDownBDSystem(args.id, args.delta)
+
+
+@utils.arg('id', metavar='<SDS_ID>', type=str, help='ID of SDSystem')
+def do_StartSDSystem(client, args):
+    """Start the SDSystem."""
+    client.StartSDSystem(args.id)
+
+
+@utils.arg('id', metavar='<SDS_ID>', type=str, help='ID of SDSystem')
+def do_StopSDSystem(client, args):
+    """Stop the SDSystem."""
+    client.StopSDSystem(args.id)
+
+
+@utils.arg('id', metavar='<SDS_ID>', type=str, help='ID of SDSystem')
+def do_DeleteSDSystem(client, args):
+    """Delete the SDSystem."""
+    client.DeleteSDSystem(args.id)
+
+
+@utils.arg('id', metavar='<SDS_ID>', type=str, help='ID of SDSystem')
+@utils.arg('delta', metavar='<DELTA>', type=int, help='number of nodes')
+def do_ScaleUpSDSystem(client, args):
+    """Scale-up the SDSystem."""
+    client.ScaleUpSDSystem(args.id, args.delta)
+
+
+@utils.arg('id', metavar='<SDS_ID>', type=str, help='ID of SDSystem')
+@utils.arg('delta', metavar='<DELTA>', type=int, help='number of nodes')
+def do_ScaleDownSDSystem(client, args):
+    """Scale-down the SDSystem."""
+    client.ScaleDownSDSystem(args.id, args.delta)
+
+
+@utils.arg('name', metavar='<BDS_NAME>', type=str, help='NAME of BDSystem')
+@utils.arg('architecture', metavar='<BDS_ARCHITECTURE>', type=str,
+           help='ARCHITECTURE of BDSystem')
+@utils.arg('slave_count', metavar='<BDS_SLAVE_COUNT>', type=int,
+           help='SLAVE_COUNT of BDSystem')
+@utils.arg('--bds_type', metavar='<BDS_FLAVOR>', required=True, type=str,
+           help='ID of FLAVOR for BDS')
+@utils.arg('--zone', metavar='<ZONE>', required=True, type=str,
+           help='ID or NAME of ZONE')
+@utils.arg('--admin_pass', metavar='<PASSWORD>', required=True, type=str,
+           help='PASSWORD of ADMINISTRATOR')
+@utils.arg('--desc', metavar='<DESCRIPTION>', type=str,
+           help='DESCRIPTION')
+def do_CreateBDSystem(client, args):
+    """Create a BDSystem."""
+    val = client.CreateBDSystem(args.name, args.architecture,
+                                args.slave_count, args.bds_type,
+                                args.zone, args.admin_pass, args.desc)
+    utils.print_dict(val)
+
+
+@utils.arg('name', metavar='<SDS_NAME>', type=str, help='NAME of SDSystem')
+@utils.arg('architecture', metavar='<SDS_ARCHITECTURE>', type=str,
+           help='ARCHITECTURE of SDSystem')
+@utils.arg('slave_count', metavar='<SDS_SLAVE_COUNT>', type=int,
+           help='SLAVE_COUNT of SDSystem')
+@utils.arg('--bds_type', metavar='<SDS_FLAVOR>', required=True, type=str,
+           help='ID of FLAVOR for SDS')
+@utils.arg('--zone', metavar='<ZONE>', required=True, type=str,
+           help='ID or NAME of ZONE')
+@utils.arg('--admin_pass', metavar='<PASSWORD>', required=True, type=str,
+           help='PASSWORD of ADMINISTRATOR')
+@utils.arg('--desc', metavar='<DESCRIPTION>', type=str,
+           help='DESCRIPTION')
+def do_CreateSDSystem(client, args):
+    """Create a SDSystem."""
+    val = client.CreateSDSystem(args.name, args.architecture,
+                                args.slave_count, args.bds_type,
+                                args.zone, args.admin_pass,
+                                args.desc)
+    utils.print_dict(val)
+
+
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--filter', metavar='<FILTER>', action='append', help='Filter')
+def do_DescribeBDSTypes(client, args):
+    """List all BigDataSystem types."""
+    val = client.DescribeBDSTypes(args.limit, args.offset, utils.convert_filter(args.filter))
+    utils.print_list(val, 'BDSType')
+
+
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--filter', metavar='<FILTER>', action='append', help='Filter')
+def do_DescribeSDSTypes(client, args):
+    """List all StreamingSystem types."""
+    val = client.DescribeSDSTypes(args.limit, args.offset, utils.convert_filter(args.filter))
+    utils.print_list(val, 'SDSType')

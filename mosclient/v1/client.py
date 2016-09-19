@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import json
+
 import re
 
 from mosclient.common import utils
@@ -1839,3 +1841,301 @@ class Client(BaseClient):
 
         val = self.request(**kwargs)
         return val
+
+    """
+        BigData API
+    """
+    def DescribeSDSystems(self, ids=None, names=None, zone=None, filters=None,
+                          limit=10, offset=0, order_by='id', order='asc'):
+        u"""获取实时计算集群列表信息.
+
+        :param ids: 期望获取的StreamingSystemID列表
+        :type ids: list
+        :param names: 期望获取信息的StreamingSystem名称列表
+        :type names: list
+        :param zone: 指定创建StreamingSystem所在的数据中心
+        :type zone: string
+        :param limit: 最多返回数量
+        :type limit: int
+        :param offset: 返回StreamingSystem的偏移量，用于分页显示
+        :type offset: int
+        :param filters: 过滤器，一个dict，包含过滤字段名和值，可能过滤字段为：name, status
+        :type filters: dict
+        :param order_by: 排序字段
+        :type order_by: string
+        :param order: 值只能为'desc'(升序)或者'asc'(降序)
+        :type order: string
+
+        :returns: StreamingSystemSet，包含StreamingSystem列表
+        """
+        kwargs = {}
+        if isinstance(ids, list) and len(ids) > 0:
+            kwargs['StreamingSystemId'] = ids
+        if isinstance(names, list) and len(names) > 0:
+            kwargs['SteamingSystemName'] = names
+        if zone is not None:
+            kwargs['ZoneId'] = zone
+        if order_by and order:
+            kwargs['OrderBy'] = order_by
+            kwargs['Order'] = order
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['StreamingSystemSet']
+
+    def DescribeBDSystems(self, ids=None, names=None, zone=None, filters=None,
+                          limit=10, offset=0, order_by='id', order='asc'):
+        u"""获取所有Hadoop集群集群列表信息.
+
+        :param ids: 期望获取的BigDataSystemID列表
+        :type ids: list
+        :param names: 期望获取信息的BigDataSystem名称列表
+        :type names: list
+        :param zone: 指定创建BigDataSystem所在的数据中心名称
+        :type zone: string
+        :param limit: 最多返回数量
+        :type limit: int
+        :param offset: 返回BigDataSystem的偏移量，用于分页显示
+        :type offset: int
+        :param filters: 过滤器，一个dict，包含过滤字段名和值，可能过滤字段为：name, status
+        :type filters: dict
+        :param order_by: 排序字段
+        :type order_by: string
+        :param order: 值只能为'desc'(升序)或者'asc'(降序)
+        :type order: string
+
+        :returns: BigDataSystemSet，包含BigDataSystem列表
+        """
+        kwargs = {}
+        if isinstance(ids, list) and len(ids) > 0:
+            kwargs['BigDataSystemId'] = ids
+        if isinstance(names, list) and len(names) > 0:
+            kwargs['BigDataSystemName'] = names
+        if zone is not None:
+            kwargs['ZoneId'] = zone
+        if order_by and order:
+            kwargs['OrderBy'] = order_by
+            kwargs['Order'] = order
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['BigDataSystemSet']
+
+    def StartBDSystem(self, idstr):
+        u"""启动集群.
+
+        :param idstr: 集群ID
+        :type idstr: string
+        :return:
+        """
+        kwargs = {}
+        kwargs['BigDataSystemID'] = idstr
+        self.request(**kwargs)
+
+    def StopBDSystem(self, idstr):
+        u"""暂停集群.
+
+        :param idstr: 集群ID
+        :type idstr: string
+        :return:
+        """
+        kwargs = {}
+        kwargs['BigDataSystemID'] = idstr
+        self.request(**kwargs)
+
+    def DeleteBDSystem(self, idstr):
+        u"""删除集群.
+
+        :param idstr: 集群ID
+        :type idstr: string
+        :return:
+        """
+        kwargs = {}
+        kwargs['BigDataSystemID'] = idstr
+        self.request(**kwargs)
+
+    def ScaleUpBDSystem(self, idstr, delta):
+        u"""扩容集群.
+
+        :param idstr: 集群ID
+        :type idstr: string
+        :param delta: 扩容的nodes数量
+        :type delta: int
+        :return:
+        """
+        kwargs = {}
+        kwargs['BigDataSystemID'] = idstr
+        kwargs['Delta'] = delta
+        self.request(**kwargs)
+
+    def ScaleDownBDSystem(self, idstr, delta):
+        u"""减容集群.
+
+        :param idstr: 集群ID
+        :type idstr: string
+        :param delta: 减容的nodes数量
+        :type delta: int
+        :return:
+        """
+        kwargs = {}
+        kwargs['BigDataSystemID'] = idstr
+        kwargs['Delta'] = delta
+        self.request(**kwargs)
+
+    def StartSDSystem(self, idstr):
+        u"""启动集群.
+
+        :param idstr: 集群ID
+        :type idstr: string
+        :return:
+        """
+        kwargs = {}
+        kwargs['StreamingSystemID'] = idstr
+        self.request(**kwargs)
+
+    def StopSDSystem(self, idstr):
+        u"""暂停集群.
+
+        :param idstr: 集群ID
+        :type idstr: string
+        :return:
+        """
+        kwargs = {}
+        kwargs['StreamingSystemID'] = idstr
+        self.request(**kwargs)
+
+    def DeleteSDSystem(self, idstr):
+        u"""删除集群.
+
+        :param idstr: 集群ID
+        :type idstr: string
+        :return:
+        """
+        kwargs = {}
+        kwargs['StreamingSystemID'] = idstr
+        self.request(**kwargs)
+
+    def ScaleUpSDSystem(self, idstr, delta):
+        u"""扩容集群.
+
+        :param idstr: 集群ID
+        :type idstr: string
+        :param delta: 扩容的nodes数量
+        :type delta: int
+        :return:
+        """
+        kwargs = {}
+        kwargs['StreamingSystemID'] = idstr
+        kwargs['Delta'] = delta
+        self.request(**kwargs)
+
+    def ScaleDownSDSystem(self, idstr, delta):
+        u"""减容集群.
+
+        :param idstr: 集群ID
+        :type idstr: string
+        :param delta: 减容的nodes数量
+        :type delta: int
+        :return:
+        """
+        kwargs = {}
+        kwargs['StreamingSystemID'] = idstr
+        kwargs['Delta'] = delta
+        self.request(**kwargs)
+
+    def CreateBDSystem(self,
+                       name, architecture, slave_count, bds_type,
+                       zone, admin_pass, description=None):
+        u"""创建Hadoop集群.
+
+        :param name: 集群名称
+        :type name: string
+        :param architecture: 集群架构类型,目前支持'single_master'
+        :type architecture: string
+        :param slave_count: 集群规模
+        :type slave_count: int
+        :param bds_type: 集群选用的配置类型，通过DescribeBDSTypes查找
+        :type bds_type: string
+        :param zone: 可以为zone的name或者id
+        :type zone: string
+        :param admin_pass: 管理员密码
+        :type admin_pass: string
+        :param description:
+        :type description: string
+        :return: BigDataSystem结构
+        """
+        kwargs = {}
+        kwargs['BigDataSystemName'] = name
+        kwargs['Architecture'] = architecture
+        kwargs['SlaveCount'] = slave_count
+        kwargs['BigDataSystemType'] = bds_type
+        kwargs['Zone'] = zone
+        kwargs['AdminPassword'] = admin_pass
+        if description:
+            kwargs['Description'] = description
+        val = self.request(**kwargs)
+        return val['BigDataSystem']
+
+    def CreateSDSystem(self,
+                       name, architecture, slave_count,
+                       bds_type, zone, admin_pass,
+                       description=None):
+        u"""创建实时计算集群.
+
+        :param name: 集群名称
+        :type name: string
+        :param architecture: 集群架构,目前支持'single_master'
+        :type architecture: string
+        :param slave_count: 集群规模数量
+        :type slave_count: int
+        :param bds_type: 集群选用的配置类型，通过DescribeSDSTypes查找
+        :type bds_type: string
+        :param zone: 可以为zone的name或者id
+        :type zone: string
+        :param admin_pass: 管理员密码
+        :type admin_pass: string
+        :param description:
+        :type description: string
+        :return: StreamingSystem结构
+        """
+        kwargs = {}
+        kwargs['StreamingSystemName'] = name
+        kwargs['Architecture'] = architecture
+        kwargs['SlaveCount'] = slave_count
+        kwargs['StreamingSystemType'] = bds_type
+        kwargs['Zone'] = zone
+        kwargs['AdminPassword'] = admin_pass
+        if description:
+            kwargs['Description'] = description
+        val = self.request(**kwargs)
+        return val['StreamingSystem']
+
+    def DescribeBDSTypes(self, limit=0, offset=0, filters=None):
+        u"""获取所有BigDataSystem(简称BDS)类型.
+
+        :param limit: 最大返回数量（可选）
+        :type limit: int
+        :param offset: 返回BDS类型的偏移量，用于分页显示（可选）
+        :type offset: int
+        :param filters: 过滤条件，key/value分别指定过滤字段名称和值，支持的字段名称为：name，status（可选）
+        :type filters: dict
+        :returns: BDSTypeSet，包含系统支持的BDS类型列表
+        """
+        kwargs = {}
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['BDSTypeSet']
+
+    def DescribeSDSTypes(self, limit=0, offset=0, filters=None):
+        u"""获取所有StreamingSystem(简称SDS)类型.
+
+        :param limit: 最大返回数量（可选）
+        :type limit: int
+        :param offset: 返回SDS类型的偏移量，用于分页显示（可选）
+        :type offset: int
+        :param filters: 过滤条件，key/value分别指定过滤字段名称和值，支持的字段名称为：name，status（可选）
+        :type filters: dict
+        :returns: SDSTypeSet，包含系统支持的SDS类型列表
+        """
+        kwargs = {}
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['SDSTypeSet']
