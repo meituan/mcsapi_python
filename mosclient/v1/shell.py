@@ -49,6 +49,11 @@ def do_GetInstanceContractInfo(client, args):
 @utils.arg('--datadisk', metavar='<DISKSIZE>', type=int, help='Extra disksize in GB')
 @utils.arg('--bandwidth', metavar='<BANDWIDTH>', type=int, help='Extra external bandwidth in Mbps')
 @utils.arg('--zone', metavar='<AVAILABILITYZONE>', type=str, help='Availability Zone')
+@utils.arg('--net', metavar='<NETWORK>', type=str, action='append', help="M|Virtual networks\n"
+        "Examples:\n"
+        "[random]                         random network\n"
+        "[random_exit]                    random exit network\n"
+        "vnet1:192.168.0.122:10:virtio    network:ipaddress:bwlimit:driver(virtio or e1000)\n")
 def do_CreateInstance(client, args):
     """ Create servers """
     val = client.CreateInstance(args.image, args.instance_type,
@@ -58,7 +63,8 @@ def do_CreateInstance(client, args):
                                 secgroup=args.secgroup,
                                 datadisk=args.datadisk,
                                 bandwidth=args.bandwidth,
-                                zone=args.zone)
+                                zone=args.zone,
+                                nets=args.net)
     utils.print_dict(val)
 
 
@@ -660,6 +666,106 @@ def do_DescribeRDSMetrics(client, args):
     """List monitor metrics"""
     val = client.DescribeRDSMetrics(args.rid)
     utils.print_list(val, 'Metric')
+
+
+"""
+VPC CRUD
+"""
+
+
+@utils.arg('name', metavar='<NAME>', help='Name of VPC')
+@utils.arg('--cidr', metavar='<CIDR>', required=True, help='Choose from \'10.0.0.0/8\', \'172.16.0.0/12\', \'192.168.0.0/16\'')
+@utils.arg('--desc', metavar='<VPC_DESCRIPTION>', help='Description of VPC')
+def do_CreateVPC(client, args):
+    """Create VPC"""
+    val = client.CreateVPC(args.name, args.cidr, args.desc)
+    utils.print_dict(val, 'VPC')
+
+
+@utils.arg('id', metavar='<VPC_ID>', help='ID of VPC')
+def do_DeleteVPC(client, args):
+    """Delete VPC
+    暂未开放, 可提工单进行操作。
+    """
+    # val = client.DeleteVPC(args.id)
+    # utils.print_dict(val)
+    print "Delete is forbidden!"
+
+
+@utils.arg('id', metavar='<VPC_ID>', help='ID of VPC')
+@utils.arg('--name', metavar='<NAME>', required=True, help='Name of VPC')
+@utils.arg('--desc', metavar='<VPC_DESCRIPTION>', help='Description of VPC')
+def do_UpdateVPC(client, args):
+    """Update VPC"""
+    val = client.UpdateVPC(args.id, args.name, args.desc)
+    utils.print_dict(val, 'VPC')
+
+
+@utils.arg('--id', metavar='<VPC_ID>', action='append', help='ID of VPC')
+@utils.arg('--zone', metavar='<AVAILABILITYZONE>', type=str, help='Availability Zone')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+def do_DescribeVPCs(client, args):
+    """Describe VPC list"""
+    val = client.DescribeVPCs(args.id, args.limit, args.offset, zone=args.zone)
+    utils.print_list(val, 'VPC')
+
+
+"""
+VPC Subnet CRUD
+"""
+
+
+@utils.arg('name', metavar='<NAME>', help='Name of VPC')
+@utils.arg('--vpcId', metavar='<VPC_ID>', required=True, help='ID of VPC')
+@utils.arg('--zoneId', metavar='<AvailabilityZoneId>', required=True, help='Available Zone')
+@utils.arg('--startip', metavar='<START_IP>', required=True, help='Start ip of subnet, should within vpc cidr')
+@utils.arg('--endip', metavar='<END_IP>', required=True, help='End ip of subnet, should within vpc cidr')
+@utils.arg('--netmask', metavar='<NETMASK>', required=True, help='Netmask of subnet')
+@utils.arg('--gateway', metavar='<GATEWAY>', required=True, help='Gateway of subnet')
+@utils.arg('--desc', metavar='<DESCRIPTION>', help='Description of Subnet')
+def do_CreateVPCSubnet(client, args):
+    """Create Subnet in VPC"""
+    val = client.CreateVPCSubnet(args.name, args.vpcId, args.zoneId, args.startip, args.endip, args.netmask, args.gateway, args.desc)
+    utils.print_dict(val, 'VPC')
+
+
+@utils.arg('id', metavar='<SUBNET_ID>', help='ID of Subnet')
+def do_DeleteVPCSubnet(client, args):
+    """Delete Subnet of VPC
+    暂未开放, 可提工单进行操作。
+    """
+    # val = client.DeleteVPCSubnet(args.id)
+    # utils.print_dict(val)
+    print "Delete is forbidden!"
+
+
+@utils.arg('--id', metavar='<SUBNET_ID>', required=True, help='ID of Subnet')
+@utils.arg('--name', metavar='<NAME>', help='Name of VPC')
+@utils.arg('--desc', metavar='<DESCRIPTION>', help='Description of Subnet')
+def do_UpdateVPCSubnet(client, args):
+    """Update Subnet in VPC"""
+    val = client.UpdateVPCSubnet(args.id, args.name, args.desc)
+    utils.print_dict(val, 'Subnet')
+
+
+@utils.arg('--id', metavar='<SUBNET_ID>', action='append', help='ID of Subnet')
+@utils.arg('--zone', metavar='<AVAILABILITYZONE>', type=str, help='Availability Zone')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+def do_DescribeVPCSubnets(client, args):
+    """Describe Subnet list"""
+    val = client.DescribeVPCSubnets(args.id, args.limit, args.offset, zone=args.zone)
+    utils.print_list(val, 'Subnet')
+
+
+@utils.arg('vid', metavar='<VPC_ID>', help='ID of VPC')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+def do_ListVPCSubnets(client, args):
+    """ List VPC Subnets """
+    val = client.ListVPCSubnets(args.vid, args.limit, args.offset)
+    utils.print_list(val, 'Subnet')
 
 
 @utils.arg('--name', metavar='<Name>', required=True, help='name of EIP, e.g. "eipA"')

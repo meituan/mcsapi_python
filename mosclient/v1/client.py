@@ -185,7 +185,7 @@ class Client(BaseClient):
 
     def CreateInstance(self, imageid, itype, duration=None, name=None,
             keypair=None, secgroup=None, datadisk=None, bandwidth=None,
-            zone=None):
+            zone=None, nets=None):
         """ 创建虚拟机
 
         :param imageid: 系统模板ID
@@ -206,7 +206,10 @@ class Client(BaseClient):
         :type bandwidth: int
         :param zone: 指定创建虚拟机所在的数据中心, 可通过DescribeAvailabilityZones接口获取
         :type zone: string
-
+        :param vpcsubnetid: 指定虚拟专有网络中的子网
+        :type vpcsubnetid: string
+        :param vpcsubnetip: 指定子网的情况下,可自定义IP(必须在子网IP范围内)
+        :type vpcsubnetip: string
         :returns: 创建成功的虚拟机信息
         """
         kwargs = {}
@@ -229,6 +232,8 @@ class Client(BaseClient):
             kwargs['ExtraExtBandwidth'] = int(bandwidth)
         if zone is not None:
             kwargs['AvailabilityZoneId'] = zone
+        if isinstance(nets, list) and len(nets) > 0:
+            kwargs['Nets'] = nets
         val = self.request(**kwargs)
         return val['Instance']
 
@@ -1325,6 +1330,183 @@ class Client(BaseClient):
             kwargs['RDSId'] = rid
         val = self.request(**kwargs)
         return val['MetricSet']
+
+    def CreateVPC(self, name, cidr, desc=None):
+        """ 新建VPC
+
+        :param name: VPC名称
+        :type name: string
+        :param cidr: 选择网段,choose from '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16'
+        :type cidr: string
+        :param desc: 描述
+        :type desc: string
+        :return: VPC实例
+        """
+        kwargs = dict()
+        kwargs['Name'] = name
+        kwargs['Cidr'] = cidr
+        if desc and not desc.isspace():
+            kwargs['Description'] = desc
+        val = self.request(**kwargs)  # 利用sys._getframe(level).f_code.co_name获取动态运行时的函数名, 在ec2/action目录下
+        return val
+
+    def DeleteVPC(self, vid):
+        """删除VPC
+
+        :param vpc_id: VPC ID
+        :type vpc_id: string
+        :return: 请求是否成功
+        """
+        kwargs = {'VPCId': vid}
+        val = self.request(**kwargs)
+        return val
+
+    def UpdateVPC(self, vid, name, desc=None):
+        """更新VPC
+
+        :param vpc_id: VPC ID
+        :type vpc_id: string
+        :param name: VPC名称
+        :type name: string
+        :param desc: VPC描述
+        :type desc: string
+        :return: 返回VPC实例
+        """
+        kwargs = dict()
+        kwargs['VPCId'] = vid
+        kwargs['Name'] = name
+        if desc and not desc.isspace():
+            kwargs['Description'] = desc
+        val = self.request(**kwargs)  # 利用sys._getframe(level).f_code.co_name获取动态运行时的函数名, 在ec2/action目录下
+        return val
+
+    def DescribeVPCs(self, vids=None, limit=0, offset=0, filters=None, zone=None):
+        """返回所有或部分VPC信息列表
+        :param vids: VPC ID列表
+        :type vids: string
+        :param limit: 返回数量
+        :type limit: string
+        :param offset: 偏移
+        :type offset: string
+        :param filters: 过滤条件
+        :type filters: dict
+        :param zone: 可用区
+        :type zone: string
+        :return: VPC实例集合
+        """
+        kwargs = dict()
+        if isinstance(vids, list) and len(vids) > 0:
+            kwargs['VPCId'] = vids
+        if zone is not None:
+            kwargs['AvailabilityZoneId'] = zone
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['VPCSet']
+
+    def CreateVPCSubnet(self, name, vpcid, zoneid, startip, endip, netmask, gateway, desc=None):
+        """创建子网
+
+        :param name: VPC名称
+        :type name: string
+        :param vpcid: VPC ID
+        :type vpcid: string
+        :param zoneid: 可用区ID
+        :type zoneid: string
+        :param startip: 子网起始IP
+        :type startip: string
+        :param endip: 子网结束IP
+        :type endip: string
+        :param netmask: 子网掩码
+        :type netmask: string
+        :param desc: 描述
+        :type desc: string
+        :return: 子网实例
+        """
+        kwargs = dict()
+        kwargs['Name'] = name
+        kwargs['VPCId'] = vpcid
+        kwargs['StartIp'] = startip
+        kwargs['EndIp'] = endip
+        kwargs['NetMask'] = netmask
+        kwargs['Gateway'] = gateway
+        if zoneid:
+            kwargs['AvailabilityZoneId'] = zoneid
+        if desc and not desc.isspace():
+            kwargs['Description'] = desc
+        val = self.request(**kwargs)
+        return val
+
+    def DeleteVPCSubnet(self, subnetid):
+        """删除子网
+        :param subnetid: 子网ID
+        :type subnetid: string
+        :return: 请求是否成功
+        """
+        kwargs = dict()
+        kwargs['SubnetId'] = subnetid
+        val = self.request(**kwargs)
+        return val
+
+    def UpdateVPCSubnet(self, subnetid, name, desc=None):
+        """更新子网
+
+        :param subnetid: 子网ID
+        :type subnetid: string
+        :param name: 名称
+        :type name: string
+        :param desc: 描述
+        :type desc: string
+        :return: 子网实例
+        """
+        kwargs = dict()
+        kwargs['SubnetId'] = subnetid
+        kwargs['Name'] = name
+        if desc and not desc.isspace():
+            kwargs['Description'] = desc
+        val = self.request(**kwargs)
+        return val
+
+    def DescribeVPCSubnets(self, subnets_ids=None, limit=0, offset=0, filters=None, zone=None):
+        """ 返回所有或部分子网信息列表
+        :param subnets_ids: 子网ID列表
+        :type subnets_ids: list
+        :param limit: 返回数量
+        :type limit: string
+        :param offset: 偏移
+        :type offset: string
+        :param filters: 过滤条件
+        :type filters: dict
+        :param zone: 可用区
+        :type zone: string
+        :return: 子网实例集合
+        """
+        kwargs = dict()
+        if isinstance(subnets_ids, list) and len(subnets_ids) > 0:
+            kwargs['SubnetId'] = subnets_ids
+        if zone is not None:
+            kwargs['AvailabilityZoneId'] = zone
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['SubnetSet']
+
+    def ListVPCSubnets(self, vpc_id, limit=0, offset=0, filters=None):
+        """列出VPC下所有子网列表
+
+        :param vpc_id: VPC ID
+        :type vpc_id: string
+        :param limit: 返回数量
+        :type limit: string
+        :param offset: 偏移
+        :type offset: string
+        :param filters: 过滤条件
+        :type filters: dict
+        :return: 子网实例集合
+        """
+        kwargs = dict()
+        kwargs["VPCId"] = vpc_id
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['SubnetSet']
 
     def AllocateAddress(self, name, billing_model='bandwidth', availability_zone_id=None):
         """ 分配浮动IP
