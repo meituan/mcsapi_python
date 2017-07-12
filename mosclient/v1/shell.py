@@ -830,8 +830,8 @@ def do_DisassociateAddress(client, args):
 
 @utils.arg('id', metavar='<AllocationId>', help='ID of EIP')
 @utils.arg('--newId', metavar='<NewAllocationId>', required=True, help='ID of new EIP')
-@utils.arg('--sync', metavar='<SYNC>', help='Replace is sync')
-@utils.arg('--timeout', metavar='<TIMEOUT>', help='Timeout')
+@utils.arg('--sync', metavar='<SYNC>', default=False, help='Replace is sync')
+@utils.arg('--timeout', metavar='<TIMEOUT>', default=300, help='Timeout')
 def do_ReplaceAddress(client, args):
     """replace old eip with new eip"""
     val = client.ReplaceAddress(args.id, args.newId, args.sync, args.timeout)
