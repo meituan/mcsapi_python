@@ -2321,3 +2321,372 @@ class Client(BaseClient):
         self.parse_list_params(limit, offset, filters, kwargs)
         val = self.request(**kwargs)
         return val['SDSTypeSet']
+
+    @utils.expect('LoadBalancer')
+    def CreateLoadBalancer(self, name, allocation_id, bandwidth=None, zone=None):
+        """ 创建ELB
+
+        :param name: ELB名称
+        :type name: string
+        :param allocation_id: EIP 浮动IP的AllocationId
+        :type allocation_id: string
+        :param bandwidth: 指定创建虚拟机使用的额外带宽，单位为Mbps
+        :type bandwidth: int
+        :param zone: 指定创建虚拟机所在的数据中心, 可通过DescribeAvailabilityZones接口获取
+        :type zone: string
+        :return: 创建成功的ELB信息
+        """
+        kwargs = {}
+        kwargs['Name'] = name
+        kwargs['AllocationId'] = allocation_id
+        bandwidth = int(bandwidth)
+        if bandwidth <= 0:
+            raise Exception('Illegal bandwidth: %d, should larger than 0' % bandwidth)
+        kwargs['Bandwidth'] = bandwidth
+        if zone is not None:
+            kwargs['AvailabilityZoneId'] = zone
+        return self.request(**kwargs)
+
+    def DeleteLoadBalancer(self, elb_id):
+        """ 删除ELB
+
+        :param elb_id: ELB id
+        :type elb_id: string
+        :return: 请求是否成功
+        """
+        kwargs = {'LoadBalancerId': elb_id}
+        val = self.request(**kwargs)
+        return val
+
+    @utils.expect('LoadBalancerSet')
+    def DescribeLoadBalancers(self, ids=None, limit=0, offset=0, filters=None, zone=None):
+        """ 获得所有ELB
+
+        :param ids: 期望获取的ELB ID列表
+        :type ids: list
+        :param limit: 最多返回数量
+        :type limit: int
+        :param offset: 返回虚拟机的偏移量，用于分页显示
+        :type offset: int
+        :param filters: 过滤器，一个dict，包含过滤字段名和值，可能过滤字段为：name, status
+        :type filters: dict
+        :param zone: 指定创建虚拟机所在的数据中心, 可通过DescribeAvailabilityZones接口获取
+        :type zone: string
+
+        :returns: LoadBalancerSet，包含ELB列表
+        """
+        kwargs = {}
+        if isinstance(ids, list) and len(ids) > 0:
+            kwargs['LoadBalancerId'] = ids
+        if zone is not None:
+            kwargs['AvailabilityZoneId'] = zone
+        self.parse_list_params(limit, offset, filters, kwargs)
+        return self.request(**kwargs)
+
+    @utils.expect('LoadBalancer')
+    def ModifyLoadBalancerAttributes(self, elb_id, name=None, bandwidth=None, allocation_id=None):
+        """ 配置负载均衡 ELB 实例信息
+        :param elb_id: ELB id
+        :type elb_id: string
+        :param name: ELB name
+        :type name: string
+        :param allocation_id: EIP 浮动IP的AllocationId或者IP
+        :type allocation_id: string
+        :param bandwidth: 指定创建虚拟机使用的额外带宽，单位为Mbps
+        :type bandwidth: int
+
+        :return: LoadBalancer
+        """
+        kwargs = {}
+        kwargs['LoadBalancerId'] = elb_id
+        if name is not None:
+            kwargs['Name'] = name
+        if bandwidth is not None:
+            bandwidth = int(bandwidth)
+            if bandwidth <= 0:
+                raise Exception('Illegal bandwidth: %d, should larger than 0' % bandwidth)
+            kwargs['Bandwidth'] = bandwidth
+        if allocation_id is not None:
+            kwargs['AllocationId'] = allocation_id
+        return self.request(**kwargs)
+
+    @utils.expect('Listener')
+    def CreateLoadBalancerListener(self, name, alg, protocol, frontend_port,
+                                   backend_port, elb_id, enablesessionsticky=False,
+                                   check_interval=5, check_rise=None,
+                                   check_fall=None, check_timeout=3,
+                                   domain=None, location=None,
+                                   cookie_name=None, check_url=None,
+                                   session_mode=None, session_timeout=None,
+                                   certificate_id=None):
+        """ 创建ELB 监听转发策略
+
+        :param name: 监听转发策略名称
+        :type name: string
+        :param alg: 有效值为wrr（加权轮询）、rr（轮询），转发调度策略
+        :type alg: string
+        :param protocol: 转发协议, 有效值TCP、HTTP、HTTPS
+        :type protocol: string
+        :param frontend_port: 监听转发规则的对外服务端口
+        :type frontend_port: int
+        :param backend_port: 监听转发规则到后端服务器池的端口
+        :type backend_port: int
+        :param enablesessionsticky: 是否打开会话保持
+        :type enablesessionsticky: boolean
+        :param elb_id: ELB实例的ID
+        :type elb_id: string
+        :param check_interval: 健康检查时间间隔, 默认5
+        :type check_interval: int
+        :param check_rise: 连续健康检查成功多少次后，认为后端服务可用
+        :type check_rise: int
+        :param check_fall: 连续健康检查失败多少次后，认为后端服务不可用
+        :type check_fall: int
+        :param check_timeout: 健康检查超时时间, 默认3
+        :type check_timeout: int
+        :param domain: 转发规则对应的域名
+        :type domain: string
+        :param location: 转发规则对应的URL location
+        :type location: string
+        :param cookie_name: 指定七层会话保持的cookie名称
+        :type cookie_name: string
+        :param check_url: 健康检查URL
+        :type check_url: string
+        :param session_mode: 会话保持模式
+        :type session_mode: string
+        :param session_timeout: 会话保持超时时间
+        :type session_timeout: int
+        :param certificate_id: Https类型转发对应的证书ID
+        :type certificate_id: string
+
+        :return: 创建成功的监听转发策略
+        """
+        kwargs = {}
+        kwargs['Name'] = name
+        kwargs['Alg'] = alg
+        kwargs['Protocol'] = protocol
+        kwargs['FrontendPort'] = frontend_port
+        kwargs['BackendPort'] = backend_port
+        kwargs['EnableSessionSticky'] = enablesessionsticky
+        kwargs['LoadBalancerId'] = elb_id
+        kwargs['CheckInterval'] = check_interval
+        if check_rise is not None:
+            kwargs['CheckRise'] = check_rise
+        if check_fall is not None:
+            kwargs['CheckFall'] = check_fall
+        kwargs['CheckTimeout'] = check_timeout
+        if domain is not None:
+            kwargs['Domain'] = domain
+        if location is not None:
+            kwargs['Location'] = location
+        if cookie_name is not None:
+            kwargs['CookieName'] = cookie_name
+        if check_url is not None:
+            kwargs['CheckUrl'] = check_url
+        if session_mode is not None:
+            kwargs['SessionMode'] = session_mode
+        if session_timeout is not None:
+            kwargs['SessionTimeout'] = session_timeout
+        if certificate_id is not None:
+            kwargs['CertificateId'] = certificate_id
+        return self.request(**kwargs)
+
+    @utils.expect('Listener')
+    def ConfigLoadBalancerListener(self, listenser_id, alg=None, protocol=None,
+                                   frontend_port=None, backend_port=None, name=None,
+                                   enablesessionsticky=None, check_interval=None,
+                                   check_rise=None, check_fall=None,
+                                   check_timeout=None, domain=None,
+                                   location=None, cookie_name=None,
+                                   check_url=None, session_mode=None,
+                                   session_timeout=None, certificate_id=None):
+        """ 配置指定的监听转发策略
+
+        :param listenser_id: 转发调度策略的ID
+        :type listenser_id: string
+        :param name: 监听转发策略名称
+        :type name: string
+        :param alg: 有效值为wrr（加权轮询）、rr（轮询），转发调度策略
+        :type alg: string
+        :param protocol: 转发协议, 有效值TCP、HTTP、HTTPS
+        :type protocol: string
+        :param frontend_port: 监听转发规则的对外服务端口
+        :type frontend_port: int
+        :param backend_port: 监听转发规则到后端服务器池的端口
+        :type backend_port: int
+        :param enablesessionsticky: 是否打开会话保持
+        :type enablesessionsticky: boolean
+        :param check_interval: 健康检查时间间隔, 默认5
+        :type check_interval: int
+        :param check_rise: 连续健康检查成功多少次后，认为后端服务可用
+        :type check_rise: int
+        :param check_fall: 连续健康检查失败多少次后，认为后端服务不可用
+        :type check_fall: int
+        :param check_timeout: 健康检查超时时间, 默认3
+        :type check_timeout: int
+        :param domain: 转发规则对应的域名
+        :type domain: string
+        :param location: 转发规则对应的URL location
+        :type location: string
+        :param cookie_name: 指定七层会话保持的cookie名称
+        :type cookie_name: string
+        :param check_url: 健康检查URL
+        :type check_url: string
+        :param session_mode: 会话保持模式
+        :type session_mode: string
+        :param session_timeout: 会话保持超时时间
+        :type session_timeout: int
+        :param certificate_id: Https类型转发对应的证书ID
+        :type certificate_id: string
+
+        :return: 创建成功的监听转发策略
+        """
+        kwargs = {}
+        kwargs['ListenerId'] = listenser_id
+        if name is not None:
+            kwargs['Name'] = name
+        if alg is not None:
+            kwargs['Alg'] = alg
+        if protocol is not None:
+            kwargs['Protocol'] = protocol
+        if frontend_port is not None:
+            kwargs['FrontendPort'] = frontend_port
+        if backend_port is not None:
+            kwargs['BackendPort'] = backend_port
+        if enablesessionsticky is not None:
+            kwargs['EnableSessionSticky'] = enablesessionsticky
+        if check_interval is not None:
+            kwargs['CheckInterval'] = check_interval
+        if check_rise is not None:
+            kwargs['CheckRise'] = check_rise
+        if check_fall is not None:
+            kwargs['CheckFall'] = check_fall
+        kwargs['CheckTimeout'] = check_timeout
+        if domain is not None:
+            kwargs['Domain'] = domain
+        if location is not None:
+            kwargs['Location'] = location
+        if cookie_name is not None:
+            kwargs['CookieName'] = cookie_name
+        if check_url is not None:
+            kwargs['CheckUrl'] = check_url
+        if session_mode is not None:
+            kwargs['SessionMode'] = session_mode
+        if session_timeout is not None:
+            kwargs['SessionTimeout'] = session_timeout
+        if certificate_id is not None:
+            kwargs['CertificateId'] = certificate_id
+        return self.request(**kwargs)
+
+    @utils.expect('ListenerSet')
+    def DescribeLoadBalancerListeners(self, ids=None, limit=0, offset=0, filters=None):
+        """ 获取指定或全部监听转发策略列表
+
+        :param ids: 期望获取的Listener列表
+        :type ids: list
+        :param limit: 最多返回数量
+        :type limit: int
+        :param offset: 返回Listener的偏移量，用于分页显示
+        :type offset: int
+        :param filters: 过滤器，一个dict，包含过滤字段名和值，可能过滤字段为：name, status
+        :type filters: dict
+
+        :returns: ListenerSet
+        """
+        kwargs = {}
+        if isinstance(ids, list) and len(ids) > 0:
+            kwargs['ListenerId'] = ids
+        self.parse_list_params(limit, offset, filters, kwargs)
+        return self.request(**kwargs)
+
+    def DeleteLoadBalancerListener(self, listener_id):
+        """ 删除ELB Listener
+
+        :param listener_id: ELB listener id
+        :type listener_id: string
+        :return: 请求是否成功
+        """
+        kwargs = {'ListenerId': listener_id}
+        val = self.request(**kwargs)
+        return val
+
+    @utils.expect('Backend')
+    def RegisterBackendWithListener(self, listener_id, server_id, name, weight=None, port=None):
+        """ 给 Listener 添加后端转发
+
+        :param listener_id: ELB listener id
+        :type listener_id: string
+        :param server_id: Server id
+        :type server_id: string
+        :param name: Server customize name
+        :type name: string
+        :param weight: Forwarding weight
+        :type weight: int
+        :param port: Forwarding port
+        :type port: int
+
+        :return: Backend
+        """
+        kwargs = {'ListenerId': listener_id, 'ServerId': server_id, 'Name': name}
+        if weight is not None:
+            kwargs['Weight'] = weight
+        if port is not None:
+            kwargs['Port'] = port
+        return self.request(**kwargs)
+
+    @utils.expect('BackendSet')
+    def DescribeListenerBackends(self, listener_id, ids=None, limit=0, offset=0, filters=None):
+        """ 获取一个Listener对应的一组或全部后端转发
+
+        :param listener_id: Listener ID
+        :type listener_id: string
+        :param ids: 期望获取的Listener列表
+        :type ids: list
+        :param limit: 最多返回数量
+        :type limit: int
+        :param offset: 返回Backend的偏移量，用于分页显示
+        :type offset: int
+        :param filters: 过滤器，一个dict，包含过滤字段名和值，可能过滤字段为：name, status
+        :type filters: dict
+
+        :returns: BackendSet
+        """
+        kwargs = {'ListenerId': listener_id}
+        if isinstance(ids, list) and len(ids) > 0:
+            kwargs['BackendId'] = ids
+        self.parse_list_params(limit, offset, filters, kwargs)
+        return self.request(**kwargs)
+
+    @utils.expect('Backend')
+    def ConfigListenerBackend(self, backend_id, listener_id=None, weight=None, port=None):
+        """ 配置Listener Backend
+
+        :param backend_id: Backend id
+        :type backend_id: string
+        :param listener_id: ELB listener id
+        :type listener_id: string
+        :param weight: Forwarding weight
+        :type weight: int
+        :param port: Forwarding port
+        :type port: int
+
+        :return: Backend
+        """
+        kwargs = {'BackendId': backend_id}
+        if listener_id is not None:
+            kwargs['ListenerId'] = listener_id
+        if weight is not None:
+            kwargs['Weight'] = weight
+        if port is not None:
+            kwargs['Port'] = port
+        return self.request(**kwargs)
+
+    def DeregisterBackendWithListener(self, id):
+        """ 删除指定的后端
+
+        :param id: listener backend id
+        :type id: string
+        :return: 请求是否成功
+        """
+        kwargs = {'BackendId': id}
+        val = self.request(**kwargs)
+        return val

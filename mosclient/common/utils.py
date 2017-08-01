@@ -2,6 +2,7 @@ import sys
 import os
 import prettytable
 import urllib
+from functools import wraps
 
 
 # Decorator for cli-args
@@ -280,3 +281,17 @@ def get_page_info(args):
                     vidx += 1
             idx += 1
     return kwargs
+
+
+# Decorator for get http error or expected success response to prettytable print
+def expect(expected_key):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            val = func(*args, **kwargs)
+            if 'code' in val or 'err' in val:
+                return val
+            else:
+                return val[expected_key]
+        return wrapper
+    return decorator
