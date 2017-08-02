@@ -1194,3 +1194,170 @@ def do_DescribeSDSTypes(client, args):
     """List all StreamingSystem types."""
     val = client.DescribeSDSTypes(args.limit, args.offset, utils.convert_filter(args.filter))
     utils.print_list(val, 'SDSType')
+
+
+@utils.arg('name', metavar='<ELB_NAME>', type=str, help='Name of ELB')
+@utils.arg('--allocation_id', metavar="<EIP_ID>", required=True, type=str, help="ID of EIP")
+@utils.arg('--bandwidth', metavar='<BANDWIDTH>', required=True, type=int, help='Extra external bandwidth in Mbps')
+@utils.arg('--zone', metavar='<AVAILABILITYZONE>', type=str, help='Availability Zone')
+def do_CreateLoadBalancer(client, args):
+    """Create a ELB instance"""
+    val = client.CreateLoadBalancer(args.name, args.allocation_id, args.bandwidth, zone=args.zone)
+    utils.print_dict(val)
+
+
+@utils.arg('id', metavar='<ID>', type=str, help='ID of ELB')
+def do_DeleteLoadBalancer(client, args):
+    """ Delete a ELB """
+    val = client.DeleteLoadBalancer(args.id)
+    utils.print_dict(val)
+
+
+@utils.arg('--id', metavar='<ID>', action='append', help='ID of LoadBalancer')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--zone', metavar='<AVAILABILITYZONE>', type=str, help='Availability Zone')
+def do_DescribeLoadBalancers(client, args):
+    """List all ELB instances"""
+    val = client.DescribeLoadBalancers(args.id, args.limit, args.offset, args.zone)
+    utils.print_list(val, 'LoadBalancer')
+
+
+@utils.arg('id', metavar='<ELB_ID>', type=str, help='ID of ELB')
+@utils.arg('--allocation_id', metavar="<EIP_ID>", type=str, help="ID or IP of EIP")
+@utils.arg('--bandwidth', metavar='<BANDWIDTH>', type=int, help='Extra external bandwidth in Mbps')
+@utils.arg('--name', metavar='<ELB_NAME>', type=str, help='Name of ELB')
+def do_ModifyLoadBalancerAttributes(client, args):
+    """Modify a ELB instance"""
+    val = client.ModifyLoadBalancerAttributes(args.id, args.name, args.bandwidth, args.allocation_id)
+    utils.print_dict(val)
+
+
+@utils.arg('name', metavar='<LISTENER_NAME>', type=str, help='Name of ELB Listener')
+@utils.arg('--alg', metavar='<ALG>', required=True, type=str, help="Forwarding strategy, select in ['wrr', 'rr']")
+@utils.arg('--protocol', metavar='<PROTOCOL>', required=True, type=str, help="Forwarding protocol, select in ['TCP', 'HTTP', 'HTTPS']")
+@utils.arg('--frontend_port', metavar='<FRONTEND_PORT>', required=True, type=int, help="External serve port")
+@utils.arg('--backend_port', metavar='<BACKEND_PORT>', required=True, type=int, help="Backend forwarded port")
+@utils.arg('--enablesessionsticky', action='store_true')
+@utils.arg('--elb_id', metavar="<ELB_ID>", required=True, type=str, help="ID of LoadBalancer")
+@utils.arg('--check_interval', metavar='<CHECK_INTERVAL>', type=int, default=5, help='Health check interval, default 5s')
+@utils.arg('--check_rise', metavar='<CHECK_RISE>', type=int, help='Check failed times treat backend available')
+@utils.arg('--check_fall', metavar='<CHECK_FALL>', type=int, help='Check failed times treat backend not available')
+@utils.arg('--check_timeout', metavar='<CHECK_TIMEOUT>', type=int, default=3, help='Check timeout, default=3s')
+@utils.arg('--domain', metavar='<DOMAIN>', type=str, help='Domain name corresponding to forwarding rules')
+@utils.arg('--location', metavar='<LOCATION>', type=str, help='URL location corresponding to forwarding rules')
+@utils.arg('--cookie_name', metavar='<COOKIENAME>', type=str, help='Cookie name keep in session')
+@utils.arg('--check_url', metavar='<CHECK_URL>', type=str, help='Health check url')
+@utils.arg('--session_mode', metavar='<SESSION_MODE>', type=str, help='Session keep mode')
+@utils.arg('--session_timeout', metavar='<SESSION_TIMEOUT>', type=int, help='Session timeout')
+@utils.arg('--certificate_id', metavar='<CERTIFICATEID>', type=str, help='Https certificate id')
+def do_CreateLoadBalancerListener(client, args):
+    """Create a ELB instance"""
+    val = client.CreateLoadBalancerListener(args.name, args.alg, args.protocol,
+                                            args.frontend_port, args.backend_port,
+                                            args.elb_id, args.enablesessionsticky,
+                                            check_interval=args.check_interval,
+                                            check_rise=args.check_rise,
+                                            check_fall=args.check_fall,
+                                            check_timeout=args.check_timeout,
+                                            domain=args.domain, location=args.location,
+                                            cookie_name=args.cookie_name,
+                                            check_url=args.check_url,
+                                            session_mode=args.session_mode,
+                                            session_timeout=args.session_timeout,
+                                            certificate_id=args.certificate_id)
+    utils.print_dict(val)
+
+
+@utils.arg('listener_id', metavar='<LISTENER_ID>', type=str, help='ID of ELB Listener')
+@utils.arg('--alg', metavar='<ALG>', type=str, help="Forwarding strategy, select in ['wrr', 'rr']")
+@utils.arg('--protocol', metavar='<PROTOCOL>', type=str, help="Forwarding protocol, select in ['TCP', 'HTTP', 'HTTPS']")
+@utils.arg('--frontend_port', metavar='<FRONTEND_PORT>', type=int, help="External serve port")
+@utils.arg('--backend_port', metavar='<BACKEND_PORT>', type=int, help="Backend forwarded port")
+@utils.arg('--enablesessionsticky', action='store_true')
+@utils.arg('--name', metavar='<LISTENDER_NAME>', type=str, help='Listenser name')
+@utils.arg('--check_interval', metavar='<CHECK_INTERVAL>', type=int, default=5, help='Health check interval, default 5s')
+@utils.arg('--check_rise', metavar='<CHECK_RISE>', type=int, help='Check failed times treat backend available')
+@utils.arg('--check_fall', metavar='<CHECK_FALL>', type=int, help='Check failed times treat backend not available')
+@utils.arg('--check_timeout', metavar='<CHECK_TIMEOUT>', type=int, default=3, help='Check timeout, default=3s')
+@utils.arg('--domain', metavar='<DOMAIN>', type=str, help='Domain name corresponding to forwarding rules')
+@utils.arg('--location', metavar='<LOCATION>', type=str, help='URL location corresponding to forwarding rules')
+@utils.arg('--cookie_name', metavar='<COOKIENAME>', type=str, help='Cookie name keep in session')
+@utils.arg('--check_url', metavar='<CHECK_URL>', type=str, help='Health check url')
+@utils.arg('--session_mode', metavar='<SESSION_MODE>', type=str, help='Session keep mode')
+@utils.arg('--session_timeout', metavar='<SESSION_TIMEOUT>', type=int, help='Session timeout')
+@utils.arg('--certificate_id', metavar='<CERTIFICATEID>', type=str, help='Https certificate id')
+def do_ConfigLoadBalancerListener(client, args):
+    """ Create a ELB instance """
+    val = client.ConfigLoadBalancerListener(args.listener_id, alg=args.alg,
+                                            name=args.name, protocol=args.protocol,
+                                            frontend_port=args.frontend_port,
+                                            backend_port=args.backend_port,
+                                            enablesessionsticky=args.enablesessionsticky,
+                                            check_interval=args.check_interval,
+                                            check_rise=args.check_rise,
+                                            check_fall=args.check_fall,
+                                            check_timeout=args.check_timeout,
+                                            domain=args.domain, location=args.location,
+                                            cookie_name=args.cookie_name,
+                                            check_url=args.check_url,
+                                            session_mode=args.session_mode,
+                                            session_timeout=args.session_timeout,
+                                            certificate_id=args.certificate_id)
+    utils.print_dict(val)
+
+
+@utils.arg('--id', metavar='<ID>', action='append', help='ID of LoadBalancerListener')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+def do_DescribeLoadBalancerListeners(client, args):
+    """ List all ELB instances """
+    val = client.DescribeLoadBalancerListeners(args.id, args.limit, args.offset)
+    utils.print_list(val, 'Listener')
+
+
+@utils.arg('id', metavar='<ID>', type=str, help='ID of ELB listenser')
+def do_DeleteLoadBalancerListener(client, args):
+    """ Delete a ELB Listener """
+    val = client.DeleteLoadBalancerListener(args.id)
+    utils.print_dict(val)
+
+
+@utils.arg('--name', metavar='<SERVER_CUSTOMIZE_NAME>', type=str, help='Server customize name')
+@utils.arg('--listener_id', metavar='<LISTENER_ID>', type=str, required=True, help='ID of Listener')
+@utils.arg('--server_id', metavar='<SERVER_ID>', type=str, required=True, help='ID of Server')
+@utils.arg('--weight', metavar='<WEIGHT>', type=int, help='Weight of forwarding')
+@utils.arg('--port', metavar='<FORWARD_PORT>', type=int, help='Change forward port')
+def do_RegisterBackendWithListener(client, args):
+    """ Register Listener Backend server """
+    val = client.RegisterBackendWithListener(args.listener_id, args.server_id, args.name,
+                                             weight=args.weight, port=args.port)
+    utils.print_dict(val)
+
+
+@utils.arg('--listener_id', metavar='<LISTENER_ID>', type=str, required=True, help='ID of listener')
+@utils.arg('--id', metavar='<ID>', action='append', help='ID of Backend')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+def do_DescribeListenerBackends(client, args):
+    """ List all Backends of specify Listener """
+    val = client.DescribeListenerBackends(args.listener_id, args.id, args.limit, args.offset)
+    utils.print_list(val, 'Backend')
+
+
+@utils.arg('id', metavar='<BACKEND_ID>', type=str, help='Listener Backend ID')
+@utils.arg('--listener_id', metavar='<LISTENER_ID>', type=str, help='Change corresponding Listener')
+@utils.arg('--weight', metavar='<WEIGHT>', type=int, help='Weight of forwarding')
+@utils.arg('--port', metavar='<FORWARD_PORT>', type=int, help='Change forward port')
+def do_ConfigListenerBackend(client, args):
+    """ Config Listener Backend """
+    val = client.ConfigListenerBackend(args.id, args.listener_id,
+                                       weight=args.weight, port=args.port)
+    utils.print_dict(val)
+
+
+@utils.arg('id', metavar='<ID>', type=str, help='ID of Backend')
+def do_DeregisterBackendWithListener(client, args):
+    """ Delete a Listener Backend """
+    val = client.DeregisterBackendWithListener(args.id)
+    utils.print_dict(val)
