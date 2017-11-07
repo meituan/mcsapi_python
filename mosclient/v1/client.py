@@ -2052,9 +2052,9 @@ class Client(BaseClient):
         """
         kwargs = {}
         if isinstance(ids, list) and len(ids) > 0:
-            kwargs['StreamingSystemId'] = ids
+            kwargs['StreamingSystemIds'] = ids
         if isinstance(names, list) and len(names) > 0:
-            kwargs['SteamingSystemName'] = names
+            kwargs['SteamingSystemNames'] = names
         if zone is not None:
             kwargs['ZoneId'] = zone
         if order_by and order:
@@ -2089,9 +2089,9 @@ class Client(BaseClient):
         """
         kwargs = {}
         if isinstance(ids, list) and len(ids) > 0:
-            kwargs['BigDataSystemId'] = ids
+            kwargs['BigDataSystemIds'] = ids
         if isinstance(names, list) and len(names) > 0:
-            kwargs['BigDataSystemName'] = names
+            kwargs['BigDataSystemNames'] = names
         if zone is not None:
             kwargs['ZoneId'] = zone
         if order_by and order:
@@ -2690,3 +2690,264 @@ class Client(BaseClient):
         kwargs = {'BackendId': id}
         val = self.request(**kwargs)
         return val
+    
+    """
+        DeepLearning API
+    """
+    def DescribeDLProjects(self, ids=None, names=None, filters=None,
+                          limit=10, offset=0, order_by='id', order='asc'):
+        u"""获取深度学习项目列表信息.
+
+        :param ids: 期望获取的DLProjectID列表
+        :type ids: list
+        :param names: 期望获取信息的DLProject名称列表
+        :type names: list
+        :param limit: 最多返回数量
+        :type limit: int
+        :param offset: 返回DLProject的偏移量，用于分页显示
+        :type offset: int
+        :param filters: 过滤器，一个dict，包含过滤字段名和值，可能过滤字段为：name, status
+        :type filters: dict
+        :param order_by: 排序字段
+        :type order_by: string
+        :param order: 值只能为'desc'(升序)或者'asc'(降序)
+        :type order: string
+
+        :returns: DLProjectSet，包含DLProject列表
+        """
+        kwargs = {}
+        if isinstance(ids, list) and len(ids) > 0:
+            kwargs['DLProjectIds'] = ids
+        if isinstance(names, list) and len(names) > 0:
+            kwargs['DLProjectNames'] = names
+        if order_by and order:
+            kwargs['OrderBy'] = order_by
+            kwargs['Order'] = order
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['DLProjectSet']
+
+    def CreateDLProject(self,
+                       name, description=None):
+        u"""创建DLProject.
+
+        :param name: 集群名称
+        :type name: string
+        :param description:
+        :type description: string
+        :return: DLProject结构
+        """
+        kwargs = {}
+        kwargs['DLProjectName'] = name
+        if description:
+            kwargs['Description'] = description
+        val = self.request(**kwargs)
+        return val['DLProject']
+    
+    def DeleteDLProject(self, idstr):
+        u"""删除DLProject.
+
+        :param idstr: DLProjectID
+        :type idstr: string
+        :return:
+        """
+        kwargs = {}
+        kwargs['DLProjectId'] = idstr
+        self.request(**kwargs)
+
+    def UpdateDLProject(self, idstr, name, desc=None):
+        u"""更新DLProject.
+
+        :param idstr: DLProjectID
+        :type idstr: string
+        :return:
+        """
+        kwargs = {}
+        kwargs['DLProjectId'] = idstr
+        kwargs['DLProjectName'] = name
+        if desc and not desc.isspace():
+            kwargs['Description'] = desc
+        val = self.request(**kwargs)  # 利用sys._getframe(level).f_code.co_name获取动态运行时的函数名, 在ec2/action目录下
+        return val
+    
+    def CreateDLJob(self, project_id, name, hardware_mode, 
+                          is_distributed, job_type, code_source,
+                          is_tensorboard, is_auto_start,
+                          node_num=None, gpu_num=None, code_main_file=None,
+                          data_dir=None, ckpt_dir=None, output_dir=None,
+                          cmdline_args=None, tensorboard_log_dir=None,
+                          notice_uid=None, distribute_files=None,
+                          description=None):
+        u"""创建DLJob.
+
+        :param name: Job名称
+        :type name: string
+        :param description:
+        :type description: string
+        :return: DLJob结构
+        """
+        kwargs = {}
+        kwargs['DLProjectId'] = project_id
+        kwargs['DLJobName'] = name
+        kwargs['HardwareMode'] = hardware_mode
+        kwargs['IsDistributed'] = is_distributed
+        kwargs['JobType'] = job_type
+        kwargs['CodeSource'] = code_source
+        kwargs['IsTensorboard'] = is_tensorboard
+        kwargs['IsAutoStart'] = is_auto_start
+        
+        if node_num:
+            kwargs['NodeNum'] = node_num
+        if gpu_num:
+            kwargs['GpuNum'] = gpu_num
+        if code_main_file:
+            kwargs['CodeMainFile'] = code_main_file
+        if data_dir:
+            kwargs['DataDir'] = data_dir
+        if ckpt_dir:
+            kwargs['CkptDir'] = ckpt_dir
+        if output_dir:
+            kwargs['OutputDir'] = output_dir
+        if isinstance(cmdline_args, list) and len(cmdline_args) > 0:
+            kwargs['CmdlineArgs'] = cmdline_args
+        if tensorboard_log_dir:
+            kwargs['TensorboardLogDir'] = tensorboard_log_dir
+        if notice_uid:
+            kwargs['NoticeUId'] = notice_uid
+        if isinstance(distribute_files, list) and len(distribute_files) > 0:
+            kwargs['DistributeFiles'] = distribute_files
+        if description:
+            kwargs['Description'] = description
+        val = self.request(**kwargs)
+        if 'DLJob' in val:
+            return val['DLJob']
+        else:
+            return val
+    
+    def DescribeDLJobs(self, project_id, ids=None, names=None, filters=None,
+                          limit=10, offset=0, order_by='id', order='asc'):
+        u"""获取某个项目里深度学习任务列表信息.
+
+        :param ids: 期望获取的DLJobID列表
+        :type ids: list
+        :param names: 期望获取信息的DLJob名称列表
+        :type names: list
+        :param limit: 最多返回数量
+        :type limit: int
+        :param offset: 返回DLJob的偏移量，用于分页显示
+        :type offset: int
+        :param filters: 过滤器，一个dict，包含过滤字段名和值，可能过滤字段为：name, status
+        :type filters: dict
+        :param order_by: 排序字段
+        :type order_by: string
+        :param order: 值只能为'desc'(升序)或者'asc'(降序)
+        :type order: string
+
+        :returns: DLJobSet，包含DLJob列表
+        """
+        kwargs = {}
+        kwargs['DLProjectId'] = project_id
+        if isinstance(ids, list) and len(ids) > 0:
+            kwargs['DLJobIds'] = ids
+        if isinstance(names, list) and len(names) > 0:
+            kwargs['DLJobNames'] = names
+        if order_by and order:
+            kwargs['OrderBy'] = order_by
+            kwargs['Order'] = order
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['DLJobSet']
+    
+    def DeleteDLJob(self, idstr):
+        u"""删除DLJob.
+
+        :param idstr: DLJobID
+        :type idstr: string
+        :return:
+        """
+        kwargs = {}
+        kwargs['DLJobId'] = idstr
+        self.request(**kwargs)
+    
+    def UpdateDLJob(self, id, name=None, hardware_mode=None, 
+                          is_distributed=None, job_type=None, code_source=None,
+                          is_tensorboard=None, is_auto_start=None,
+                          node_num=None, gpu_num=None, code_main_file=None,
+                          data_dir=None, ckpt_dir=None, output_dir=None,
+                          cmdline_args=None, tensorboard_log_dir=None,
+                          notice_uid=None, distribute_files=None,
+                          description=None):
+        u"""更新DLJob.
+
+        :param name: Job名称
+        :type name: string
+        :param description:
+        :type description: string
+        :return: DLJob结构
+        """
+        kwargs = {}
+        kwargs['DLJobId'] = id
+        if name:
+            kwargs['DLJobName'] = name
+        if hardware_mode:
+            kwargs['HardwareMode'] = hardware_mode
+        if is_distributed:
+            kwargs['IsDistributed'] = is_distributed
+        if job_type:
+            kwargs['JobType'] = job_type
+        if code_source:
+            kwargs['CodeSource'] = code_source
+        if is_tensorboard:
+            kwargs['IsTensorboard'] = is_tensorboard
+        if is_auto_start:
+            kwargs['IsAutoStart'] = is_auto_start
+        
+        if node_num:
+            kwargs['NodeNum'] = node_num
+        if gpu_num:
+            kwargs['GpuNum'] = gpu_num
+        if code_main_file:
+            kwargs['CodeMainFile'] = code_main_file
+        if data_dir:
+            kwargs['DataDir'] = data_dir
+        if ckpt_dir:
+            kwargs['CkptDir'] = ckpt_dir
+        if output_dir:
+            kwargs['OutputDir'] = output_dir
+        if isinstance(cmdline_args, list) and len(cmdline_args) > 0:
+            kwargs['CmdlineArgs'] = cmdline_args
+        if tensorboard_log_dir:
+            kwargs['TensorboardLogDir'] = tensorboard_log_dir
+        if notice_uid:
+            kwargs['NoticeUId'] = notice_uid
+        if isinstance(distribute_files, list) and len(distribute_files) > 0:
+            kwargs['DistributeFiles'] = distribute_files
+        if description:
+            kwargs['Description'] = description
+        val = self.request(**kwargs)
+        if 'DLJob' in val:
+            return val['DLJob']
+        else:
+            return val
+    
+    def SubmitDLJob(self, idstr):
+        u"""提交任务.
+
+        :param idstr: 任务ID
+        :type idstr: string
+        :return:
+        """
+        kwargs = {}
+        kwargs['DLJobId'] = idstr
+        self.request(**kwargs)
+
+    def StopDLJob(self, idstr):
+        u"""线束任务.
+
+        :param idstr: 任务ID
+        :type idstr: string
+        :return:
+        """
+        kwargs = {}
+        kwargs['DLJobId'] = idstr
+        self.request(**kwargs)

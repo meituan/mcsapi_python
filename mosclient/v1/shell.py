@@ -1361,3 +1361,159 @@ def do_DeregisterBackendWithListener(client, args):
     """ Delete a Listener Backend """
     val = client.DeregisterBackendWithListener(args.id)
     utils.print_dict(val)
+
+"""
+    DeepLearning API
+"""
+@utils.arg('--id', metavar='<ID>', action='append', help='ID of DLProject')
+@utils.arg('--name', metavar='<NAME>', action='append', help='Name of DLProject')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--filter', metavar='<FILTER>', action='append', help='Filter')
+@utils.arg('--order_by', metavar='<ORDER_BY>', type=str, help='ORDER_BY')
+@utils.arg('--order', metavar='<ORDER>', type=str,
+           help='ORDER:["desc", "asc"]')
+def do_DescribeDLProjects(client, args):
+    """List all DeepLearningProjects."""
+    val = client.DescribeDLProjects(args.id, args.name, utils.convert_filter(args.filter),
+                           args.limit, args.offset, args.order_by, args.order)
+    utils.print_list(val, 'DLProject')
+
+@utils.arg('name', metavar='<DLProject_NAME>', type=str, help='NAME of DLProject')
+@utils.arg('--desc', metavar='<DESCRIPTION>', type=str,
+           help='DESCRIPTION')
+def do_CreateDLProject(client, args):
+    """Create a DLProject."""
+    val = client.CreateDLProject(args.name, args.desc)
+    utils.print_dict(val)
+
+@utils.arg('id', metavar='<DLProjecID>', type=str, help='ID of DLProject')
+def do_DeleteDLProject(client, args):
+    """Delete the DLProject."""
+    client.DeleteDLProject(args.id)
+
+@utils.arg('id', metavar='<DLProjecID>', type=str, help='ID of DLProject')
+@utils.arg('--name', metavar='<NAME>', required=True, help='Name of DLProject')
+@utils.arg('--desc', metavar='<DESCRIPTION>', help='Description of DLProject')
+def do_UpdateDLProject(client, args):
+    """Delete the DLProject."""
+    val = client.UpdateDLProject(args.id, args.name, args.desc)
+    utils.print_dict(val, 'DLProject')
+
+@utils.arg('project_id', metavar='<DLProjectID>', type=str, help='ID of DLProject')
+@utils.arg('name', metavar='<DLJobName>', type=str, help='Name of DLJob')
+@utils.arg('--hardware_mode', metavar='<HardwareMode>', required=True, type=str, choices=['CPU-ONLY', 'CPU-GPU'],
+           help='hardware mode of DLJob, choices in [CPU-ONLY, CPU-GPU]')
+@utils.arg('--distributed', action='store_true', help='DLJob is distributed')
+@utils.arg('--job_type', metavar='<JobType>', required=True, type=str, choices=['training', 'inference'],
+           help='Job type, choices in [training, inference]')
+@utils.arg('--code_source', metavar='<CodeSource>', required=True, type=str,
+           help='path of source code')
+@utils.arg('--with_tensorboard', action='store_true', help='DLJob requires tensorboard')
+@utils.arg('--auto_start', action='store_true', help='start DLJob automatically after creation')
+@utils.arg('--node_num', metavar='<NodeNum>', type=int,
+           help='Number of Worker Nodes, required integer > 0 in distributed mode')
+@utils.arg('--gpu_num', metavar='<GpuNum>', type=int,
+           help='Number of GPUs per Worker Node, required integer > 0 in CPU-GPU mode')
+@utils.arg('--code_main_file', metavar='<CodeMainFile>', type=str,
+           help='code main file, required when code_source is in compressed format, like tar.gz, tgz, zip ...')
+@utils.arg('--data_dir', metavar='<DataDir>', type=str,
+           help='directory for data')
+@utils.arg('--ckpt_dir', metavar='<CkptDir>', type=str,
+           help='directory for checkpoint/model')
+@utils.arg('--output_dir', metavar='<OutputDir>', type=str,
+           help='directory for output, valid for inference jobtype')
+@utils.arg('--cmdline_args', metavar='<CmdlineArgs>', action='append',
+           help='extra comandline args, like foo=bar')
+@utils.arg('--tensorboard_log_dir', metavar='<TensorboardLogDir>', type=str,
+           help='directory for tensorboard events if any')
+@utils.arg('--notice_uid', metavar='<NoticeUID>', type=int,
+           help='Whom to notice when DLJob finished, -1 stands for Job Owner')
+@utils.arg('--distribute_file', metavar='<DistributedFile>', action='append',
+           help='distribute and cache file to worker nodes\' $PWD for the DLJob')
+@utils.arg('--desc', metavar='<DESCRIPTION>', type=str,
+           help='DESCRIPTION')
+def do_CreateDLJob(client, args):
+    """Create a DLJob."""
+    val = client.CreateDLJob(args.project_id, args.name, args.hardware_mode,
+                                args.distributed, args.job_type, args.code_source,
+                                args.with_tensorboard, args.auto_start,
+                                args.node_num, args.gpu_num, args.code_main_file,
+                                args.data_dir, args.ckpt_dir, args.output_dir,
+                                args.cmdline_args, args.tensorboard_log_dir,
+                                args.notice_uid, args.distribute_file, args.desc)
+    utils.print_dict(val)
+
+@utils.arg('project_id', metavar='<DLProjectID>', type=str, help='ID of DLProject')
+@utils.arg('--id', metavar='<ID>', action='append', help='ID of DLJob')
+@utils.arg('--name', metavar='<NAME>', action='append', help='Name of DLJob')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--filter', metavar='<FILTER>', action='append', help='Filter')
+@utils.arg('--order_by', metavar='<ORDER_BY>', type=str, help='ORDER_BY')
+@utils.arg('--order', metavar='<ORDER>', type=str,
+           help='ORDER:["desc", "asc"]')
+def do_DescribeDLJobs(client, args):
+    """List all DeepLearningJobs of a DLProject."""
+    val = client.DescribeDLJobs(args.project_id, args.id, args.name, utils.convert_filter(args.filter),
+                           args.limit, args.offset, args.order_by, args.order)
+    utils.print_list(val, 'DLJob')
+
+@utils.arg('id', metavar='<DLJobID>', type=str, help='ID of DLJob')
+def do_DeleteDLJob(client, args):
+    """Delete the DLJob."""
+    client.DeleteDLJob(args.id)
+
+@utils.arg('id', metavar='<DLJobID>', type=str, help='ID of DLJob')
+@utils.arg('--name', metavar='<DLJobName>', type=str, help='Name of DLJob')
+@utils.arg('--hardware_mode', metavar='<HardwareMode>', type=str, choices=['CPU-ONLY', 'CPU-GPU'],
+           help='hardware mode of DLJob')
+@utils.arg('--distributed', action='store_true', help='DLJob is distributed')
+@utils.arg('--job_type', metavar='<JobType>', type=str, choices=['training', 'inference'],
+           help='Job type')
+@utils.arg('--code_source', metavar='<CodeSource>', type=str,
+           help='path of source code')
+@utils.arg('--with_tensorboard', action='store_true', help='DLJob require tensorboard')
+@utils.arg('--auto_start', action='store_true', help='start DLJob automatically after creation')
+@utils.arg('--node_num', metavar='<NodeNum>', type=int,
+           help='Number of Worker Nodes')
+@utils.arg('--gpu_num', metavar='<GpuNum>', type=int,
+           help='Number of GPUs per Worker Node')
+@utils.arg('--code_main_file', metavar='<CodeMainFile>', type=str,
+           help='code main file')
+@utils.arg('--data_dir', metavar='<DataDir>', type=str,
+           help='directory for data')
+@utils.arg('--ckpt_dir', metavar='<CkptDir>', type=str,
+           help='directory for checkpoint/model')
+@utils.arg('--output_dir', metavar='<OutputDir>', type=str,
+           help='directory for output')
+@utils.arg('--cmdline_args', metavar='<CmdlineArgs>', action='append',
+           help='extra comandline args, like foo=bar')
+@utils.arg('--tensorboard_log_dir', metavar='<TensorboardLogDir>', type=str,
+           help='directory for tensorboard events if any')
+@utils.arg('--notice_uid', metavar='<NoticeUID>', type=int,
+           help='Whom to notice when DLJob finished, -1 for Job Owner')
+@utils.arg('--distribute_file', metavar='<DistributedFile>', action='append',
+           help='distribute and cache file to worker nodes\' $PWD for the DLJob')
+@utils.arg('--desc', metavar='<DESCRIPTION>', type=str,
+           help='DESCRIPTION')
+def do_UpdateDLJob(client, args):
+    """Update a DLJob."""
+    val = client.UpdateDLJob(args.id, args.name, args.hardware_mode,
+                                args.distributed, args.job_type, args.code_source,
+                                args.with_tensorboard, args.auto_start,
+                                args.node_num, args.gpu_num, args.code_main_file,
+                                args.data_dir, args.ckpt_dir, args.output_dir,
+                                args.cmdline_args, args.tensorboard_log_dir,
+                                args.notice_uid, args.distribute_file, args.desc)
+    utils.print_dict(val)
+
+@utils.arg('id', metavar='<DLJobID>', type=str, help='ID of DLJob')
+def do_SubmitDLJob(client, args):
+    """Submit the DLJob."""
+    client.SubmitDLJob(args.id)
+
+@utils.arg('id', metavar='<DLJobID>', type=str, help='ID of DLJob')
+def do_StopDLJob(client, args):
+    """Stop the DLJob."""
+    client.StopDLJob(args.id)
