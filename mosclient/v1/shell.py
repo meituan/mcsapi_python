@@ -1396,7 +1396,7 @@ def do_DeleteDLProject(client, args):
 @utils.arg('--name', metavar='<NAME>', required=True, help='Name of DLProject')
 @utils.arg('--desc', metavar='<DESCRIPTION>', help='Description of DLProject')
 def do_UpdateDLProject(client, args):
-    """Delete the DLProject."""
+    """Update the DLProject."""
     val = client.UpdateDLProject(args.id, args.name, args.desc)
     utils.print_dict(val, 'DLProject')
 
@@ -1433,6 +1433,8 @@ def do_UpdateDLProject(client, args):
            help='distribute and cache file to worker nodes\' $PWD for the DLJob')
 @utils.arg('--desc', metavar='<DESCRIPTION>', type=str,
            help='DESCRIPTION')
+@utils.arg('--image_id', metavar='<ImageId>', type=str,
+           help='Docker Image ID')
 def do_CreateDLJob(client, args):
     """Create a DLJob."""
     val = client.CreateDLJob(args.project_id, args.name, args.hardware_mode,
@@ -1441,7 +1443,7 @@ def do_CreateDLJob(client, args):
                                 args.node_num, args.gpu_num, args.code_main_file,
                                 args.data_dir, args.ckpt_dir, args.output_dir,
                                 args.cmdline_args, args.tensorboard_log_dir,
-                                args.notice_uid, args.distribute_file, args.desc)
+                                args.notice_uid, args.distribute_file, args.desc, args.image_id)
     utils.print_dict(val)
 
 @utils.arg('project_id', metavar='<DLProjectID>', type=str, help='ID of DLProject')
@@ -1497,6 +1499,8 @@ def do_DeleteDLJob(client, args):
            help='distribute and cache file to worker nodes\' $PWD for the DLJob')
 @utils.arg('--desc', metavar='<DESCRIPTION>', type=str,
            help='DESCRIPTION')
+@utils.arg('--image_id', metavar='<ImageId>', type=str,
+           help='Docker Image ID')
 def do_UpdateDLJob(client, args):
     """Update a DLJob."""
     val = client.UpdateDLJob(args.id, args.name, args.hardware_mode,
@@ -1505,7 +1509,7 @@ def do_UpdateDLJob(client, args):
                                 args.node_num, args.gpu_num, args.code_main_file,
                                 args.data_dir, args.ckpt_dir, args.output_dir,
                                 args.cmdline_args, args.tensorboard_log_dir,
-                                args.notice_uid, args.distribute_file, args.desc)
+                                args.notice_uid, args.distribute_file, args.desc, args.image_id)
     utils.print_dict(val)
 
 @utils.arg('id', metavar='<DLJobID>', type=str, help='ID of DLJob')
@@ -1517,3 +1521,40 @@ def do_SubmitDLJob(client, args):
 def do_StopDLJob(client, args):
     """Stop the DLJob."""
     client.StopDLJob(args.id)
+
+@utils.arg('--id', metavar='<ID>', action='append', help='ID of DLImage')
+@utils.arg('--name', metavar='<NAME>', action='append', help='Name of DLImage')
+@utils.arg('--limit', metavar='<LIMIT>', type=int, help='Limit')
+@utils.arg('--offset', metavar='<OFFSET>', type=int, help='Offset')
+@utils.arg('--filter', metavar='<FILTER>', action='append', help='Filter')
+@utils.arg('--order_by', metavar='<ORDER_BY>', type=str, help='ORDER_BY')
+@utils.arg('--order', metavar='<ORDER>', type=str,
+           help='ORDER:["desc", "asc"]')
+def do_DescribeDLImages(client, args):
+    """List all DeepLearningImages."""
+    val = client.DescribeDLImages(args.id, args.name, utils.convert_filter(args.filter),
+                           args.limit, args.offset, args.order_by, args.order)
+    utils.print_list(val, 'DLImage')
+
+@utils.arg('name', metavar='<DLProject_NAME>', type=str, help='NAME of DLImage')
+@utils.arg('image_config', metavar='<ImageConfig>', type=str, help='Dockerfile str for DLImage')
+@utils.arg('--desc', metavar='<DESCRIPTION>', type=str,
+           help='DESCRIPTION')
+def do_CreateDLImage(client, args):
+    """Create a DLImage."""
+    val = client.CreateDLImage(args.name, args.image_config, args.desc)
+    utils.print_dict(val)
+
+@utils.arg('id', metavar='<DLImageID>', type=str, help='ID of DLImage')
+def do_DeleteDLImage(client, args):
+    """Delete the DLImage."""
+    client.DeleteDLImage(args.id)
+
+@utils.arg('id', metavar='<DLImageID>', type=str, help='ID of DLImage')
+@utils.arg('--name', metavar='<NAME>', required=True, help='Name of DLImage')
+@utils.arg('--image_config', metavar='<ImageConfig>', required=True, help='Dockerfile str for DLImage')
+@utils.arg('--desc', metavar='<DESCRIPTION>', help='Description of DLImage')
+def do_UpdateDLImage(client, args):
+    """Update the DLImage."""
+    val = client.UpdateDLImage(args.id, args.name, args.image_config, args.desc)
+    utils.print_dict(val, 'DLImage')

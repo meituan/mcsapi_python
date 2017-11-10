@@ -2777,7 +2777,7 @@ class Client(BaseClient):
                           data_dir=None, ckpt_dir=None, output_dir=None,
                           cmdline_args=None, tensorboard_log_dir=None,
                           notice_uid=None, distribute_files=None,
-                          description=None):
+                          description=None, image_id=None):
         u"""创建DLJob.
 
         :param name: Job名称
@@ -2818,6 +2818,8 @@ class Client(BaseClient):
             kwargs['DistributeFiles'] = distribute_files
         if description:
             kwargs['Description'] = description
+        if image_id:
+            kwargs['ImageId'] = image_id
         val = self.request(**kwargs)
         if 'DLJob' in val:
             return val['DLJob']
@@ -2876,7 +2878,7 @@ class Client(BaseClient):
                           data_dir=None, ckpt_dir=None, output_dir=None,
                           cmdline_args=None, tensorboard_log_dir=None,
                           notice_uid=None, distribute_files=None,
-                          description=None):
+                          description=None, image_id=None):
         u"""更新DLJob.
 
         :param name: Job名称
@@ -2924,6 +2926,8 @@ class Client(BaseClient):
             kwargs['DistributeFiles'] = distribute_files
         if description:
             kwargs['Description'] = description
+        if image_id:
+            kwargs['ImageId'] = image_id
         val = self.request(**kwargs)
         if 'DLJob' in val:
             return val['DLJob']
@@ -2951,3 +2955,73 @@ class Client(BaseClient):
         kwargs = {}
         kwargs['DLJobId'] = idstr
         self.request(**kwargs)
+    
+    def DescribeDLImages(self, ids=None, names=None, filters=None,
+                          limit=10, offset=0, order_by='id', order='asc'):
+        u"""获取深度学习Docker镜像列表信息.
+
+        :param ids: 期望获取的DLImageID列表
+        :type ids: list
+        :param names: 期望获取信息的DLImage名称列表
+        :type names: list
+        :param limit: 最多返回数量
+        :type limit: int
+        :param offset: 返回DLImage的偏移量，用于分页显示
+        :type offset: int
+        :param filters: 过滤器，一个dict，包含过滤字段名和值，可能过滤字段为：name, status
+        :type filters: dict
+        :param order_by: 排序字段
+        :type order_by: string
+        :param order: 值只能为'desc'(升序)或者'asc'(降序)
+        :type order: string
+
+        :returns: DLImageSet，包含DLImage列表
+        """
+        kwargs = {}
+        if isinstance(ids, list) and len(ids) > 0:
+            kwargs['DLImageIds'] = ids
+        if isinstance(names, list) and len(names) > 0:
+            kwargs['DLImageNames'] = names
+        if order_by and order:
+            kwargs['OrderBy'] = order_by
+            kwargs['Order'] = order
+        self.parse_list_params(limit, offset, filters, kwargs)
+        val = self.request(**kwargs)
+        return val['DLImageSet']
+
+    def CreateDLImage(self,
+                       name, image_config, description=None):
+        u"""创建DLImage.
+        """
+        kwargs = {}
+        kwargs['DLImageName'] = name
+        kwargs['ImageConfig'] = image_config
+        if description:
+            kwargs['Description'] = description
+        val = self.request(**kwargs)
+        return val['DLImage']
+    
+    def DeleteDLImage(self, idstr):
+        u"""删除DLImage.
+
+        :param idstr: DLImageID
+        :type idstr: string
+        :return:
+        """
+        kwargs = {}
+        kwargs['DLImageId'] = idstr
+        self.request(**kwargs)
+
+    def UpdateDLImage(self, idstr, name=None, image_config=None, desc=None):
+        u"""更新DLImage.
+        """
+        kwargs = {}
+        kwargs['DLImageId'] = idstr
+        if name:
+            kwargs['DLImageName'] = name
+        if image_config:
+            kwargs['ImageConfig'] = image_config
+        if desc and not desc.isspace():
+            kwargs['Description'] = desc
+        val = self.request(**kwargs)  # 利用sys._getframe(level).f_code.co_name获取动态运行时的函数名, 在ec2/action目录下
+        return val
