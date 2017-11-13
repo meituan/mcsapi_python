@@ -13,13 +13,14 @@ from xmltodict import parse
 class BaseClient(object):
 
     def __init__(self, access, secret, url, format=None,
-                                timeout=300, debug=False):
+                 timeout=300, debug=False, region='Beijing'):
         self.access = access
         self.secret = secret
         self.url = url
         self.format = format
         self.timeout = timeout
         self.debug = debug
+        self.region = region
 
     def _get_action(self, level):
         if getattr(sys, '_getframe', None) is not None:
@@ -84,6 +85,7 @@ class BaseClient(object):
         params['Timestamp'] = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.000Z')
         params['SignatureVersion'] = '2'
         params['SignatureMethod'] = 'HmacSHA256'
+        params['Region'] = self.region
         for k, v in kwargs.iteritems():
             if isinstance(v, list):
                 i = 1

@@ -47,6 +47,11 @@ class APIShell(object):
             help='MOS access key, defaults to env[MOS_ACCESS]'
         )
 
+        parser.add_argument('--mos-region',
+            default=utils.env('MOS_REGION', default='Beijing'),
+            help='MOS region, defaults to env[MOS_REGION]'
+        )
+
         parser.add_argument('--mos-secret',
             default=utils.env('MOS_SECRET'),
             help='MOS secret, defaults to env[MOS_SECRET]'
@@ -123,24 +128,6 @@ class APIShell(object):
 
         if args.func == self.do_help:
             self.do_help(args)
-            # import cgi
-            # for cmd in self.subcommands:
-            #     # print cmd
-            #     if cmd.endswith('Node') or 'ECS' in cmd:
-            #         p = self.subcommands[cmd]
-            #         h = p.format_help()
-            #         splited = h.split('\n\n', 2)
-            #         usage, text, options = [cgi.escape(s.strip()) for s in splited]
-            #         usage = usage[len('usage: climc '):]
-            #         fmt = """
-            #                 <tr>
-            #                   <td colspan="1"><pre>{usage}</pre></td>
-            #                   <td colspan="1"><pre>{text}</pre></td>
-            #                   <td colspan="1"><pre>{options}</pre></td>
-            #                   <td colspan="1"></td>
-            #                 </tr>
-            #                 """
-                    # print fmt.format(usage=usage, text=text, options=options)
             return 0
 
         if not args.mos_access:
@@ -160,6 +147,7 @@ class APIShell(object):
             logger.setLevel(logging.DEBUG)
         clt = client.Client(api_version,
                             args.mos_access, args.mos_secret, args.mos_url,
+                            region=args.mos_region,
                             format=args.format,
                             timeout=args.timeout,
                             debug=args.debug)
