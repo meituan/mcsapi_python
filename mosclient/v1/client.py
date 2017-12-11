@@ -2830,7 +2830,6 @@ class Client(BaseClient):
         if 'cos_inference_net_file' in kwargs:
             params['CosInferenceNetFile'] = kwargs['cos_inference_net_file']
         val = self.request(**params)
-        print val
         if 'DLJob' in val:
             return val['DLJob']
         else:
