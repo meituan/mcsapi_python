@@ -2771,13 +2771,13 @@ class Client(BaseClient):
         return val
     
     def CreateDLJob(self, project_id, name, hardware_mode, 
-                          is_distributed, job_type, code_source,
-                          is_tensorboard, is_auto_start,
+                          distributed, job_type,
+                          auto_start=True, code_source=None, with_tensorboard=False,
                           node_num=None, gpu_num=None, code_main_file=None,
                           data_dir=None, ckpt_dir=None, output_dir=None,
                           cmdline_args=None, tensorboard_log_dir=None,
-                          notice_uid=None, distribute_files=None,
-                          description=None, image_id=None):
+                          notice_uid=None, distribute_file=None,
+                          description=None, image_id=None, **kwargs):
         u"""创建DLJob.
 
         :param name: Job名称
@@ -2786,41 +2786,50 @@ class Client(BaseClient):
         :type description: string
         :return: DLJob结构
         """
-        kwargs = {}
-        kwargs['DLProjectId'] = project_id
-        kwargs['DLJobName'] = name
-        kwargs['HardwareMode'] = hardware_mode
-        kwargs['IsDistributed'] = is_distributed
-        kwargs['JobType'] = job_type
-        kwargs['CodeSource'] = code_source
-        kwargs['IsTensorboard'] = is_tensorboard
-        kwargs['IsAutoStart'] = is_auto_start
+        params = {}
+        params['DLProjectId'] = project_id
+        params['DLJobName'] = name
+        params['HardwareMode'] = hardware_mode
+        params['IsDistributed'] = distributed
+        params['JobType'] = job_type
+        params['IsAutoStart'] = auto_start
+        params['IsTensorboard'] = with_tensorboard
         
+        if code_source:
+            params['CodeSource'] = code_source
         if node_num:
-            kwargs['NodeNum'] = node_num
+            params['NodeNum'] = node_num
         if gpu_num:
-            kwargs['GpuNum'] = gpu_num
+            params['GpuNum'] = gpu_num
         if code_main_file:
-            kwargs['CodeMainFile'] = code_main_file
+            params['CodeMainFile'] = code_main_file
         if data_dir:
-            kwargs['DataDir'] = data_dir
+            params['DataDir'] = data_dir
         if ckpt_dir:
-            kwargs['CkptDir'] = ckpt_dir
+            params['CkptDir'] = ckpt_dir
         if output_dir:
-            kwargs['OutputDir'] = output_dir
+            params['OutputDir'] = output_dir
         if isinstance(cmdline_args, list) and len(cmdline_args) > 0:
-            kwargs['CmdlineArgs'] = cmdline_args
+            params['CmdlineArgs'] = cmdline_args
         if tensorboard_log_dir:
-            kwargs['TensorboardLogDir'] = tensorboard_log_dir
+            params['TensorboardLogDir'] = tensorboard_log_dir
         if notice_uid:
-            kwargs['NoticeUId'] = notice_uid
-        if isinstance(distribute_files, list) and len(distribute_files) > 0:
-            kwargs['DistributeFiles'] = distribute_files
+            params['NoticeUId'] = notice_uid
+        if isinstance(distribute_file, list) and len(distribute_file) > 0:
+            params['DistributeFiles'] = distribute_file
         if description:
-            kwargs['Description'] = description
+            params['Description'] = description
         if image_id:
-            kwargs['ImageId'] = image_id
-        val = self.request(**kwargs)
+            params['ImageId'] = image_id
+        if 'cos_solver_file' in kwargs:
+            params['CosSolverFile'] = kwargs['cos_solver_file']
+        if 'job_category' in kwargs:
+            params['JobCategory'] = kwargs['job_category']
+        if 'cos_inference_iteration' in kwargs:
+            params['CosInferenceIteration'] = kwargs['cos_inference_iteration']
+        if 'cos_inference_net_file' in kwargs:
+            params['CosInferenceNetFile'] = kwargs['cos_inference_net_file']
+        val = self.request(**params)
         if 'DLJob' in val:
             return val['DLJob']
         else:
@@ -2872,63 +2881,71 @@ class Client(BaseClient):
         self.request(**kwargs)
     
     def UpdateDLJob(self, id, name=None, hardware_mode=None, 
-                          is_distributed=None, job_type=None, code_source=None,
-                          is_tensorboard=None, is_auto_start=None,
+                          distributed=None, job_type=None, code_source=None,
+                          with_tensorboard=None, auto_start=None,
                           node_num=None, gpu_num=None, code_main_file=None,
                           data_dir=None, ckpt_dir=None, output_dir=None,
                           cmdline_args=None, tensorboard_log_dir=None,
-                          notice_uid=None, distribute_files=None,
-                          description=None, image_id=None):
+                          notice_uid=None, distribute_file=None,
+                          desc=None, image_id=None, **kwargs):
         u"""更新DLJob.
 
         :param name: Job名称
         :type name: string
-        :param description:
-        :type description: string
+        :param desc:
+        :type desc: string
         :return: DLJob结构
         """
-        kwargs = {}
-        kwargs['DLJobId'] = id
+        params = {}
+        params['DLJobId'] = id
         if name:
-            kwargs['DLJobName'] = name
+            params['DLJobName'] = name
         if hardware_mode:
-            kwargs['HardwareMode'] = hardware_mode
-        if is_distributed:
-            kwargs['IsDistributed'] = is_distributed
+            params['HardwareMode'] = hardware_mode
+        if distributed:
+            params['IsDistributed'] = distributed
         if job_type:
-            kwargs['JobType'] = job_type
+            params['JobType'] = job_type
         if code_source:
-            kwargs['CodeSource'] = code_source
-        if is_tensorboard:
-            kwargs['IsTensorboard'] = is_tensorboard
-        if is_auto_start:
-            kwargs['IsAutoStart'] = is_auto_start
+            params['CodeSource'] = code_source
+        if with_tensorboard:
+            params['IsTensorboard'] = with_tensorboard
+        if auto_start:
+            params['IsAutoStart'] = auto_start
         
         if node_num:
-            kwargs['NodeNum'] = node_num
+            params['NodeNum'] = node_num
         if gpu_num:
-            kwargs['GpuNum'] = gpu_num
+            params['GpuNum'] = gpu_num
         if code_main_file:
-            kwargs['CodeMainFile'] = code_main_file
+            params['CodeMainFile'] = code_main_file
         if data_dir:
-            kwargs['DataDir'] = data_dir
+            params['DataDir'] = data_dir
         if ckpt_dir:
-            kwargs['CkptDir'] = ckpt_dir
+            params['CkptDir'] = ckpt_dir
         if output_dir:
-            kwargs['OutputDir'] = output_dir
+            params['OutputDir'] = output_dir
         if isinstance(cmdline_args, list) and len(cmdline_args) > 0:
-            kwargs['CmdlineArgs'] = cmdline_args
+            params['CmdlineArgs'] = cmdline_args
         if tensorboard_log_dir:
-            kwargs['TensorboardLogDir'] = tensorboard_log_dir
+            params['TensorboardLogDir'] = tensorboard_log_dir
         if notice_uid:
-            kwargs['NoticeUId'] = notice_uid
-        if isinstance(distribute_files, list) and len(distribute_files) > 0:
-            kwargs['DistributeFiles'] = distribute_files
-        if description:
-            kwargs['Description'] = description
+            params['NoticeUId'] = notice_uid
+        if isinstance(distribute_file, list) and len(distribute_file) > 0:
+            params['DistributeFiles'] = distribute_file
+        if desc:
+            params['Description'] = desc
         if image_id:
-            kwargs['ImageId'] = image_id
-        val = self.request(**kwargs)
+            params['ImageId'] = image_id
+        if 'cos_solver_file' in kwargs:
+            params['CosSolverFile'] = kwargs['cos_solver_file']
+        if 'job_category' in kwargs:
+            params['JobCategory'] = kwargs['job_category']
+        if 'cos_inference_iteration' in kwargs:
+            params['CosInferenceIteration'] = kwargs['cos_inference_iteration']
+        if 'cos_inference_net_file' in kwargs:
+            params['CosInferenceNetFile'] = kwargs['cos_inference_net_file']
+        val = self.request(**params)
         if 'DLJob' in val:
             return val['DLJob']
         else:

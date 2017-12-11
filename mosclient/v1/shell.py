@@ -1407,7 +1407,7 @@ def do_UpdateDLProject(client, args):
 @utils.arg('--distributed', action='store_true', help='DLJob is distributed')
 @utils.arg('--job_type', metavar='<JobType>', required=True, type=str, choices=['training', 'inference'],
            help='Job type, choices in [training, inference]')
-@utils.arg('--code_source', metavar='<CodeSource>', required=True, type=str,
+@utils.arg('--code_source', metavar='<CodeSource>', type=str,
            help='path of source code')
 @utils.arg('--with_tensorboard', action='store_true', help='DLJob requires tensorboard')
 @utils.arg('--auto_start', action='store_true', help='start DLJob automatically after creation')
@@ -1435,15 +1435,18 @@ def do_UpdateDLProject(client, args):
            help='DESCRIPTION')
 @utils.arg('--image_id', metavar='<ImageId>', type=str,
            help='Docker Image ID')
+@utils.arg('--cos_solver_file', metavar='<CosSolverFile>', type=str,
+           help='solver file for Caffe')
+@utils.arg('--job_category', metavar='<JobCategory>', type=str,
+           help='job category, tfos or cos')
+@utils.arg('--cos_inference_iteration', metavar='<CosInferenceIteration>', type=str,
+           help='inference iteration for Caffe')
+@utils.arg('--cos_inference_net_file', metavar='<CosInferenceNetFile>', type=str,
+           help='inference net file for Caffe')
 def do_CreateDLJob(client, args):
     """Create a DLJob."""
-    val = client.CreateDLJob(args.project_id, args.name, args.hardware_mode,
-                                args.distributed, args.job_type, args.code_source,
-                                args.with_tensorboard, args.auto_start,
-                                args.node_num, args.gpu_num, args.code_main_file,
-                                args.data_dir, args.ckpt_dir, args.output_dir,
-                                args.cmdline_args, args.tensorboard_log_dir,
-                                args.notice_uid, args.distribute_file, args.desc, args.image_id)
+    kwargs = dict([(k, v) for (k, v) in args.__dict__.items() if v is not None])
+    val = client.CreateDLJob(**kwargs)
     utils.print_dict(val)
 
 @utils.arg('project_id', metavar='<DLProjectID>', type=str, help='ID of DLProject')
@@ -1501,15 +1504,18 @@ def do_DeleteDLJob(client, args):
            help='DESCRIPTION')
 @utils.arg('--image_id', metavar='<ImageId>', type=str,
            help='Docker Image ID')
+@utils.arg('--cos_solver_file', metavar='<CosSolverFile>', type=str,
+           help='solver file for Caffe')
+@utils.arg('--job_category', metavar='<JobCategory>', type=str,
+           help='job category, tfos or cos')
+@utils.arg('--cos_inference_iteration', metavar='<CosInferenceIteration>', type=str,
+           help='inference iteration for Caffe')
+@utils.arg('--cos_inference_net_file', metavar='<CosInferenceNetFile>', type=str,
+           help='inference net file for Caffe')
 def do_UpdateDLJob(client, args):
     """Update a DLJob."""
-    val = client.UpdateDLJob(args.id, args.name, args.hardware_mode,
-                                args.distributed, args.job_type, args.code_source,
-                                args.with_tensorboard, args.auto_start,
-                                args.node_num, args.gpu_num, args.code_main_file,
-                                args.data_dir, args.ckpt_dir, args.output_dir,
-                                args.cmdline_args, args.tensorboard_log_dir,
-                                args.notice_uid, args.distribute_file, args.desc, args.image_id)
+    kwargs = dict([(k, v) for (k, v) in args.__dict__.items() if v is not None])
+    val = client.UpdateDLJob(**kwargs)
     utils.print_dict(val)
 
 @utils.arg('id', metavar='<DLJobID>', type=str, help='ID of DLJob')
